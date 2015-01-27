@@ -1,0 +1,207 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+    <base target="right" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+   <link rel="stylesheet" href="css/common.css">
+   <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
+    <title>后台首页</title>
+    <style>
+    #contain{width:960px;margin-left:15px;margin-righ:15px;}
+    </style>
+    <script>
+        function checkAll(obj) {
+            var isCheck = obj.checked;
+            var boxlist = $("#alist_table").find("input", "[type='checkbox']");
+            for (var i = 0; i < boxlist.length; i++) {
+                boxlist[i].checked = isCheck;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="contain">
+    <div id="search_bar" class="mt10">
+       <div class="box">
+          <div class="box_border">
+            <div class="box_top"><b class="pl15">搜索</b></div>
+            <div class="box_center pt10 pb10">
+              <table class="form_table" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td>姓名</td>
+                  <td><input type="text" name="name" class="input-text lh25" size="10"/></td>
+                  <td>学生编号</td>
+                  <td><input type="text" name="name" class="input-text lh25" size="10"/></td>
+                  <td>性别</td>
+                  <td>
+                    <span class="fl">
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                        <select name="" class="select"> 
+                        <option>男</option> 
+                        <option>女</option> 
+                        </select> 
+                        </div> 
+                      </div> 
+                    </span>
+                  </td>
+                  <td>家长姓名</td>
+                  <td><input type="text" name="name" class="input-text lh25" size="10"/></td>
+                  <td align="right" >
+
+                  <input type="submit" value="确定" class="ext_btn ext_btn_submit" />
+                  </td>
+                  </tr><tr>
+                  <td>就读学校</td>
+                  <td colspan="3">
+                    <span class="fl">
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                        <select name="" class="select"> 
+                        <option>聚德西小学</option> 
+                        <option>知信小学</option> 
+                        </select> 
+                        </div> 
+                      </div> 
+                    </span>
+                  </td>
+                  
+                  <td>年级</td>
+                  <td>
+                    <span class="fl">
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                        <select name="" class="select"> 
+                        <option selected="selected" value="1">一年级</option>
+            <option value="2">二年级</option>
+            <option value="3">三年级</option>
+            <option value="4">四年级</option>
+            <option value="5">五年级</option>
+            <option value="6">六年级</option>
+            <option value="7">初一</option>
+            <option value="8">初二</option>
+            <option value="9">初三</option> 
+                        </select> 
+                        </div> 
+                      </div> 
+                    </span>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="table" class="mt10">
+        <div class="box span10 oh">
+        <div class="box_bottom pb5 pt5 pr10" style="border-top:1px solid #dadada;">
+              <div class="search_bar_btn">
+        <input type="button" name="button" class="btn btn82 btn_del" value="删除"> <input type="button" name="button" class="btn btn82 btn_export" value="导出">
+        </div></div>
+              <table width="100%" border="0" cellpadding="0" cellspacing="0"  id="alist_table" class="list_table">
+                <tr>
+                   <th width="30"><input type="checkbox"  onclick="checkAll(this);" name="button" value="全选"/>全选 </th>
+                   <th width="100">姓名</th>
+                   <th width="100">学生编号</th>
+                   <th width="100">姓别</th>
+                   <th width="100">家长姓名</th>
+                   <th width="100">就读学校</th>
+                   <th width="100">年级</th>
+                   <th width="100">操作</th>
+                    </tr>
+                <tr class="tr">
+                   <td class="td_center"><input type="checkbox"></td>
+                   <td>aad</td>
+                   <td>aad</td>
+                   <td>aad</td>
+                <td>aad</td>
+                <td>aad</td>
+                   <td>aad</td>
+                <td align="center"><a href="">详细</a></td>
+                 </tr>
+                 <tr class="tr"> 
+                   <td class="td_center"><input type="checkbox"/></td>
+                   <td>aad</td>
+                   <td>aad</td>
+                   <td>aad</td>
+                <td>aad</td>
+                <td>aad</td>
+                   <td>aad</td>
+                <td align="center"><a href="">详细</a></td>
+                 </tr>
+                 <tr class="tr">
+                    <td class="td_center"><input type="checkbox"></td>
+                   <td>aad</td>
+                   <td>aad</td>
+                   <td>aad</td>
+                <td>aad</td>
+                 </tr>
+                 <tr class="tr">
+                    <td class="td_center"><input type="checkbox"></td>
+                   <td>aad</td>
+                   <td>aad</td>
+                   <td>aad</td>
+                <td>aad</td>
+                 </tr>
+                 <tr class="tr">
+                    <td class="td_center"><input type="checkbox"></td>
+                   <td>aad</td>
+                   <td>aad</td>
+                   <td>aad</td>
+                <td>aad</td>
+                 </tr>
+                 <tr class="tr">
+                   <td class="td_center"><input type="checkbox"></td>
+                   <td>aad</td>
+                   <td>aad</td>
+                   <td>aad</td>
+                <td>aad</td>
+                 </tr>
+                 <tr class="tr">
+                   <td class="td_center"><input type="checkbox"></td>
+                   <td>aad</td>
+                   <td>aad</td>
+                   <td>aad</td>
+                <td>aad</td>
+                 </tr>
+                 <tr class="tr">
+                   <td class="td_center"><input type="checkbox"></td>
+                   <td>aad</td>
+                   <td>aad</td>
+                   <td>aad</td>
+                <td>aad</td>
+                 </tr>
+                 <tr class="tr">
+                   <td class="td_center"><input type="checkbox"></td>
+                   <td>aad</td>
+                   <td>aad</td>
+                   <td>aad</td>
+                <td>aad</td>
+                 </tr>
+              
+              </table>
+              <div class="page mt10">
+                <div class="pagination">
+                  <ul>
+                      <li class="first-child"><a href="#">首页</a></li>
+                      <li class="disabled"><span>上一页</span></li>
+                      <li class="active"><span>1</span></li>
+                      <li><a href="#">2</a></li>
+                      <li><a href="#">下一页</a></li>
+                      <li class="last-child"><a href="#">末页</a></li>
+                  </ul>
+                </div>
+
+              </div>
+        
+        </div>
+     </div>
+     </div>
+</body>
+</html>
