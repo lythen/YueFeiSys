@@ -36,5 +36,12 @@ public class TeacherHandler : IHttpHandler {
             return;
         }
         Lythen.Model.teacher model = new Lythen.Model.teacher();
+        model.Teacher_info = info;
+        model.Teacher_mobile = phone;
+        model.Teacher_name = name;
+        model.Teacher_role = Int32.Parse(role);
+        int row = new Lythen.BLL.teacher().Add(model);
+        if (row > 0) context.Response.Write("success");
+        else context.Response.Write("faile");
     }
 }
