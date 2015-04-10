@@ -38,7 +38,19 @@ namespace Lythen.BLL
 		{
 			return dal.Add(model);
 		}
-
+        public string Add(int parent_id, string subject_title)
+        {
+            if (dal.Exists(parent_id, subject_title)) return "exists";
+            else
+            {
+                Model.subject model = new Model.subject();
+                model.Subject_parent = parent_id;
+                model.Subject_title = subject_title;
+                model.Subject_info = "";
+                if (Add(model) > 0) return "success";
+                else return "error";
+            }
+        }
 		/// <summary>
 		/// 更新一条数据
 		/// </summary>

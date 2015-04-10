@@ -37,7 +37,22 @@ namespace Lythen.DAL
 
 			return DbHelperSQL.Exists(strSql.ToString(),parameters);
 		}
-
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int Subject_parent, string Subject_title)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from subject");
+            strSql.Append(" where Subject_parent=@Subject_parent and Subject_title=@Subject_title");
+            SqlParameter[] parameters = {
+					new SqlParameter("@Subject_parent", SqlDbType.Int,4),
+					new SqlParameter("@Subject_title", SqlDbType.VarChar,100)
+			};
+            parameters[0].Value = Subject_parent;
+            parameters[1].Value = Subject_title;
+            return DbHelperSQL.Exists(strSql.ToString(), parameters);
+        }
 
 		/// <summary>
 		/// 增加一条数据
@@ -272,13 +287,13 @@ namespace Lythen.DAL
 			{
 				strSql.Append("order by T.Subject_id desc");
 			}
-			strSql.Append(")AS Row, T.*  from subject T ");
+            strSql.Append(")AS Row, T.Subject_id,T.Subject_title,(select b.Subject_title from subject b where b.Subject_id=T.Subject_parent) as parent  from subject T ");
 			if (!string.IsNullOrEmpty(strWhere.Trim()))
 			{
 				strSql.Append(" WHERE " + strWhere);
 			}
 			strSql.Append(" ) TT");
-			strSql.AppendFormat(" WHERE TT.Row between {0} and {1}", startIndex, endIndex);
+            strSql.AppendFormat(" WHERE TT.Row between {0} and {1};select COUNT(1) from subject", startIndex, endIndex);
 			return DbHelperSQL.Query(strSql.ToString());
 		}
 

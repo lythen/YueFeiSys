@@ -37,7 +37,7 @@
     </SccProvider>
     <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <PublishUrl>http://localhost/Maticsoft.DBUtility/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -52,6 +52,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -102,17 +104,11 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IBatisNet.Common, Version=1.4.1.0, Culture=neutral, PublicKeyToken=ed781d9fc396c6ca, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\CodematicDemo\CodematicDemo\Lib\IBatisNet.Common.dll</HintPath>
+    <Reference Include="IBatisNet.Common">
+      <HintPath>..\..\..\net库\IBatisNetDemo\Web\bin\IBatisNet.Common.dll</HintPath>
     </Reference>
-    <Reference Include="IBatisNet.DataMapper, Version=1.5.1.0, Culture=neutral, PublicKeyToken=ed781d9fc396c6ca, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\CodematicDemo\CodematicDemo\Lib\IBatisNet.DataMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data, Version=6.4.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\CodematicDemo\CodematicDemo\Lib\MySql.Data.dll</HintPath>
+    <Reference Include="IBatisNet.DataMapper">
+      <HintPath>..\..\..\net库\IBatisNetDemo\Web\bin\IBatisNet.DataMapper.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -124,13 +120,6 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Data.OracleClient">
-      <Name>System.Data.OracleClient</Name>
-    </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.62.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\CodematicDemo\CodematicDemo\Lib\System.Data.SQLite.DLL</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
@@ -138,23 +127,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseSqlMapDao.cs" />
-    <Compile Include="DbHelperSQLite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CommandInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbHelperMySQL.cs" />
-    <Compile Include="DbHelperOleDb.cs" />
-    <Compile Include="DbHelperOra.cs" />
     <Compile Include="DbHelperSQL.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DESEncrypt.cs" />
-    <Compile Include="OracleHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PubConstant.cs" />
     <Compile Include="SQLHelper.cs">
       <SubType>Code</SubType>

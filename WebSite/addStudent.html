@@ -62,6 +62,7 @@
     </style>
     <script>
         function addStu() {
+            //学生基本信息
             var txtstuname = $("#txtstuname").val();
             var txtage = $("#txtage").val();
             var slsex = $("#slsex").val();
@@ -74,6 +75,8 @@
             var txtpay = $("#txtpay").val();
             var txtemail = $("#txtemail").val();
             var stu_age = $("#txtage").val();
+            //报名信息
+
             $.post('',
             '',
             function (data,status) {
