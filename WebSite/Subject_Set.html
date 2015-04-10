@@ -142,8 +142,8 @@
         data.rows = (data.originalRows.slice(start, end));
         return data;
     }
+    var pagesize = 10;
     function loadtable() {
-        var pagesize = 20;
         $('#dg').datagrid({ loadFilter: pagerFilter }).datagrid({
             title: '科目列表显示',
             iconCls: 'icon-edit',
@@ -197,6 +197,12 @@
             onCancelEdit: function (index, row) {
                 row.editing = false;
                 updateActions(index);
+            }
+        });
+        var pg = $('#dg').datagrid("getPager");
+        $(pg).pagination({
+            onChangePageSize: function () {
+                alert("change");
             }
         });
     }
