@@ -13,17 +13,31 @@ public class SubjectHandler : IHttpHandler
         string type = context.Request.Form["type"];
         if (type == "edit")
         {
-            Edit();
+            int sub_id = WebUtility.FilterParam(context.Request.Form["id"]);
+            int parent_id = WebUtility.FilterParam(context.Request.Form["pid"]);
+            string sub_title = WebUtility.InputText(context.Request.Form["title"], context.Request.Form["title"].Length);
+            context.Response.Write(new Lythen.BLL.subject().Update(sub_id, parent_id, sub_title));
             return;
         }
         else if (type == "delete")
         {
-            Delete();
+            int id = WebUtility.FilterParam(context.Request.Form["id"]);
+            if (new Lythen.BLL.subject().Delete(id))
+                context.Response.Write("success");
+            else context.Response.Write("error");
             return;
         }
         else if (type == "deletelist")
         {
-            DeleteList();
+            string ids = WebUtility.InputText(context.Request.Form["ids"], context.Request.Form["ids"].Length);
+            if (String.IsNullOrEmpty(ids))
+            {
+                context.Response.Write(0);
+                return;
+            }
+            ids = ids.Remove(ids.Length - 1, 1);
+            int deRow = new Lythen.BLL.subject().DeleteList(ids);
+            context.Response.Write(deRow);
             return;
         }
         else if (type == "add")
@@ -57,9 +71,7 @@ public class SubjectHandler : IHttpHandler
     void Delete()
     {
     }
-    void DeleteList()
-    {
-    }
+
     public bool IsReusable
     {
         get

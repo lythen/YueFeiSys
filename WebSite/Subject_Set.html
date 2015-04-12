@@ -3,7 +3,7 @@
 <head>
     <base target="right" />
     <link rel="stylesheet" href="css/common.css" />
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="css/easyui.css" />
     <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
@@ -103,7 +103,8 @@
             <div class="box span10 oh">
                 <div class="box_bottom pb5 pt5 pr10" style="border-top: 1px solid #dadada;">
                     <div class="search_bar_btn">
-                        <input type="button" name="button" class="btn btn82 btn_del" value="删除" />
+                        <input type="button" id="btnDelete" name="button" class="btn btn82 btn_del" onclick="Delete();"
+                            value="删除" />
                     </div>
                 </div>
                 <table id="dg" title="科目列表显示">
@@ -143,6 +144,7 @@
         return data;
     }
     var pagesize = 10;
+    var pagenumber = 1;
     function loadtable() {
         $('#dg').datagrid({ loadFilter: pagerFilter }).datagrid({
             title: '科目列表显示',
@@ -152,6 +154,7 @@
             url: 'AjaxHandler/SubjectHandler.ashx',
             pagination: true,
             pageSize: pagesize,
+            pageNumber: pagenumber,
             queryParams: {
                 pagesize: pagesize,
                 pageindex: 1
@@ -191,6 +194,7 @@
                 updateActions(index);
             },
             onAfterEdit: function (index, row) {
+                editSave(row);
                 row.editing = false;
                 updateActions(index);
             },
@@ -199,10 +203,25 @@
                 updateActions(index);
             }
         });
+        //分页事件
         var pg = $('#dg').datagrid("getPager");
         $(pg).pagination({
-            onChangePageSize: function () {
-                alert("change");
+            //选择每页显示列表数量
+            onChangePageSize: function (pageSize) {
+                pagesize = pageSize;
+                loadtable();
+            },
+            //刷新列表
+            onRefresh: function (pageNumber, pageSize) {
+                pagesize = pageSize;
+                pagenumber = pageNumber;
+                loadtable();
+            },
+            //直接点击页码
+            onSelectPage: function (pageNumber, pageSize) {
+                pagesize = pageSize;
+                pagenumber = pageNumber;
+                loadtable();
             }
         });
     }
@@ -216,15 +235,28 @@
         var tr = $(target).closest('tr.datagrid-row');
         return parseInt(tr.attr('datagrid-row-index'));
     }
+    //编辑行
     function editrow(target) {
-        alert(getRowIndex(target));
-        var k = $('#dg').datagrid('selectRow', getRowIndex(target));
         $('#dg').datagrid('beginEdit', getRowIndex(target));
     }
     function deleterow(target) {
-        $.messager.confirm('Confirm', '确实删除?', function (r) {
+        $.messager.confirm('警告', '确实删除?', function (r) {
             if (r) {
-                $('#dg').datagrid('deleteRow', getRowIndex(target));
+                var id = $('#dg').datagrid('getSelected').Subject_id;
+                $.post("AjaxHandler/SubjectHandler.ashx",
+                { "type": "delete",
+                    "id": id
+                },
+                function (data, status) {
+                    if (status == "success") {
+                        if (data == "success") {
+                            alert("删除成功");
+                            //loadtable();
+                            $('#dg').datagrid('deleteRow', getRowIndex(target));
+                        } else
+                            alert("共删失败");
+                    } else alert("删除失败。");
+                });
             }
         });
     }
@@ -233,6 +265,59 @@
     }
     function cancelrow(target) {
         $('#dg').datagrid('cancelEdit', getRowIndex(target));
+    }
+
+    function Delete() {
+        $.messager.confirm('警告', '确实删除?', function (r) {
+            if (r) {
+                var debox = $('#dg').datagrid('getChecked');
+                var len = debox.length;
+                if (len == 0) {
+                    alert("没有选择任何行。");
+                    return;
+                }
+                var ids = "";
+                for (var i = 0; i < len; i++) {
+                    ids += debox[i].Subject_id + ',';
+                }
+                $.post("AjaxHandler/SubjectHandler.ashx",
+                { "type": "deletelist",
+                    "ids": ids
+                },
+                function (data, status) {
+                    if (status == "success") {
+                        alert("共删除学生" + data + "名");
+                        loadtable();
+                    } else alert("删除失败。");
+                });
+            }
+        });
+    }
+    function editSave(row) {
+        var id = row.Subject_id;
+        var pid = row.parent;
+        if (id == pid) {
+            alert("不能把自已作为上级科目。");
+            return;
+        }
+        $.post("AjaxHandler/SubjectHandler.ashx",
+                { "type": "edit",
+                    "id": row.Subject_id,
+                    "pid": row.parent,
+                    "title": row.Subject_title
+                },
+                function (data, status) {
+                    if (status == "success") {
+                        if (data == "success")
+                            alert("编辑成功");
+                        else if (data == "exists")
+                            alert("所改名称已存在。");
+                        else if (data == "nosubject")
+                            alert("所选科目已被删除，请刷新列表。");
+                        else
+                            alert("编辑失败");
+                    } else alert("编辑失败。");
+                });
     }
 </script>
 </html>
