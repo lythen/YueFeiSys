@@ -9,6 +9,7 @@ namespace Lythen.Common.DEncrypt
 	/// </summary>
 	public class DESEncrypt
 	{
+        private const string key = "#w3d@#sdES32S#d$";
 		public DESEncrypt()
 		{			
 		}
@@ -22,7 +23,7 @@ namespace Lythen.Common.DEncrypt
         /// <returns></returns>
 		public static string Encrypt(string Text) 
 		{
-			return Encrypt(Text,"Lythen");
+            return Encrypt(Text, key);
 		}
 		/// <summary> 
 		/// 加密数据 
@@ -61,7 +62,7 @@ namespace Lythen.Common.DEncrypt
         /// <returns></returns>
 		public static string Decrypt(string Text) 
 		{
-			return Decrypt(Text,"Lythen");
+            return Decrypt(Text, key);
 		}
 		/// <summary> 
 		/// 解密数据 

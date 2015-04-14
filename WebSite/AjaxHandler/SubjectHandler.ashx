@@ -4,13 +4,21 @@ using System;
 using System.Web;
 using System.Data;
 using System.IO;
-public class SubjectHandler : IHttpHandler
+using System.Web.SessionState;
+public class SubjectHandler : IHttpHandler,IRequiresSessionState
 {
 
+    Admin adm = new Admin();
     public void ProcessRequest(HttpContext context)
     {
         context.Response.ContentType = "text/plain";
         Lythen.BLL.subject BLLSub = new Lythen.BLL.subject();
+        int myrole_id = adm.GetRoleId();
+        if (myrole_id == 0)
+        {
+            context.Response.Write("nologin");
+            return;
+        }
         string type = context.Request.Form["type"];
         if (type == "edit")
         {
@@ -59,7 +67,7 @@ public class SubjectHandler : IHttpHandler
         pagesize = WebUtility.FilterParam(context.Request.Form["pagesize"]); ;
         size = WebUtility.FilterParam(context.Request.Form["size"]);
         //DataSet ds = new Lythen.BLL.subject().GetListByPage("", "Subject_id", pageindex, pagesize);
-        DataSet ds = new Lythen.BLL.subject().GetListForTable();
+        DataSet ds = BLLSub.GetListForTable();
         DataTable dtSub = ds.Tables[0];
         DataTable dtCount = new DataTable("table");
         dtCount.Columns.Add(new DataColumn("total", typeof(int)));

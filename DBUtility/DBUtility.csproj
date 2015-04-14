@@ -105,10 +105,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IBatisNet.Common">
-      <HintPath>..\..\..\net库\IBatisNetDemo\Web\bin\IBatisNet.Common.dll</HintPath>
+      <HintPath>..\..\net库\IBatisNet.Common.dll</HintPath>
     </Reference>
     <Reference Include="IBatisNet.DataMapper">
-      <HintPath>..\..\..\net库\IBatisNetDemo\Web\bin\IBatisNet.DataMapper.dll</HintPath>
+      <HintPath>..\..\net库\IBatisNet.DataMapper.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

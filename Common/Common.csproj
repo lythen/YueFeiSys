@@ -105,15 +105,15 @@
   <ItemGroup>
     <Reference Include="COM.Excel, Version=1.1.1606.17082, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\net库\yuefei\COM.Excel.dll</HintPath>
+      <HintPath>..\..\net库\COM.Excel.dll</HintPath>
     </Reference>
     <Reference Include="Excel, Version=1.5.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\net库\yuefei\Excel.dll</HintPath>
+      <HintPath>..\..\net库\Excel.dll</HintPath>
     </Reference>
     <Reference Include="OpenSmtp, Version=1.11.0.34196, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\net库\yuefei\OpenSmtp.dll</HintPath>
+      <HintPath>..\..\net库\OpenSmtp.dll</HintPath>
     </Reference>
     <Reference Include="OWC10Chart, Version=1.0.2074.16784, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>

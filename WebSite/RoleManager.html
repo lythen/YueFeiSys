@@ -25,9 +25,9 @@
         });
         function loadTree() {
             $('#cbt').combotree({
-                url: 'AjaxHandler/RoleHandler.ashx',
+                url: 'AjaxHandler/RoleHandler.ashx?type=getlist',
                 required: true,
-                method: 'post',
+                method: 'get',
                 valueField: 'id',
                 textField: 'text',
                 onChange: function (newValue, oldValue) {
@@ -149,14 +149,11 @@
             iconCls: 'icon-edit',
             singleSelect: false,
             idField: 'Role_id',
-            url: 'AjaxHandler/RoleHandler.ashx',
-            method: 'post',
+            url: 'AjaxHandler/RoleHandler.ashx?type=gettable',
+            method: 'get',
             pagination: true,
             pageSize: pagesize,
             pageNumber: pagenumber,
-            queryParams: {
-                type: "getlist"
-            },
             columns: [[
                 { field: 'Role_id', title: '角色ID', width: 60 },
                 { field: 'Role_name', title: '角色名称', width: 200, align: 'center', editor: 'text' },
@@ -167,41 +164,19 @@
                             method: 'post',
                             valueField: 'id',
                             textField: 'text',
-                            url: 'AjaxHandler/RoleHandler.ashx',
-                            queryParams: {
-                                type: "getlist"
-                            },
+                            url: 'AjaxHandler/RoleHandler.ashx?type=getlist',
                             required: true
                         }
                     }
                 },
                 { field: 'action', title: '操作', width: 100, align: 'center',
                     formatter: function (value, row, index) {
-                        if (row.editing) {
-                            var s = '<a href="#" onclick="saverow(this)">保存</a> ';
-                            var c = '<a href="#" onclick="cancelrow(this)">取消</a>';
-                            return s + c;
-                        } else {
-                            var e = '<a href="#" onclick="editrow(this)">编辑</a> ';
-                            var d = '<a href="#" onclick="deleterow(this)">删除</a>';
-                            return e + d;
-                        }
+                        var e = '<a href="#" onclick="linkto(' + row.Role_id + ')">详细</a> ';
+                        var d = '<a href="#" onclick="deleterow(this)">删除</a>';
+                        return e + d;
                     }
                 }
-            ]],
-            onBeforeEdit: function (index, row) {
-                row.editing = true;
-                updateActions(index);
-            },
-            onAfterEdit: function (index, row) {
-                editSave(row);
-                row.editing = false;
-                updateActions(index);
-            },
-            onCancelEdit: function (index, row) {
-                row.editing = false;
-                updateActions(index);
-            }
+            ]]
         });
         //分页事件
         var pg = $('#dg').datagrid("getPager");
@@ -236,8 +211,18 @@
         return parseInt(tr.attr('datagrid-row-index'));
     }
     //编辑行
-    function editrow(target) {
-        $('#dg').datagrid('beginEdit', getRowIndex(target));
+    function linkto(id) {
+        $.get("AjaxHandler/RoleHandler.ashx?type=getlink&role_id=" + id,
+        function (data, status) {
+            if (status == "success") {
+                if (data == "iderror")
+                    alert("获取角色失败。");
+                else if (data == "error") alert("获取连接失败。");
+                else
+                    location.href = "RoleDetail.html?link=" + data;
+
+            } else alert("获取连接失败。");
+        });
     }
     function deleterow(target) {
         $.messager.confirm('警告', '确实删除?', function (r) {
@@ -260,40 +245,6 @@
                 });
             }
         });
-    }
-    function saverow(target) {
-        $('#dg').datagrid('endEdit', getRowIndex(target));
-    }
-    function cancelrow(target) {
-        $('#dg').datagrid('cancelEdit', getRowIndex(target));
-    }
-
-    function editSave(row) {
-        var id = row.Role_id;
-        var pid = row.parent;
-        if (id == pid) {
-            alert("不能把自已作为上级角色。");
-            return;
-        }
-        $.post("AjaxHandler/RoleHandler.ashx",
-                { "type": "edit",
-                    "id": row.Role_id,
-                    "parent_title": row.parent,
-                    "sub_title": row.Role_name
-                },
-                function (data, status) {
-                    if (status == "success") {
-                        if (data == "success")
-                            alert("编辑成功");
-                        else if (data == "exists")
-                            alert("所改名称已存在。");
-                        else if (data == "nosubject")
-                            alert("所选角色已被删除，请刷新列表。");
-                        else
-                            alert("编辑失败");
-                    } else alert("编辑失败。");
-                });
-        reloadTree();
     }
 </script>
 </html>
