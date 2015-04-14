@@ -35,6 +35,9 @@
                 }
             });
         }
+        function reloadTree() {
+            $('#cbt').combotree('reload', 'AjaxHandler/SubjectComboTreeHandler.ashx');
+        }
         function checkAll(obj) {
             var isCheck = obj.checked;
             var boxlist = $("#alist_table").find("input", "[type='checkbox']");
@@ -49,10 +52,10 @@
                 alert("输入科目名称");
             else {
                 if (!isValidString(sub_title)) {
-                    var parent_id = $(".combo-value").val();
+                    var parent_title = $(".combo-value").val();
                     $.post("AjaxHandler/SubjectHandler.ashx",
                     { 'type': 'add',
-                        'parent_id': parent_id,
+                        'parent_title': parent_title,
                         'sub_title': sub_title
                     },
                     function (data, status) {
@@ -60,6 +63,7 @@
                             if (data == "success") {
                                 alert("添加成功。");
                                 loadtable();
+                                reloadTree();
                             }
                             else if (data == "exists") alert("科目重复。");
                             else {
@@ -95,6 +99,8 @@
                         &nbsp;&nbsp;
                         <input type="button" name="button" class="btn btn82 btn_add" onclick="AddSubject();"
                             value="新增" />
+                             <input type="button" name="button" class="btn btn82 btn_add" onclick="reloadTree();"
+                            value="重载" />
                     </div>
                 </div>
             </div>
@@ -252,6 +258,7 @@
                         if (data == "success") {
                             alert("删除成功");
                             //loadtable();
+                            reloadTree();
                             $('#dg').datagrid('deleteRow', getRowIndex(target));
                         } else
                             alert("共删失败");
@@ -288,6 +295,7 @@
                     if (status == "success") {
                         alert("共删除学生" + data + "名");
                         loadtable();
+                        reloadTree();
                     } else alert("删除失败。");
                 });
             }
@@ -303,8 +311,8 @@
         $.post("AjaxHandler/SubjectHandler.ashx",
                 { "type": "edit",
                     "id": row.Subject_id,
-                    "pid": row.parent,
-                    "title": row.Subject_title
+                    "parent_title": row.parent,
+                    "sub_title": row.Subject_title
                 },
                 function (data, status) {
                     if (status == "success") {
@@ -318,6 +326,7 @@
                             alert("编辑失败");
                     } else alert("编辑失败。");
                 });
+        reloadTree();
     }
 </script>
 </html>

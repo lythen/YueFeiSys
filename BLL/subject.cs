@@ -3,6 +3,8 @@ using System.Data;
 using System.Collections.Generic;
 using Lythen.Common;
 using Lythen.Model;
+using System.Web;
+using System.IO;
 namespace Lythen.BLL
 {
     /// <summary>
@@ -11,6 +13,7 @@ namespace Lythen.BLL
     public partial class subject
     {
         private readonly Lythen.DAL.subject dal = new Lythen.DAL.subject();
+        private string CachePath = HttpContext.Current.Server.MapPath("~/DataCache/");
         public subject()
         { }
         #region  BasicMethod
@@ -185,6 +188,14 @@ namespace Lythen.BLL
             return dal.GetListByPage(strWhere, orderby, startIndex, endIndex);
         }
         /// <summary>
+        /// 获取全部列表
+        /// </summary>
+        /// <returns></returns>
+        public DataSet GetListForTable()
+        {
+            return dal.GetListForTable();
+        }
+        /// <summary>
         /// 分页获取数据列表
         /// </summary>
         //public DataSet GetList(int PageSize,int PageIndex,string strWhere)
@@ -194,7 +205,51 @@ namespace Lythen.BLL
 
         #endregion  BasicMethod
         #region  ExtensionMethod
+        /// <summary>
+        /// 获取轻量级数据
+        /// </summary>
+        /// <returns></returns>
+        public DataSet GetLiteList()
+        {
+            return dal.GetLiteList();
+        }
+        /// <summary>
+        /// 从缓存中取科目
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetDataTableByCache()
+        {
+            string cache_file = CachePath + "cache_subject.xml";
+            DataTable dt;
+            if (!File.Exists(cache_file)) goto next;
+            else
+            {
+                dt = new DataTable();
+                dt.ReadXml(cache_file);
+                if (dt.Rows.Count == 0) goto next;
+                else return dt;
+            }
+        next:
+            dt = GetLiteList().Tables[0];
+            dt.WriteXml(cache_file, XmlWriteMode.WriteSchema);
+            return dt;
 
+        }
+        /// <summary>
+        /// 根据文本查找科目ID
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public int GetIdByText(string text)
+        {
+            DataTable dtSub = GetDataTableByCache();
+            foreach (DataRow dr in dtSub.Rows)
+            {
+                if (dr["Subject_title"].ToString() == text)
+                    return (int)dr["Subject_id"];
+            }
+            return 0;
+        }
         #endregion  ExtensionMethod
     }
 }

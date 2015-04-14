@@ -49,7 +49,7 @@ public class SubjectComboTreeHandler : IHttpHandler {
     }
     void WriteNode(DataRow dr,DataTable dtsub,StringBuilder sb,int len)
     {
-        sb.Append("{\"id\":").Append(dr["Subject_id"]).Append(",\"text\":\"").Append(dr["Subject_title"]).Append("\",\"children\":[");
+        sb.Append("{\"id\":\"").Append(dr["Subject_title"]).Append("\",\"text\":\"").Append(dr["Subject_title"]).Append("\",\"children\":[");
         DataRow[] drs = dtsub.Select("Subject_parent=" + dr["Subject_id"].ToString());
         if (drs.Length == 0)
         {

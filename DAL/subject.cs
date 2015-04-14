@@ -290,7 +290,24 @@ namespace Lythen.DAL
             strSql.AppendFormat(" WHERE TT.Row between {0} and {1};select COUNT(1) from subject", startIndex, endIndex);
             return DbHelperSQL.Query(strSql.ToString());
         }
-
+        /// <summary>
+        /// 获取全部列表
+        /// </summary>
+        /// <returns></returns>
+        public DataSet GetListForTable()
+        {
+            string sql = "select T.Subject_id,T.Subject_title,(select b.Subject_title from subject b where b.Subject_id=T.Subject_parent) as parent  from subject T order by T.Subject_id;select COUNT(1) from subject";
+            return DbHelperSQL.Query(sql);
+        }
+        /// <summary>
+        /// 获取轻量级数据
+        /// </summary>
+        /// <returns></returns>
+        public DataSet GetLiteList()
+        {
+            string sql = "select Subject_id,Subject_title from subject";
+            return DbHelperSQL.Query(sql);
+        }
         /*
         /// <summary>
         /// 分页获取数据列表

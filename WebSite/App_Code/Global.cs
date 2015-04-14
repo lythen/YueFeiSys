@@ -18,11 +18,20 @@ public class Global
     public static void DeleteSubjectCache()
     {
         string sub_file = CachePath + "subject.txt";
+        string xml_file = CachePath + "cache_subject.xml";
         if (File.Exists(sub_file))
         {
             try
             {
                 File.Delete(sub_file);
+            }
+            catch (IOException) { }
+        }
+        if (File.Exists(xml_file))
+        {
+            try
+            {
+                File.Delete(xml_file);
             }
             catch (IOException) { }
         }

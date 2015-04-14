@@ -10,21 +10,25 @@ public class SubjectHandler : IHttpHandler
     public void ProcessRequest(HttpContext context)
     {
         context.Response.ContentType = "text/plain";
+        Lythen.BLL.subject BLLSub = new Lythen.BLL.subject();
         string type = context.Request.Form["type"];
         if (type == "edit")
         {
             int sub_id = WebUtility.FilterParam(context.Request.Form["id"]);
-            int parent_id = WebUtility.FilterParam(context.Request.Form["pid"]);
-            string sub_title = WebUtility.InputText(context.Request.Form["title"], context.Request.Form["title"].Length);
-            context.Response.Write(new Lythen.BLL.subject().Update(sub_id, parent_id, sub_title));
+            string parent_title = WebUtility.InputText(context.Request.Form["parent_title"],100);
+            string sub_title = WebUtility.InputText(context.Request.Form["sub_title"], 100);
+            int parent_id = BLLSub.GetIdByText(parent_title.Trim());
+            context.Response.Write(BLLSub.Update(sub_id, parent_id, sub_title));
+            Global.DeleteSubjectCache();
             return;
         }
         else if (type == "delete")
         {
             int id = WebUtility.FilterParam(context.Request.Form["id"]);
-            if (new Lythen.BLL.subject().Delete(id))
+            if (BLLSub.Delete(id))
                 context.Response.Write("success");
             else context.Response.Write("error");
+            Global.DeleteSubjectCache();
             return;
         }
         else if (type == "deletelist")
@@ -36,23 +40,26 @@ public class SubjectHandler : IHttpHandler
                 return;
             }
             ids = ids.Remove(ids.Length - 1, 1);
-            int deRow = new Lythen.BLL.subject().DeleteList(ids);
+            int deRow = BLLSub.DeleteList(ids);
+            Global.DeleteSubjectCache();
             context.Response.Write(deRow);
             return;
         }
         else if (type == "add")
         {
-            int parent_id = WebUtility.FilterParam(context.Request.Form["parent_id"]);
+            string parent_title = WebUtility.InputText(context.Request.Form["parent_title"],100);
             string sub_title = WebUtility.InputText(context.Request.Form["sub_title"], 100);
+            int parent_id = BLLSub.GetIdByText(parent_title.Trim());
             Global.DeleteSubjectCache();
-            context.Response.Write(new Lythen.BLL.subject().Add(parent_id, sub_title));
+            context.Response.Write(BLLSub.Add(parent_id, sub_title));
             return;
         }
         int pageindex, pagesize, size;
         pageindex = WebUtility.FilterParam(context.Request.Form["pageindex"]);
         pagesize = WebUtility.FilterParam(context.Request.Form["pagesize"]); ;
         size = WebUtility.FilterParam(context.Request.Form["size"]);
-        DataSet ds = new Lythen.BLL.subject().GetListByPage("", "Subject_id", pageindex, pagesize);
+        //DataSet ds = new Lythen.BLL.subject().GetListByPage("", "Subject_id", pageindex, pagesize);
+        DataSet ds = new Lythen.BLL.subject().GetListForTable();
         DataTable dtSub = ds.Tables[0];
         DataTable dtCount = new DataTable("table");
         dtCount.Columns.Add(new DataColumn("total", typeof(int)));
