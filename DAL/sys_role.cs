@@ -46,7 +46,7 @@ namespace Lythen.DAL
             strSql.Append("select count(1) from sys_role");
             strSql.Append(" where Role_name=@Role_name");
             SqlParameter[] parameters = {
-					new SqlParameter("@Role_name", SqlDbType.VarBinary,30)
+					new SqlParameter("@Role_name", SqlDbType.VarChar,30)
 			};
             parameters[0].Value = Role_name;
 

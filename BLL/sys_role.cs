@@ -212,7 +212,7 @@ namespace Lythen.BLL
         {
             string cache_key = CACHE_KEY_DATATABLE;
             if (role_id != 0) cache_key = cache_key + role_id;
-            Lythen.Common.DataCache.RemoveCache(CACHE_KEY_DATATABLE);
+            Lythen.Common.DataCache.RemoveAllCache();
         }
         /// <summary>
         /// 获取管理下的全部角色
@@ -311,10 +311,10 @@ namespace Lythen.BLL
             model.Role_parent_id = parent_id;
             if (Add(model) > 0)
             {
-                ClearDataTableCache(0);
+                DeleteCache(parent_id);
                 return "success";
             }
-            else return "erroe";
+            else return "error";
         }
         /// <summary>
         /// 
@@ -340,7 +340,7 @@ namespace Lythen.BLL
             model.Role_parent_id = parent_id;
             if (Update(model))
             {
-                ClearDataTableCache(0);
+                DeleteCache(parent_id);
                 return "success";
             }
             else return "error";
@@ -349,11 +349,15 @@ namespace Lythen.BLL
         {
             if (deRole_id == 1) return "cannot";
             if (myRole_id == deRole_id) return "cannot";
-            //只能把角色添加到自己管辖的科目范围内
+            //只能删除自己管理的角色
             DataTable dtRole = GetManagerRoleByCache(myRole_id);
             DataRow[] drs = dtRole.Select("Role_id=" + deRole_id);
             if (drs.Length == 0) return "nopower";
-            if (Delete(deRole_id)) return "success";
+            if (Delete(deRole_id))
+            {
+                DeleteCache(myRole_id);
+                return "success";
+            }
             else return "error";
         }
         public string GetJsonList(int role_id)
@@ -413,6 +417,23 @@ namespace Lythen.BLL
             }
             sb.Append("]}");
             if (len > 0) sb.Append(",");
+        }
+        void DeleteCache(int role_id)
+        {
+            ClearDataTableCache(0);
+            DataTable dt = GetDataTableByCache();
+            foreach (DataRow dr in dt.Rows)
+            {
+                string path = string.Format("{0}role_{1}.txt", CachePath, dr["Role_id"].ToString());
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        File.Delete(path);
+                    }
+                    catch (IOException) { }
+                }
+            }
         }
 		#endregion  ExtensionMethod
 	}

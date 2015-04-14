@@ -187,7 +187,7 @@
                             return s + c;
                         } else {
                             var e = '<a href="#" onclick="editrow(this)">编辑</a> ';
-                            var d = '<a href="#" onclick="deleterow(this)">删除</a>';
+                            var d = '<a href="#" onclick="deleterow(this,' + row.Subject_id + ')">删除</a>';
                             return e + d;
                         }
                     }
@@ -243,10 +243,9 @@
     function editrow(target) {
         $('#dg').datagrid('beginEdit', getRowIndex(target));
     }
-    function deleterow(target) {
+    function deleterow(target,id) {
         $.messager.confirm('警告', '确实删除?', function (r) {
             if (r) {
-                var id = $('#dg').datagrid('getSelected').Subject_id;
                 $.post("AjaxHandler/SubjectHandler.ashx",
                 { "type": "delete",
                     "id": id
@@ -259,7 +258,7 @@
                             reloadTree();
                             $('#dg').datagrid('deleteRow', getRowIndex(target));
                         } else
-                            alert("共删失败");
+                            alert("删除失败");
                     } else alert("删除失败。");
                 });
             }

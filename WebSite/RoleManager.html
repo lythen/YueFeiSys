@@ -36,7 +36,7 @@
             });
         }
         function reloadTree() {
-            $('#cbt').combotree('reload', 'AjaxHandler/RoleHandler.ashx');
+            $('#cbt').combotree('reload', 'AjaxHandler/RoleHandler.ashx?type=getlist');
         }
         function checkAll(obj) {
             var isCheck = obj.checked;
@@ -47,13 +47,20 @@
         }
         function AddRole() {
             var role_name = $("#txtrolename").val();
-
+            var parent_title = $(".combo-value").val();
             if (role_name == "")
-                alert("输入角色名称");
+                alert("输入角色名称。");
+            else if (parent_title == "") alert("请选择上级角色。");
             else {
-                if (!isValidString(sub_title)) {
-                    var parent_title = $(".combo-value").val();
-                    $.post("AjaxHandler/RoleHandler.ashx",
+                if (isValidString(parent_title)) {
+                    alert('上级角色名称包含危险字符。');
+                    return;
+                }
+                if (isValidString(role_name)) {
+                    alert('角色名称包含危险字符。');
+                    return;
+                }
+                $.post("AjaxHandler/RoleHandler.ashx",
                     { 'type': 'add',
                         'parent_title': parent_title,
                         'role_name': role_name
@@ -66,6 +73,10 @@
                                 reloadTree();
                             }
                             else if (data == "exists") alert("角色重复。");
+                            else if (data == "noparent") alert("请选择上级角色。");
+                            else if (data == "noname") alert("请输入角色名。");
+                            else if (data == "pdelete") alert("所选择的上级角色已被删除，请另选择。");
+                            else if (data == "nopower") alert("没有权限把该角色添加到所选上级角色中。");
                             else {
                                 alert("添加失败。")
                             }
@@ -73,9 +84,6 @@
                             alert("添加失败。");
                         }
                     });
-                } else {
-                    alert('角色名称包含危险字符。');
-                }
             }
         }
     </script>
@@ -94,8 +102,8 @@
                                     <input id="cbt" style="width: 200px;" />
                                 </div>
                             </div>
-                            <span style="color: Red">(不选择上级角色则新增为一级角色)</span> </span>&nbsp;&nbsp; 角色名称：<input
-                                type="text" id="txtrolename" name="name" class="input-text lh30" size="30" />
+                        </span>&nbsp;&nbsp; 角色名称：<input type="text" id="txtrolename" name="name" class="input-text lh30"
+                            size="30" />
                         &nbsp;&nbsp;
                         <input type="button" name="button" class="btn btn82 btn_add" onclick="AddRole();"
                             value="新增" />
@@ -172,7 +180,7 @@
                 { field: 'action', title: '操作', width: 100, align: 'center',
                     formatter: function (value, row, index) {
                         var e = '<a href="#" onclick="linkto(' + row.Role_id + ')">详细</a> ';
-                        var d = '<a href="#" onclick="deleterow(this)">删除</a>';
+                        var d = '<a href="#" onclick="deleterow(this,' + row.Role_id + ')">删除</a>';
                         return e + d;
                     }
                 }
@@ -224,13 +232,12 @@
             } else alert("获取连接失败。");
         });
     }
-    function deleterow(target) {
+    function deleterow(target,id) {
         $.messager.confirm('警告', '确实删除?', function (r) {
             if (r) {
-                var id = $('#dg').datagrid('getSelected').Role_id;
                 $.post("AjaxHandler/RoleHandler.ashx",
                 { "type": "delete",
-                    "id": id
+                    "role_id": id
                 },
                 function (data, status) {
                     if (status == "success") {
@@ -239,8 +246,13 @@
                             //loadtable();
                             reloadTree();
                             $('#dg').datagrid('deleteRow', getRowIndex(target));
-                        } else
-                            alert("共删失败");
+                        } else if (data == "nologin") {
+                            alert("没有登陆或登陆超时，请重新登陆。");
+                            top.location.href = "login.html";
+                        } else if (data == "iderror") alert("角色选择出错。");
+                        else if (data == "nopower") alert("没有权限。");
+                        else
+                            alert("删除失败");
                     } else alert("删除失败。");
                 });
             }

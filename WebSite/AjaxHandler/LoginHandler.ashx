@@ -54,5 +54,9 @@ public class LoginHandler : IHttpHandler, IRequiresSessionState
     private void Logout(HttpContext context)
     {
         context.Session["username"] = "";
+        context.Session["id"] = "";
+        context.Session["realname"] = "";
+        context.Session["role_id"] = "";
+        context.Session["role_name"] = "";
     }
 }
