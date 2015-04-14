@@ -12,6 +12,7 @@ namespace Lythen.Model
 		#region Model
 		private int _role_id;
 		private string _role_name;
+		private int? _role_parent_id=1;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -27,6 +28,14 @@ namespace Lythen.Model
 		{
 			set{ _role_name=value;}
 			get{return _role_name;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public int? Role_parent_id
+		{
+			set{ _role_parent_id=value;}
+			get{return _role_parent_id;}
 		}
 		#endregion Model
 

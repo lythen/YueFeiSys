@@ -37,8 +37,38 @@ namespace Lythen.DAL
 
 			return DbHelperSQL.Exists(strSql.ToString(),parameters);
 		}
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(string Role_name)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from sys_role");
+            strSql.Append(" where Role_name=@Role_name");
+            SqlParameter[] parameters = {
+					new SqlParameter("@Role_name", SqlDbType.VarBinary,30)
+			};
+            parameters[0].Value = Role_name;
 
-
+            return DbHelperSQL.Exists(strSql.ToString(), parameters);
+        }
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int Role_id, string Role_name)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from sys_role");
+            strSql.Append(" where Role_name=@Role_name");
+            strSql.Append(" and Role_id<>@Role_id");
+            SqlParameter[] parameters = {
+					new SqlParameter("@Role_id", SqlDbType.Int,4),
+					new SqlParameter("@Role_name", SqlDbType.VarBinary,30)
+			};
+            parameters[0].Value = Role_id;
+            parameters[1].Value = Role_name;
+            return DbHelperSQL.Exists(strSql.ToString(), parameters);
+        }
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
@@ -46,13 +76,15 @@ namespace Lythen.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into sys_role(");
-			strSql.Append("Role_name)");
+			strSql.Append("Role_name,Role_parent_id)");
 			strSql.Append(" values (");
-			strSql.Append("@Role_name)");
+			strSql.Append("@Role_name,@Role_parent_id)");
 			strSql.Append(";select @@IDENTITY");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Role_name", SqlDbType.VarChar,30)};
+					new SqlParameter("@Role_name", SqlDbType.VarChar,30),
+					new SqlParameter("@Role_parent_id", SqlDbType.Int,4)};
 			parameters[0].Value = model.Role_name;
+			parameters[1].Value = model.Role_parent_id;
 
 			object obj = DbHelperSQL.GetSingle(strSql.ToString(),parameters);
 			if (obj == null)
@@ -71,13 +103,16 @@ namespace Lythen.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("update sys_role set ");
-			strSql.Append("Role_name=@Role_name");
+			strSql.Append("Role_name=@Role_name,");
+			strSql.Append("Role_parent_id=@Role_parent_id");
 			strSql.Append(" where Role_id=@Role_id");
 			SqlParameter[] parameters = {
 					new SqlParameter("@Role_name", SqlDbType.VarChar,30),
+					new SqlParameter("@Role_parent_id", SqlDbType.Int,4),
 					new SqlParameter("@Role_id", SqlDbType.Int,4)};
 			parameters[0].Value = model.Role_name;
-			parameters[1].Value = model.Role_id;
+			parameters[1].Value = model.Role_parent_id;
+			parameters[2].Value = model.Role_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -141,7 +176,7 @@ namespace Lythen.DAL
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select  top 1 Role_id,Role_name from sys_role ");
+			strSql.Append("select  top 1 Role_id,Role_name,Role_parent_id from sys_role ");
 			strSql.Append(" where Role_id=@Role_id");
 			SqlParameter[] parameters = {
 					new SqlParameter("@Role_id", SqlDbType.Int,4)
@@ -177,6 +212,10 @@ namespace Lythen.DAL
 				{
 					model.Role_name=row["Role_name"].ToString();
 				}
+				if(row["Role_parent_id"]!=null && row["Role_parent_id"].ToString()!="")
+				{
+					model.Role_parent_id=int.Parse(row["Role_parent_id"].ToString());
+				}
 			}
 			return model;
 		}
@@ -187,7 +226,7 @@ namespace Lythen.DAL
 		public DataSet GetList(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select Role_id,Role_name ");
+			strSql.Append("select Role_id,Role_name,Role_parent_id ");
 			strSql.Append(" FROM sys_role ");
 			if(strWhere.Trim()!="")
 			{
@@ -207,7 +246,7 @@ namespace Lythen.DAL
 			{
 				strSql.Append(" top "+Top.ToString());
 			}
-			strSql.Append(" Role_id,Role_name ");
+			strSql.Append(" Role_id,Role_name,Role_parent_id ");
 			strSql.Append(" FROM sys_role ");
 			if(strWhere.Trim()!="")
 			{
@@ -291,7 +330,15 @@ namespace Lythen.DAL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
-
+        /// <summary>
+        ///取得详细的角色表
+        /// </summary>
+        /// <returns></returns>
+        public DataSet GetRolesList()
+        {
+            string sql = "select T.Role_id,T.Role_name,T.Role_parent_id,(select B.Role_name from sys_role B where B.Role_id=T.Role_parent_id) as parent from sys_role T";
+            return DbHelperSQL.Query(sql);
+        }
 		#endregion  ExtensionMethod
 	}
 }

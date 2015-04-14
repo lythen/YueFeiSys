@@ -46,23 +46,29 @@ namespace Lythen.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into teacher(");
-			strSql.Append("Teacher_name,Teacher_mobile,Teacher_pic_path,Teacher_info,Teacher_role,Teacher_job)");
+			strSql.Append("Teacher_name,Teacher_realname,Teacher_password,Teacher_mobile,Teacher_pic_path,Teacher_info,Teacher_role,Teacher_job,Teacher_sex)");
 			strSql.Append(" values (");
-			strSql.Append("@Teacher_name,@Teacher_mobile,@Teacher_pic_path,@Teacher_info,@Teacher_role,@Teacher_job)");
+			strSql.Append("@Teacher_name,@Teacher_realname,@Teacher_password,@Teacher_mobile,@Teacher_pic_path,@Teacher_info,@Teacher_role,@Teacher_job,@Teacher_sex)");
 			strSql.Append(";select @@IDENTITY");
 			SqlParameter[] parameters = {
 					new SqlParameter("@Teacher_name", SqlDbType.VarChar,30),
+					new SqlParameter("@Teacher_realname", SqlDbType.VarChar,50),
+					new SqlParameter("@Teacher_password", SqlDbType.VarChar,36),
 					new SqlParameter("@Teacher_mobile", SqlDbType.VarChar,12),
 					new SqlParameter("@Teacher_pic_path", SqlDbType.VarChar,100),
 					new SqlParameter("@Teacher_info", SqlDbType.Text),
 					new SqlParameter("@Teacher_role", SqlDbType.Int,4),
-					new SqlParameter("@Teacher_job", SqlDbType.Int,4)};
+					new SqlParameter("@Teacher_job", SqlDbType.Int,4),
+					new SqlParameter("@Teacher_sex", SqlDbType.VarChar,2)};
 			parameters[0].Value = model.Teacher_name;
-			parameters[1].Value = model.Teacher_mobile;
-			parameters[2].Value = model.Teacher_pic_path;
-			parameters[3].Value = model.Teacher_info;
-			parameters[4].Value = model.Teacher_role;
-			parameters[5].Value = model.Teacher_job;
+			parameters[1].Value = model.Teacher_realname;
+			parameters[2].Value = model.Teacher_password;
+			parameters[3].Value = model.Teacher_mobile;
+			parameters[4].Value = model.Teacher_pic_path;
+			parameters[5].Value = model.Teacher_info;
+			parameters[6].Value = model.Teacher_role;
+			parameters[7].Value = model.Teacher_job;
+			parameters[8].Value = model.Teacher_sex;
 
 			object obj = DbHelperSQL.GetSingle(strSql.ToString(),parameters);
 			if (obj == null)
@@ -82,27 +88,36 @@ namespace Lythen.DAL
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("update teacher set ");
 			strSql.Append("Teacher_name=@Teacher_name,");
+			strSql.Append("Teacher_realname=@Teacher_realname,");
+			strSql.Append("Teacher_password=@Teacher_password,");
 			strSql.Append("Teacher_mobile=@Teacher_mobile,");
 			strSql.Append("Teacher_pic_path=@Teacher_pic_path,");
 			strSql.Append("Teacher_info=@Teacher_info,");
 			strSql.Append("Teacher_role=@Teacher_role,");
-			strSql.Append("Teacher_job=@Teacher_job");
+			strSql.Append("Teacher_job=@Teacher_job,");
+			strSql.Append("Teacher_sex=@Teacher_sex");
 			strSql.Append(" where Teacher_id=@Teacher_id");
 			SqlParameter[] parameters = {
 					new SqlParameter("@Teacher_name", SqlDbType.VarChar,30),
+					new SqlParameter("@Teacher_realname", SqlDbType.VarChar,50),
+					new SqlParameter("@Teacher_password", SqlDbType.VarChar,36),
 					new SqlParameter("@Teacher_mobile", SqlDbType.VarChar,12),
 					new SqlParameter("@Teacher_pic_path", SqlDbType.VarChar,100),
 					new SqlParameter("@Teacher_info", SqlDbType.Text),
 					new SqlParameter("@Teacher_role", SqlDbType.Int,4),
 					new SqlParameter("@Teacher_job", SqlDbType.Int,4),
+					new SqlParameter("@Teacher_sex", SqlDbType.VarChar,2),
 					new SqlParameter("@Teacher_id", SqlDbType.Int,4)};
 			parameters[0].Value = model.Teacher_name;
-			parameters[1].Value = model.Teacher_mobile;
-			parameters[2].Value = model.Teacher_pic_path;
-			parameters[3].Value = model.Teacher_info;
-			parameters[4].Value = model.Teacher_role;
-			parameters[5].Value = model.Teacher_job;
-			parameters[6].Value = model.Teacher_id;
+			parameters[1].Value = model.Teacher_realname;
+			parameters[2].Value = model.Teacher_password;
+			parameters[3].Value = model.Teacher_mobile;
+			parameters[4].Value = model.Teacher_pic_path;
+			parameters[5].Value = model.Teacher_info;
+			parameters[6].Value = model.Teacher_role;
+			parameters[7].Value = model.Teacher_job;
+			parameters[8].Value = model.Teacher_sex;
+			parameters[9].Value = model.Teacher_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -166,7 +181,7 @@ namespace Lythen.DAL
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select  top 1 Teacher_id,Teacher_name,Teacher_mobile,Teacher_pic_path,Teacher_info,Teacher_role,Teacher_job from teacher ");
+			strSql.Append("select  top 1 Teacher_id,Teacher_name,Teacher_realname,Teacher_password,Teacher_mobile,Teacher_pic_path,Teacher_info,Teacher_role,Teacher_job,Teacher_sex from teacher ");
 			strSql.Append(" where Teacher_id=@Teacher_id");
 			SqlParameter[] parameters = {
 					new SqlParameter("@Teacher_id", SqlDbType.Int,4)
@@ -202,6 +217,14 @@ namespace Lythen.DAL
 				{
 					model.Teacher_name=row["Teacher_name"].ToString();
 				}
+				if(row["Teacher_realname"]!=null)
+				{
+					model.Teacher_realname=row["Teacher_realname"].ToString();
+				}
+				if(row["Teacher_password"]!=null)
+				{
+					model.Teacher_password=row["Teacher_password"].ToString();
+				}
 				if(row["Teacher_mobile"]!=null)
 				{
 					model.Teacher_mobile=row["Teacher_mobile"].ToString();
@@ -222,6 +245,10 @@ namespace Lythen.DAL
 				{
 					model.Teacher_job=int.Parse(row["Teacher_job"].ToString());
 				}
+				if(row["Teacher_sex"]!=null)
+				{
+					model.Teacher_sex=row["Teacher_sex"].ToString();
+				}
 			}
 			return model;
 		}
@@ -232,7 +259,7 @@ namespace Lythen.DAL
 		public DataSet GetList(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select Teacher_id,Teacher_name,Teacher_mobile,Teacher_pic_path,Teacher_info,Teacher_role,Teacher_job ");
+			strSql.Append("select Teacher_id,Teacher_name,Teacher_realname,Teacher_password,Teacher_mobile,Teacher_pic_path,Teacher_info,Teacher_role,Teacher_job,Teacher_sex ");
 			strSql.Append(" FROM teacher ");
 			if(strWhere.Trim()!="")
 			{
@@ -252,7 +279,7 @@ namespace Lythen.DAL
 			{
 				strSql.Append(" top "+Top.ToString());
 			}
-			strSql.Append(" Teacher_id,Teacher_name,Teacher_mobile,Teacher_pic_path,Teacher_info,Teacher_role,Teacher_job ");
+			strSql.Append(" Teacher_id,Teacher_name,Teacher_realname,Teacher_password,Teacher_mobile,Teacher_pic_path,Teacher_info,Teacher_role,Teacher_job,Teacher_sex ");
 			strSql.Append(" FROM teacher ");
 			if(strWhere.Trim()!="")
 			{
@@ -354,6 +381,20 @@ namespace Lythen.DAL
             parameters[0].Value = username;
             parameters[1].Value = password;
             return DbHelperSQL.Exists(strSql.ToString(), parameters);
+        }
+        /// <summary>
+        /// 获取教师角色和个人信息
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public DataSet GetTeacherRole(string username)
+        {
+            string sql = "select Teacher_id,Teacher_name,Teacher_realname,Teacher_role,Role_name from teacher inner join sys_role on Role_id=Teacher_role where Teacher_name=@Teacher_name";
+            SqlParameter[] parameters = {
+					new SqlParameter("@Teacher_name", SqlDbType.VarChar,30)
+			};
+            parameters[0].Value = username;
+            return DbHelperSQL.Query(sql, parameters);
         }
 		#endregion  ExtensionMethod
 	}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using System.Collections;
 
 namespace Lythen.Common
 {
@@ -41,5 +42,26 @@ namespace Lythen.Common
 			System.Web.Caching.Cache objCache = HttpRuntime.Cache;
 			objCache.Insert(CacheKey, objObject,null,absoluteExpiration,slidingExpiration);
 		}
+        /// <summary>
+        /// 清除当前应用程序指定CacheKey的Cache值
+        /// <param name="CacheKey">缓存键</param>
+        /// </summary>
+        public static void RemoveCache(string CacheKey)
+        {
+            System.Web.Caching.Cache objCache = HttpRuntime.Cache;
+            objCache.Remove(CacheKey);
+        }
+        /// <summary>
+        /// 清除所有缓存
+        /// </summary>
+        public static void RemoveAllCache()
+        {
+            System.Web.Caching.Cache objCache = HttpRuntime.Cache;
+            IDictionaryEnumerator enumCache = objCache.GetEnumerator();
+            while (enumCache.MoveNext())
+            {
+                objCache.Remove(enumCache.Key.ToString());
+            }
+        }
 	}
 }

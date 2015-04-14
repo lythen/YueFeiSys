@@ -25,9 +25,9 @@
         });
         function loadTree() {
             $('#cbt').combotree({
-                url: 'AjaxHandler/SubjectComboTreeHandler.ashx',
+                url: 'AjaxHandler/RoleHandler.ashx',
                 required: true,
-                method: 'get',
+                method: 'post',
                 valueField: 'id',
                 textField: 'text',
                 onChange: function (newValue, oldValue) {
@@ -36,7 +36,7 @@
             });
         }
         function reloadTree() {
-            $('#cbt').combotree('reload', 'AjaxHandler/SubjectComboTreeHandler.ashx');
+            $('#cbt').combotree('reload', 'AjaxHandler/RoleHandler.ashx');
         }
         function checkAll(obj) {
             var isCheck = obj.checked;
@@ -45,18 +45,18 @@
                 boxlist[i].checked = isCheck;
             }
         }
-        function AddSubject() {
-            var sub_title = $("#txtsubtitle").val();
+        function AddRole() {
+            var role_name = $("#txtrolename").val();
 
-            if (sub_title == "")
-                alert("输入科目名称");
+            if (role_name == "")
+                alert("输入角色名称");
             else {
                 if (!isValidString(sub_title)) {
                     var parent_title = $(".combo-value").val();
-                    $.post("AjaxHandler/SubjectHandler.ashx",
+                    $.post("AjaxHandler/RoleHandler.ashx",
                     { 'type': 'add',
                         'parent_title': parent_title,
-                        'sub_title': sub_title
+                        'role_name': role_name
                     },
                     function (data, status) {
                         if (status == "success") {
@@ -65,7 +65,7 @@
                                 loadtable();
                                 reloadTree();
                             }
-                            else if (data == "exists") alert("科目重复。");
+                            else if (data == "exists") alert("角色重复。");
                             else {
                                 alert("添加失败。")
                             }
@@ -74,7 +74,7 @@
                         }
                     });
                 } else {
-                    alert('科目名称包含危险字符。');
+                    alert('角色名称包含危险字符。');
                 }
             }
         }
@@ -86,18 +86,18 @@
             <div class="box">
                 <div class="box_border">
                     <div class="box_top">
-                        <b class="pl15">添加科目</b></div>
+                        <b class="pl15">添加角色</b></div>
                     <div class="box_center pt10 pb10">
-                        &nbsp;&nbsp;上级科目：<span>
+                        &nbsp;&nbsp;上级角色：<span>
                             <div class="select_border">
                                 <div class="select_containers ">
                                     <input id="cbt" style="width: 200px;" />
                                 </div>
                             </div>
-                            <span style="color: Red">(不选择上级科目则新增为一级科目)</span> </span>&nbsp;&nbsp; 科目名称：<input
-                                type="text" id="txtsubtitle" name="name" class="input-text lh30" size="30" />
+                            <span style="color: Red">(不选择上级角色则新增为一级角色)</span> </span>&nbsp;&nbsp; 角色名称：<input
+                                type="text" id="txtrolename" name="name" class="input-text lh30" size="30" />
                         &nbsp;&nbsp;
-                        <input type="button" name="button" class="btn btn82 btn_add" onclick="AddSubject();"
+                        <input type="button" name="button" class="btn btn82 btn_add" onclick="AddRole();"
                             value="新增" />
                     </div>
                 </div>
@@ -105,13 +105,7 @@
         </div>
         <div id="table" class="mt10">
             <div class="box span10 oh">
-                <div class="box_bottom pb5 pt5 pr10" style="border-top: 1px solid #dadada;">
-                    <div class="search_bar_btn">
-                        <input type="button" id="btnDelete" name="button" class="btn btn82 btn_del" onclick="Delete();"
-                            value="删除" />
-                    </div>
-                </div>
-                <table id="dg" title="科目列表显示">
+                <table id="dg" title="角色列表显示">
                 </table>
             </div>
         </div>
@@ -151,30 +145,32 @@
     var pagenumber = 1;
     function loadtable() {
         $('#dg').datagrid({ loadFilter: pagerFilter }).datagrid({
-            title: '科目列表显示',
+            title: '角色列表显示',
             iconCls: 'icon-edit',
             singleSelect: false,
-            idField: 'Subject_id',
-            url: 'AjaxHandler/SubjectHandler.ashx',
+            idField: 'Role_id',
+            url: 'AjaxHandler/RoleHandler.ashx',
+            method: 'post',
             pagination: true,
             pageSize: pagesize,
             pageNumber: pagenumber,
             queryParams: {
-                pagesize: pagesize,
-                pageindex: 1
+                type: "getlist"
             },
             columns: [[
-                { field: 'cb', title: '全选', width: 100, align: 'center', checkbox: true },
-                { field: 'Subject_id', title: '科目ID', width: 60 },
-                { field: 'Subject_title', title: '科目名称', width: 200, align: 'center', editor: 'text' },
-                { field: 'parent', title: '上级科目', width: 200, align: 'center',
+                { field: 'Role_id', title: '角色ID', width: 60 },
+                { field: 'Role_name', title: '角色名称', width: 200, align: 'center', editor: 'text' },
+                { field: 'parent', title: '上级角色', width: 200, align: 'center',
                     editor: {
                         type: 'combotree',
                         options: {
-                            method: 'get',
+                            method: 'post',
                             valueField: 'id',
                             textField: 'text',
-                            url: 'AjaxHandler/SubjectComboTreeHandler.ashx',
+                            url: 'AjaxHandler/RoleHandler.ashx',
+                            queryParams: {
+                                type: "getlist"
+                            },
                             required: true
                         }
                     }
@@ -246,8 +242,8 @@
     function deleterow(target) {
         $.messager.confirm('警告', '确实删除?', function (r) {
             if (r) {
-                var id = $('#dg').datagrid('getSelected').Subject_id;
-                $.post("AjaxHandler/SubjectHandler.ashx",
+                var id = $('#dg').datagrid('getSelected').Role_id;
+                $.post("AjaxHandler/RoleHandler.ashx",
                 { "type": "delete",
                     "id": id
                 },
@@ -272,45 +268,18 @@
         $('#dg').datagrid('cancelEdit', getRowIndex(target));
     }
 
-    function Delete() {
-        $.messager.confirm('警告', '确实删除?', function (r) {
-            if (r) {
-                var debox = $('#dg').datagrid('getChecked');
-                var len = debox.length;
-                if (len == 0) {
-                    alert("没有选择任何行。");
-                    return;
-                }
-                var ids = "";
-                for (var i = 0; i < len; i++) {
-                    ids += debox[i].Subject_id + ',';
-                }
-                $.post("AjaxHandler/SubjectHandler.ashx",
-                { "type": "deletelist",
-                    "ids": ids
-                },
-                function (data, status) {
-                    if (status == "success") {
-                        alert("共删除学生" + data + "名");
-                        loadtable();
-                        reloadTree();
-                    } else alert("删除失败。");
-                });
-            }
-        });
-    }
     function editSave(row) {
-        var id = row.Subject_id;
+        var id = row.Role_id;
         var pid = row.parent;
         if (id == pid) {
-            alert("不能把自已作为上级科目。");
+            alert("不能把自已作为上级角色。");
             return;
         }
-        $.post("AjaxHandler/SubjectHandler.ashx",
+        $.post("AjaxHandler/RoleHandler.ashx",
                 { "type": "edit",
-                    "id": row.Subject_id,
+                    "id": row.Role_id,
                     "parent_title": row.parent,
-                    "sub_title": row.Subject_title
+                    "sub_title": row.Role_name
                 },
                 function (data, status) {
                     if (status == "success") {
@@ -319,7 +288,7 @@
                         else if (data == "exists")
                             alert("所改名称已存在。");
                         else if (data == "nosubject")
-                            alert("所选科目已被删除，请刷新列表。");
+                            alert("所选角色已被删除，请刷新列表。");
                         else
                             alert("编辑失败");
                     } else alert("编辑失败。");

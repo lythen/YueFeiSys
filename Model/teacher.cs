@@ -12,11 +12,14 @@ namespace Lythen.Model
 		#region Model
 		private int _teacher_id;
 		private string _teacher_name;
+		private string _teacher_realname;
+		private string _teacher_password;
 		private string _teacher_mobile;
 		private string _teacher_pic_path;
 		private string _teacher_info;
 		private int? _teacher_role;
 		private int? _teacher_job;
+		private string _teacher_sex;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -32,6 +35,22 @@ namespace Lythen.Model
 		{
 			set{ _teacher_name=value;}
 			get{return _teacher_name;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Teacher_realname
+		{
+			set{ _teacher_realname=value;}
+			get{return _teacher_realname;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Teacher_password
+		{
+			set{ _teacher_password=value;}
+			get{return _teacher_password;}
 		}
 		/// <summary>
 		/// 
@@ -72,6 +91,14 @@ namespace Lythen.Model
 		{
 			set{ _teacher_job=value;}
 			get{return _teacher_job;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Teacher_sex
+		{
+			set{ _teacher_sex=value;}
+			get{return _teacher_sex;}
 		}
 		#endregion Model
 

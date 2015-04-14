@@ -14,7 +14,6 @@ public static class WebUtility
     /// <returns>The cleaned up version of the input</returns>
     public static string InputText(string text, int maxLength)
     {
-        text = text.Trim();
         if (String.IsNullOrEmpty(text))
             return string.Empty;
         if (text.Length > maxLength)
@@ -24,7 +23,7 @@ public static class WebUtility
         text = Regex.Replace(text, "(\\s*&[n|N][b|B][s|S][p|P];\\s*)+", " ");	//&nbsp;
         text = Regex.Replace(text, "<(.|\\n)*?>", String.Empty);	//any other tags
         text = text.Replace("'", "''");
-        return text;
+        return text.Trim();
     }
     /// <summary>
     /// 过滤TextArea文本
