@@ -39,6 +39,7 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
             case "getlist": GetList(context); break;
             case "gettable": GetTable(context); break;
             case "getlink": GetLink(context); break;
+            case "getdetail": GetDetail(context); break;
         }
     }
  
@@ -138,5 +139,44 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
         {
             context.Response.Write("error");
         }
+    }
+    void GetDetail(HttpContext context)
+    {
+        string link = context.Request.Form["link"];
+        string[] ids;
+        int myid, role_id;
+        try
+        {
+            ids = Lythen.Common.DEncrypt.DESEncrypt.Decrypt(link).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+        }
+        catch (Exception)
+        {
+            context.Response.Write("error");
+            return;
+        }
+        if (ids.Length != 2)
+        {
+            context.Response.Write("error");
+            return;
+        }
+        myid = WebUtility.FilterParam(ids[0]);
+        role_id = WebUtility.FilterParam(ids[1]);
+        if (myid != adm.GetRoleId())
+        {
+            context.Response.Write("nopower");
+            return;
+        }
+        if (role_id == 0)
+        {
+            context.Response.Write("iderror");
+            return;
+        }
+        DataTable dtRole = BLLRole.GetList(role_id).Tables[0];
+        if (dtRole.Rows.Count == 0)
+        {
+            context.Response.Write("nodata");
+            return;
+        }
+        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(dtRole, null));
     }
 }

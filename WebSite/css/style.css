@@ -1,7 +1,8 @@
 @CHARSET "UTF-8";
 html, body { 
-	height:100%; overflow:hidden;
+	height:100%;
 }
+.main{margin-bottom:10px;}
 .top {
  position:absolute; left:0; top:0; right:0;
  height:125px;
@@ -169,5 +170,18 @@ width: 100%;
 .scroll a:hover{ background-position:left bottom;}
 .scroll a.next{background-position:right top;}
 .scroll a.next:hover{ background-position:right bottom;}
+#contain{
+margin-left: 15px;
+margin-right: 15px;
+}
+@media screen and (min-width: 1301px) { 
+#contain {width: 960px} 
+}
+@media screen and (max-width: 1300px) { 
+.abc {width: 700px} 
+} 
+@media screen and (max-width: 1080px) { 
+.abc {width: 500px} 
+} 
 
 

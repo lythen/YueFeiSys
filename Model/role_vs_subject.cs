@@ -2,23 +2,23 @@
 namespace Lythen.Model
 {
 	/// <summary>
-	/// teacher_vs_subject:实体类(属性说明自动提取数据库字段的描述信息)
+	/// role_vs_subject:实体类(属性说明自动提取数据库字段的描述信息)
 	/// </summary>
 	[Serializable]
-	public partial class teacher_vs_subject
+	public partial class role_vs_subject
 	{
-		public teacher_vs_subject()
+		public role_vs_subject()
 		{}
 		#region Model
-		private int _teacher_id;
+		private int _role_id;
 		private int _sub_id;
 		/// <summary>
 		/// 
 		/// </summary>
-		public int teacher_id
+		public int role_id
 		{
-			set{ _teacher_id=value;}
-			get{return _teacher_id;}
+			set{ _role_id=value;}
+			get{return _role_id;}
 		}
 		/// <summary>
 		/// 

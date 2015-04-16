@@ -11,15 +11,14 @@
     <script type="text/javascript" src="Scripts/typecheck.js"></script>
     <title>后台首页</title>
     <style>
-        #contain
+        #table
         {
-            width: 960px;
-            margin-left: 15px;
-            margin-righ: 15px;
+            overflow:scroll;
         }
     </style>
     <script>
         $(function () {
+            window.res
             loadTree();
             loadtable();
         });
@@ -163,9 +162,9 @@
             pageSize: pagesize,
             pageNumber: pagenumber,
             columns: [[
-                { field: 'Role_id', title: '角色ID', width: 60 },
-                { field: 'Role_name', title: '角色名称', width: 200, align: 'center', editor: 'text' },
-                { field: 'parent', title: '上级角色', width: 200, align: 'center',
+                { field: 'Role_id', title: '角色ID', width: 50 },
+                { field: 'Role_name', title: '角色名称', align: 'center', editor: 'text' },
+                { field: 'parent', title: '上级角色', align: 'center',
                     editor: {
                         type: 'combotree',
                         options: {
@@ -177,7 +176,7 @@
                         }
                     }
                 },
-                { field: 'action', title: '操作', width: 100, align: 'center',
+                { field: 'action', title: '操作', align: 'center',
                     formatter: function (value, row, index) {
                         var e = '<a href="#" onclick="linkto(' + row.Role_id + ')">详细</a> ';
                         var d = '<a href="#" onclick="deleterow(this,' + row.Role_id + ')">删除</a>';

@@ -234,7 +234,7 @@ namespace Lythen.DAL
 			}
 			return DbHelperSQL.Query(strSql.ToString());
 		}
-
+        
 		/// <summary>
 		/// 获得前几行数据
 		/// </summary>
@@ -338,6 +338,20 @@ namespace Lythen.DAL
         {
             string sql = "select T.Role_id,T.Role_name,T.Role_parent_id,(select B.Role_name from sys_role B where B.Role_id=T.Role_parent_id) as parent from sys_role T";
             return DbHelperSQL.Query(sql);
+        }
+        /// <summary>
+        /// 根据角色ID取角色详细
+        /// </summary>
+        /// <param name="role_id"></param>
+        /// <returns></returns>
+        public DataSet GetList(int Role_id)
+        {
+            string sql = "select T.Role_id,T.Role_name,T.Role_parent_id,(select B.Role_name from sys_role B where B.Role_id=T.Role_parent_id) as parent from sys_role T where T.Role_id=@Role_id";
+            SqlParameter[] parameters = {
+					new SqlParameter("@Role_id", SqlDbType.Int,4)
+			};
+            parameters[0].Value = Role_id;
+            return DbHelperSQL.Query(sql, parameters);
         }
 		#endregion  ExtensionMethod
 	}

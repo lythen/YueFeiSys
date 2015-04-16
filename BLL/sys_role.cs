@@ -435,6 +435,15 @@ namespace Lythen.BLL
                 }
             }
         }
+        /// <summary>
+        /// 根据角色ID取角色详细
+        /// </summary>
+        /// <param name="role_id"></param>
+        /// <returns></returns>
+        public DataSet GetList(int Role_id)
+        {
+            return dal.GetList(Role_id);
+        }
 		#endregion  ExtensionMethod
 	}
 }

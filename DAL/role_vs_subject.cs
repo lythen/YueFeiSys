@@ -6,11 +6,11 @@ using Lythen.DBUtility;//Please add references
 namespace Lythen.DAL
 {
 	/// <summary>
-	/// 数据访问类:teacher_vs_subject
+	/// 数据访问类:role_vs_subject
 	/// </summary>
-	public partial class teacher_vs_subject
+	public partial class role_vs_subject
 	{
-		public teacher_vs_subject()
+		public role_vs_subject()
 		{}
 		#region  BasicMethod
 
@@ -19,21 +19,21 @@ namespace Lythen.DAL
 		/// </summary>
 		public int GetMaxId()
 		{
-		return DbHelperSQL.GetMaxID("teacher_id", "teacher_vs_subject"); 
+		return DbHelperSQL.GetMaxID("role_id", "role_vs_subject"); 
 		}
 
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(int teacher_id,int sub_id)
+		public bool Exists(int role_id,int sub_id)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select count(1) from teacher_vs_subject");
-			strSql.Append(" where teacher_id=@teacher_id and sub_id=@sub_id ");
+			strSql.Append("select count(1) from role_vs_subject");
+			strSql.Append(" where role_id=@role_id and sub_id=@sub_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@teacher_id", SqlDbType.Int,4),
+					new SqlParameter("@role_id", SqlDbType.Int,4),
 					new SqlParameter("@sub_id", SqlDbType.Int,4)			};
-			parameters[0].Value = teacher_id;
+			parameters[0].Value = role_id;
 			parameters[1].Value = sub_id;
 
 			return DbHelperSQL.Exists(strSql.ToString(),parameters);
@@ -43,17 +43,17 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
-		public bool Add(Lythen.Model.teacher_vs_subject model)
+		public bool Add(Lythen.Model.role_vs_subject model)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("insert into teacher_vs_subject(");
-			strSql.Append("teacher_id,sub_id)");
+			strSql.Append("insert into role_vs_subject(");
+			strSql.Append("role_id,sub_id)");
 			strSql.Append(" values (");
-			strSql.Append("@teacher_id,@sub_id)");
+			strSql.Append("@role_id,@sub_id)");
 			SqlParameter[] parameters = {
-					new SqlParameter("@teacher_id", SqlDbType.Int,4),
+					new SqlParameter("@role_id", SqlDbType.Int,4),
 					new SqlParameter("@sub_id", SqlDbType.Int,4)};
-			parameters[0].Value = model.teacher_id;
+			parameters[0].Value = model.role_id;
 			parameters[1].Value = model.sub_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
@@ -69,18 +69,18 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 更新一条数据
 		/// </summary>
-		public bool Update(Lythen.Model.teacher_vs_subject model)
+		public bool Update(Lythen.Model.role_vs_subject model)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("update teacher_vs_subject set ");
+			strSql.Append("update role_vs_subject set ");
 #warning 系统发现缺少更新的字段，请手工确认如此更新是否正确！ 
-			strSql.Append("teacher_id=@teacher_id,");
+			strSql.Append("role_id=@role_id,");
 			strSql.Append("sub_id=@sub_id");
-			strSql.Append(" where teacher_id=@teacher_id and sub_id=@sub_id ");
+			strSql.Append(" where role_id=@role_id and sub_id=@sub_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@teacher_id", SqlDbType.Int,4),
+					new SqlParameter("@role_id", SqlDbType.Int,4),
 					new SqlParameter("@sub_id", SqlDbType.Int,4)};
-			parameters[0].Value = model.teacher_id;
+			parameters[0].Value = model.role_id;
 			parameters[1].Value = model.sub_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
@@ -97,16 +97,16 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete(int teacher_id,int sub_id)
+		public bool Delete(int role_id,int sub_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("delete from teacher_vs_subject ");
-			strSql.Append(" where teacher_id=@teacher_id and sub_id=@sub_id ");
+			strSql.Append("delete from role_vs_subject ");
+			strSql.Append(" where role_id=@role_id and sub_id=@sub_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@teacher_id", SqlDbType.Int,4),
+					new SqlParameter("@role_id", SqlDbType.Int,4),
 					new SqlParameter("@sub_id", SqlDbType.Int,4)			};
-			parameters[0].Value = teacher_id;
+			parameters[0].Value = role_id;
 			parameters[1].Value = sub_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
@@ -124,19 +124,19 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public Lythen.Model.teacher_vs_subject GetModel(int teacher_id,int sub_id)
+		public Lythen.Model.role_vs_subject GetModel(int role_id,int sub_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select  top 1 teacher_id,sub_id from teacher_vs_subject ");
-			strSql.Append(" where teacher_id=@teacher_id and sub_id=@sub_id ");
+			strSql.Append("select  top 1 role_id,sub_id from role_vs_subject ");
+			strSql.Append(" where role_id=@role_id and sub_id=@sub_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@teacher_id", SqlDbType.Int,4),
+					new SqlParameter("@role_id", SqlDbType.Int,4),
 					new SqlParameter("@sub_id", SqlDbType.Int,4)			};
-			parameters[0].Value = teacher_id;
+			parameters[0].Value = role_id;
 			parameters[1].Value = sub_id;
 
-			Lythen.Model.teacher_vs_subject model=new Lythen.Model.teacher_vs_subject();
+			Lythen.Model.role_vs_subject model=new Lythen.Model.role_vs_subject();
 			DataSet ds=DbHelperSQL.Query(strSql.ToString(),parameters);
 			if(ds.Tables[0].Rows.Count>0)
 			{
@@ -152,14 +152,14 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public Lythen.Model.teacher_vs_subject DataRowToModel(DataRow row)
+		public Lythen.Model.role_vs_subject DataRowToModel(DataRow row)
 		{
-			Lythen.Model.teacher_vs_subject model=new Lythen.Model.teacher_vs_subject();
+			Lythen.Model.role_vs_subject model=new Lythen.Model.role_vs_subject();
 			if (row != null)
 			{
-				if(row["teacher_id"]!=null && row["teacher_id"].ToString()!="")
+				if(row["role_id"]!=null && row["role_id"].ToString()!="")
 				{
-					model.teacher_id=int.Parse(row["teacher_id"].ToString());
+					model.role_id=int.Parse(row["role_id"].ToString());
 				}
 				if(row["sub_id"]!=null && row["sub_id"].ToString()!="")
 				{
@@ -175,8 +175,8 @@ namespace Lythen.DAL
 		public DataSet GetList(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select teacher_id,sub_id ");
-			strSql.Append(" FROM teacher_vs_subject ");
+			strSql.Append("select role_id,sub_id ");
+			strSql.Append(" FROM role_vs_subject ");
 			if(strWhere.Trim()!="")
 			{
 				strSql.Append(" where "+strWhere);
@@ -195,8 +195,8 @@ namespace Lythen.DAL
 			{
 				strSql.Append(" top "+Top.ToString());
 			}
-			strSql.Append(" teacher_id,sub_id ");
-			strSql.Append(" FROM teacher_vs_subject ");
+			strSql.Append(" role_id,sub_id ");
+			strSql.Append(" FROM role_vs_subject ");
 			if(strWhere.Trim()!="")
 			{
 				strSql.Append(" where "+strWhere);
@@ -211,7 +211,7 @@ namespace Lythen.DAL
 		public int GetRecordCount(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select count(1) FROM teacher_vs_subject ");
+			strSql.Append("select count(1) FROM role_vs_subject ");
 			if(strWhere.Trim()!="")
 			{
 				strSql.Append(" where "+strWhere);
@@ -242,7 +242,7 @@ namespace Lythen.DAL
 			{
 				strSql.Append("order by T.sub_id desc");
 			}
-			strSql.Append(")AS Row, T.*  from teacher_vs_subject T ");
+			strSql.Append(")AS Row, T.*  from role_vs_subject T ");
 			if (!string.IsNullOrEmpty(strWhere.Trim()))
 			{
 				strSql.Append(" WHERE " + strWhere);
@@ -267,7 +267,7 @@ namespace Lythen.DAL
 					new SqlParameter("@OrderType", SqlDbType.Bit),
 					new SqlParameter("@strWhere", SqlDbType.VarChar,1000),
 					};
-			parameters[0].Value = "teacher_vs_subject";
+			parameters[0].Value = "role_vs_subject";
 			parameters[1].Value = "sub_id";
 			parameters[2].Value = PageSize;
 			parameters[3].Value = PageIndex;

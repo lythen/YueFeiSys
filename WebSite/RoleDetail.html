@@ -3,8 +3,89 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
+    <base target="right" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="Scripts/typecheck.js"></script>
+    <style>
+    #tdetail
+    {
+        font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+	width:700px;
+	margin:10px 0 0 10px;
+    }
+    #tdetail th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+}
+#tdetail td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+	text-align:center;
+}
+#aback{margin:10px 0 0 10px;}
+.divDe{margin:10px 0 0 10px;width:700px;}
+    </style>
+    <script>
+        var link = getQueryString("link");
+        $.post("AjaxHandler/RoleHandler.ashx",
+        { "type": "getdetail",
+            "link": link
+        },
+        function (data, status) {
+            if (status == "success") {
+                if (data.indexOf("nologin")>0) {
+                    alert("没有登陆或登陆超时，请重新登陆"); top.location.href = "login.html";
+                }
+                switch (data) {
+                    case "error": alert("非法参数。"); history.go(-1); break;
+                    case "nopower": alert("您没有权限。"); history.go(-1); break;
+                    case "iderror": alert("角色获取出错。"); history.go(-1); break;
+                    case "nodata": alert("该角色已被删除或角色获取出错。"); history.go(-1); break;
+                    default: setTable(data); break;
+                }
+            } else {
+                alert("链接出错。");
+                history.go(-1);
+            }
+        });
+        function setTable(json) {
+            var data = jQuery.parseJSON(json);
+                $("#tdID").text(data.Role_id);
+                $("#tdName").text(data.Role_name);
+                $("#tdParent").text(data.parent);
+        }
+    </script>
 </head>
 <body>
-
+    <a id="aback" class="u-btn" href="RoleManager.html">返回角色管理</a>
+    <table id="tdetail" cellpadding="0" cellspacing="0">
+        <tr>
+            <th>角色ID</th>
+            <th>角色名称</th>
+            <th>上级角色</th>
+        </tr>
+        <tr>
+        <td id="tdID"></td>
+        <td id="tdName"></td>
+        <td id="tdParent"></td>
+        </tr>
+    </table>
+    <div class="divDe">
+        
+    </div>
 </body>
 </html>

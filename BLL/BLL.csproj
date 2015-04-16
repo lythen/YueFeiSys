@@ -134,7 +134,7 @@
     <Compile Include="sys_log.cs" />
     <Compile Include="sys_role.cs" />
     <Compile Include="teacher.cs" />
-    <Compile Include="teacher_vs_subject.cs" />
+    <Compile Include="role_vs_subject.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
