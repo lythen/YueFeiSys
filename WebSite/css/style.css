@@ -175,13 +175,13 @@ margin-left: 15px;
 margin-right: 15px;
 }
 @media screen and (min-width: 1301px) { 
-#contain {width: 960px} 
+.divSc {width: 960px} 
 }
 @media screen and (max-width: 1300px) { 
-.abc {width: 700px} 
+.divSc {width: 700px} 
 } 
 @media screen and (max-width: 1080px) { 
-.abc {width: 500px} 
+.divSc {width: 500px} 
 } 
 
 

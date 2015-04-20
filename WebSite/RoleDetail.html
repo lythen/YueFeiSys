@@ -18,7 +18,6 @@
 	border-width: 1px;
 	border-color: #666666;
 	border-collapse: collapse;
-	width:700px;
 	margin:10px 0 0 10px;
     }
     #tdetail th {
@@ -26,7 +25,7 @@
 	padding: 8px;
 	border-style: solid;
 	border-color: #666666;
-	background-color: #dedede;
+	background-color: #d4e7f0;
 }
 #tdetail td {
 	border-width: 1px;
@@ -37,7 +36,7 @@
 	text-align:center;
 }
 #aback{margin:10px 0 0 10px;}
-.divDe{margin:10px 0 0 10px;width:700px;}
+.divDe{margin:10px 0 0 10px;}
     </style>
     <script>
         var link = getQueryString("link");
@@ -72,7 +71,7 @@
 </head>
 <body>
     <a id="aback" class="u-btn" href="RoleManager.html">返回角色管理</a>
-    <table id="tdetail" cellpadding="0" cellspacing="0">
+    <table id="tdetail" class="divSc" cellpadding="0" cellspacing="0">
         <tr>
             <th>角色ID</th>
             <th>角色名称</th>
@@ -84,7 +83,7 @@
         <td id="tdParent"></td>
         </tr>
     </table>
-    <div class="divDe">
+    <div class="divSc divDe">
         
     </div>
 </body>
