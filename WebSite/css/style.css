@@ -183,5 +183,13 @@ margin-right: 15px;
 @media screen and (max-width: 1080px) { 
 .divSc {width: 500px} 
 } 
+.tdnolbd td{border-left:none;}
+.tdnorbd td{border-right:none;}
+.tdnobbd td{border-bottom:none;}
+.tdnotbd td{border-top:none;}
+.nolbd{border-left:none;}
+.norbd{border-right:none;}
+.nobbd{border-bottom:none;}
+.notbd{border-top:none;}
 
 

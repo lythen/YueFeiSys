@@ -37,6 +37,8 @@
 }
 #aback{margin:10px 0 0 10px;}
 .divDe{margin:10px 0 0 10px;}
+.line{width:100%; background-color:Gray; height:1px;}
+.ttl{ margin-top:20px;}
     </style>
     <script>
         var link = getQueryString("link");
@@ -84,7 +86,26 @@
         </tr>
     </table>
     <div class="divSc divDe">
-        
+        <div class="ttl lh30">
+        可选管理科目：</div>
+        <div class="line"></div>
+        <div class="ttl">
+        <table class="list_table tdnolbd tdnorbd tdnotbd notbd nolbd norbd lh30" cellpadding="0" border="0" cellspacing="0">
+        <tr>
+        <td><input type="checkbox" value="1" />语文</td>
+        <td><input type="checkbox" value="2" />四年级作文</td>
+        <td><input type="checkbox" value="3" />二年级基础提高班</td>
+        <td><input type="checkbox" value="3" />二年级基础提高班</td>
+        </tr>
+        <tr>
+        <td><input type="checkbox" value="1" />二年级基础提高班</td>
+        <td><input type="checkbox" value="2" />四年级作文</td>
+        <td><input type="checkbox" value="3" />二年级基础提高班</td>
+        <td><input type="checkbox" value="3" />语文</td>
+        </tr>
+        </table>
+        </div>
+
     </div>
 </body>
 </html>
