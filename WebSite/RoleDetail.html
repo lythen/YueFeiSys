@@ -1,7 +1,10 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<META HTTP-EQUIV="pragma" CONTENT="no-cache"> 
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate"> 
+<META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT"> 
+<META HTTP-EQUIV="expires" CONTENT="0"> 
     <title></title>
     <base target="right" />
     <link rel="stylesheet" href="css/common.css" />
@@ -10,35 +13,55 @@
     <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="Scripts/typecheck.js"></script>
     <style>
-    #tdetail
-    {
-        font-family: verdana,arial,sans-serif;
-	font-size:11px;
-	color:#333333;
-	border-width: 1px;
-	border-color: #666666;
-	border-collapse: collapse;
-	margin:10px 0 0 10px;
-    }
-    #tdetail th {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #666666;
-	background-color: #d4e7f0;
-}
-#tdetail td {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #666666;
-	background-color: #ffffff;
-	text-align:center;
-}
-#aback{margin:10px 0 0 10px;}
-.divDe{margin:10px 0 0 10px;}
-.line{width:100%; background-color:Gray; height:1px;}
-.ttl{ margin-top:20px;}
+        #tdetail
+        {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+            margin: 10px 0 0 10px;
+        }
+        #tdetail th
+        {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #d4e7f0;
+        }
+        #tdetail td
+        {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+            text-align: center;
+        }
+        #aback
+        {
+            margin: 10px 0 0 10px;
+        }
+        .divDe
+        {
+            margin: 10px 0 0 10px;
+        }
+        .btndiv
+        {
+            margin: 10px 0 0 0;
+        }
+        .line
+        {
+            width: 100%;
+            background-color: Gray;
+            height: 1px;
+        }
+        .ttl
+        {
+            margin-top: 20px;
+        }
     </style>
     <script>
         var link = getQueryString("link");
@@ -48,7 +71,7 @@
         },
         function (data, status) {
             if (status == "success") {
-                if (data.indexOf("nologin")>0) {
+                if (data.indexOf("nologin") > 0) {
                     alert("没有登陆或登陆超时，请重新登陆"); top.location.href = "login.html";
                 }
                 switch (data) {
@@ -65,9 +88,29 @@
         });
         function setTable(json) {
             var data = jQuery.parseJSON(json);
-                $("#tdID").text(data.Role_id);
-                $("#tdName").text(data.Role_name);
-                $("#tdParent").text(data.parent);
+            $("#tdID").text(data.Role_id);
+            $("#tdName").text(data.Role_name);
+            $("#tdParent").text(data.parent);
+        }
+        function btnSubmit() {
+            var subList = "";
+            $("[name='checkbox']:checked").each(function () {
+                subList += $(this).val();
+            });
+            $.post("AjaxHandler/RolevsSubjectHandler.ashx",
+            { "type": "update",
+                "subList": subList
+            },
+            function (data, status) {
+                if (status == "success") {
+                    if (data == "success")
+                        alert("更新成功。");
+                    else
+                        alert("更新失败。");
+                }
+                else
+                    alert("更新失败。");
+            });
         }
     </script>
 </head>
@@ -75,37 +118,66 @@
     <a id="aback" class="u-btn" href="RoleManager.html">返回角色管理</a>
     <table id="tdetail" class="divSc" cellpadding="0" cellspacing="0">
         <tr>
-            <th>角色ID</th>
-            <th>角色名称</th>
-            <th>上级角色</th>
+            <th>
+                角色ID
+            </th>
+            <th>
+                角色名称
+            </th>
+            <th>
+                上级角色
+            </th>
         </tr>
         <tr>
-        <td id="tdID"></td>
-        <td id="tdName"></td>
-        <td id="tdParent"></td>
+            <td id="tdID">
+            </td>
+            <td id="tdName">
+            </td>
+            <td id="tdParent">
+            </td>
         </tr>
     </table>
     <div class="divSc divDe">
         <div class="ttl lh30">
-        可选管理科目：</div>
-        <div class="line"></div>
-        <div class="ttl">
-        <table class="list_table tdnolbd tdnorbd tdnotbd notbd nolbd norbd lh30" cellpadding="0" border="0" cellspacing="0">
-        <tr>
-        <td><input type="checkbox" value="1" />语文</td>
-        <td><input type="checkbox" value="2" />四年级作文</td>
-        <td><input type="checkbox" value="3" />二年级基础提高班</td>
-        <td><input type="checkbox" value="3" />二年级基础提高班</td>
-        </tr>
-        <tr>
-        <td><input type="checkbox" value="1" />二年级基础提高班</td>
-        <td><input type="checkbox" value="2" />四年级作文</td>
-        <td><input type="checkbox" value="3" />二年级基础提高班</td>
-        <td><input type="checkbox" value="3" />语文</td>
-        </tr>
-        </table>
+            可选管理科目：</div>
+        <div class="line">
         </div>
-
+        <div class="ttl">
+            <table class="list_table tdnolbd tdnorbd tdnotbd notbd nolbd norbd lh30" cellpadding="0"
+                border="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <input type="checkbox" name='checkbox' value="1" />语文
+                    </td>
+                    <td>
+                        <input type="checkbox" name="checkbox" value="2" />四年级作文
+                    </td>
+                    <td>
+                        <input type="checkbox" name="checkbox" value="3" />二年级基础提高班
+                    </td>
+                    <td>
+                        <input type="checkbox" name="checkbox" value="3" />二年级基础提高班
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" name="checkbox" value="1" />二年级基础提高班
+                    </td>
+                    <td>
+                        <input type="checkbox" name="checkbox" value="2" />四年级作文
+                    </td>
+                    <td>
+                        <input type="checkbox" name="checkbox" value="3" />二年级基础提高班
+                    </td>
+                    <td>
+                        <input type="checkbox" name="checkbox" value="3" />语文
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="btndiv">
+            <a href="javascript:btnSubmit();" class="u-btn">更改</a>
+        </div>
     </div>
 </body>
 </html>

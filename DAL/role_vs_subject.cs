@@ -25,16 +25,14 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(int role_id,int sub_id)
+		public bool Exists(int role_id)
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("select count(1) from role_vs_subject");
-			strSql.Append(" where role_id=@role_id and sub_id=@sub_id ");
+			strSql.Append(" where role_id=@role_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@role_id", SqlDbType.Int,4),
-					new SqlParameter("@sub_id", SqlDbType.Int,4)			};
+					new SqlParameter("@role_id", SqlDbType.Int,4)			};
 			parameters[0].Value = role_id;
-			parameters[1].Value = sub_id;
 
 			return DbHelperSQL.Exists(strSql.ToString(),parameters);
 		}
@@ -47,14 +45,14 @@ namespace Lythen.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into role_vs_subject(");
-			strSql.Append("role_id,sub_id)");
+			strSql.Append("role_id,sub_list)");
 			strSql.Append(" values (");
-			strSql.Append("@role_id,@sub_id)");
+			strSql.Append("@role_id,@sub_list)");
 			SqlParameter[] parameters = {
 					new SqlParameter("@role_id", SqlDbType.Int,4),
-					new SqlParameter("@sub_id", SqlDbType.Int,4)};
+					new SqlParameter("@sub_list", SqlDbType.VarChar,100)};
 			parameters[0].Value = model.role_id;
-			parameters[1].Value = model.sub_id;
+			parameters[1].Value = model.sub_list;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -73,15 +71,13 @@ namespace Lythen.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("update role_vs_subject set ");
-#warning 系统发现缺少更新的字段，请手工确认如此更新是否正确！ 
-			strSql.Append("role_id=@role_id,");
-			strSql.Append("sub_id=@sub_id");
-			strSql.Append(" where role_id=@role_id and sub_id=@sub_id ");
+			strSql.Append("sub_list=@sub_list");
+			strSql.Append(" where role_id=@role_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@role_id", SqlDbType.Int,4),
-					new SqlParameter("@sub_id", SqlDbType.Int,4)};
-			parameters[0].Value = model.role_id;
-			parameters[1].Value = model.sub_id;
+					new SqlParameter("@sub_list", SqlDbType.VarChar,100),
+					new SqlParameter("@role_id", SqlDbType.Int,4)};
+			parameters[0].Value = model.sub_list;
+			parameters[1].Value = model.role_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -97,19 +93,35 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete(int role_id,int sub_id)
+		public bool Delete(int role_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("delete from role_vs_subject ");
-			strSql.Append(" where role_id=@role_id and sub_id=@sub_id ");
+			strSql.Append(" where role_id=@role_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@role_id", SqlDbType.Int,4),
-					new SqlParameter("@sub_id", SqlDbType.Int,4)			};
+					new SqlParameter("@role_id", SqlDbType.Int,4)			};
 			parameters[0].Value = role_id;
-			parameters[1].Value = sub_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
+			if (rows > 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		/// <summary>
+		/// 批量删除数据
+		/// </summary>
+		public bool DeleteList(string role_idlist )
+		{
+			StringBuilder strSql=new StringBuilder();
+			strSql.Append("delete from role_vs_subject ");
+			strSql.Append(" where role_id in ("+role_idlist + ")  ");
+			int rows=DbHelperSQL.ExecuteSql(strSql.ToString());
 			if (rows > 0)
 			{
 				return true;
@@ -124,17 +136,15 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public Lythen.Model.role_vs_subject GetModel(int role_id,int sub_id)
+		public Lythen.Model.role_vs_subject GetModel(int role_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select  top 1 role_id,sub_id from role_vs_subject ");
-			strSql.Append(" where role_id=@role_id and sub_id=@sub_id ");
+			strSql.Append("select  top 1 role_id,sub_list from role_vs_subject ");
+			strSql.Append(" where role_id=@role_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@role_id", SqlDbType.Int,4),
-					new SqlParameter("@sub_id", SqlDbType.Int,4)			};
+					new SqlParameter("@role_id", SqlDbType.Int,4)			};
 			parameters[0].Value = role_id;
-			parameters[1].Value = sub_id;
 
 			Lythen.Model.role_vs_subject model=new Lythen.Model.role_vs_subject();
 			DataSet ds=DbHelperSQL.Query(strSql.ToString(),parameters);
@@ -161,9 +171,9 @@ namespace Lythen.DAL
 				{
 					model.role_id=int.Parse(row["role_id"].ToString());
 				}
-				if(row["sub_id"]!=null && row["sub_id"].ToString()!="")
+				if(row["sub_list"]!=null)
 				{
-					model.sub_id=int.Parse(row["sub_id"].ToString());
+					model.sub_list=row["sub_list"].ToString();
 				}
 			}
 			return model;
@@ -175,7 +185,7 @@ namespace Lythen.DAL
 		public DataSet GetList(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select role_id,sub_id ");
+			strSql.Append("select role_id,sub_list ");
 			strSql.Append(" FROM role_vs_subject ");
 			if(strWhere.Trim()!="")
 			{
@@ -195,7 +205,7 @@ namespace Lythen.DAL
 			{
 				strSql.Append(" top "+Top.ToString());
 			}
-			strSql.Append(" role_id,sub_id ");
+			strSql.Append(" role_id,sub_list ");
 			strSql.Append(" FROM role_vs_subject ");
 			if(strWhere.Trim()!="")
 			{
@@ -240,7 +250,7 @@ namespace Lythen.DAL
 			}
 			else
 			{
-				strSql.Append("order by T.sub_id desc");
+				strSql.Append("order by T.role_id desc");
 			}
 			strSql.Append(")AS Row, T.*  from role_vs_subject T ");
 			if (!string.IsNullOrEmpty(strWhere.Trim()))
@@ -268,7 +278,7 @@ namespace Lythen.DAL
 					new SqlParameter("@strWhere", SqlDbType.VarChar,1000),
 					};
 			parameters[0].Value = "role_vs_subject";
-			parameters[1].Value = "sub_id";
+			parameters[1].Value = "role_id";
 			parameters[2].Value = PageSize;
 			parameters[3].Value = PageIndex;
 			parameters[4].Value = 0;
@@ -279,7 +289,14 @@ namespace Lythen.DAL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
-
+        public DataSet GetManagerSubject(int role_id)
+        {
+            string sql = "select sub_list from role_vs_subject where role_id=@role_id";
+            SqlParameter[] parameters = {
+					new SqlParameter("@role_id", SqlDbType.Int,4)			};
+            parameters[0].Value = role_id;
+            return DbHelperSQL.Query(sql, parameters);
+        }
 		#endregion  ExtensionMethod
 	}
 }

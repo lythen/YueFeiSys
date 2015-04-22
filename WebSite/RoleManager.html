@@ -220,7 +220,7 @@
                     alert("获取角色失败。");
                 else if (data == "error") alert("获取连接失败。");
                 else
-                    location.href = "RoleDetail.html?link=" + data;
+                    location.href = "RoleDetail.html?link=" + data + "&s="+Math.random();
 
             } else alert("获取连接失败。");
         });

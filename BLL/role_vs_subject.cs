@@ -3,6 +3,7 @@ using System.Data;
 using System.Collections.Generic;
 using Lythen.Common;
 using Lythen.Model;
+using System.Web;
 namespace Lythen.BLL
 {
 	/// <summary>
@@ -11,6 +12,8 @@ namespace Lythen.BLL
 	public partial class role_vs_subject
 	{
 		private readonly Lythen.DAL.role_vs_subject dal=new Lythen.DAL.role_vs_subject();
+        private const string CACHE_KEY_DATATABLE = "role_vs_subject";
+        private string CachePath = HttpContext.Current.Server.MapPath("~/DataCache/");
 		public role_vs_subject()
 		{}
 		#region  BasicMethod
@@ -26,9 +29,9 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(int role_id,int sub_id)
+		public bool Exists(int role_id)
 		{
-			return dal.Exists(role_id,sub_id);
+			return dal.Exists(role_id);
 		}
 
 		/// <summary>
@@ -50,34 +53,41 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete(int role_id,int sub_id)
+		public bool Delete(int role_id)
 		{
 			
-			return dal.Delete(role_id,sub_id);
+			return dal.Delete(role_id);
+		}
+		/// <summary>
+		/// 删除一条数据
+		/// </summary>
+		public bool DeleteList(string role_idlist )
+		{
+			return dal.DeleteList(Lythen.Common.PageValidate.SafeLongFilter(role_idlist,0) );
 		}
 
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public Lythen.Model.role_vs_subject GetModel(int role_id,int sub_id)
+		public Lythen.Model.role_vs_subject GetModel(int role_id)
 		{
 			
-			return dal.GetModel(role_id,sub_id);
+			return dal.GetModel(role_id);
 		}
 
 		/// <summary>
 		/// 得到一个对象实体，从缓存中
 		/// </summary>
-		public Lythen.Model.role_vs_subject GetModelByCache(int role_id,int sub_id)
+		public Lythen.Model.role_vs_subject GetModelByCache(int role_id)
 		{
 			
-			string CacheKey = "role_vs_subjectModel-" + role_id+sub_id;
+			string CacheKey = "role_vs_subjectModel-" + role_id;
 			object objModel = Lythen.Common.DataCache.GetCache(CacheKey);
 			if (objModel == null)
 			{
 				try
 				{
-					objModel = dal.GetModel(role_id,sub_id);
+					objModel = dal.GetModel(role_id);
 					if (objModel != null)
 					{
 						int ModelCache = Lythen.Common.ConfigHelper.GetConfigInt("ModelCache");
@@ -162,10 +172,43 @@ namespace Lythen.BLL
 		//{
 			//return dal.GetList(PageSize,PageIndex,strWhere);
 		//}
-
+        DataTable GetManagerSubjectByCache(int role_id){
+            string cache_key = CACHE_KEY_DATATABLE + role_id;
+            object objDataTable = Lythen.Common.DataCache.GetCache(cache_key);
+            if (objDataTable == null)
+            {
+                try
+                {
+                    objDataTable = dal.GetManagerSubject(role_id).Tables[0];
+                    if (objDataTable != null)
+                    {
+                        int ModelCache = Lythen.Common.ConfigHelper.GetConfigInt("DataTableCache");
+                        Lythen.Common.DataCache.SetCache(cache_key, objDataTable, DateTime.Now.AddMinutes(ModelCache), TimeSpan.Zero);
+                    }
+                }
+                catch { }
+            }
+            return (DataTable)objDataTable;
+        }
 		#endregion  BasicMethod
 		#region  ExtensionMethod
-
+        public String Update(string subList, int role_id,int myrole_id)
+        {
+            string[] list = subList.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            if (list == null || list.Length == 0)
+                return "noselect";
+            //查询出当前管理员所管理的科目
+            DataTable dtRoleSub = GetManagerSubjectByCache(myrole_id);
+            if (dtRoleSub.Rows.Count == 0) return "nopower";
+            string mySubList = dtRoleSub.Rows[0]["sub_list"].ToString();
+            if (String.IsNullOrEmpty(mySubList)) return "nopower";
+            //查询传入的科目是否有不包含在当前管理员的科目中的
+            foreach (string sub_id in list)
+            {
+                
+            }
+            return "success";
+        }
 		#endregion  ExtensionMethod
 	}
 }

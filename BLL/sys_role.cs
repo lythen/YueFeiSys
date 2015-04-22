@@ -14,7 +14,7 @@ namespace Lythen.BLL
 	public partial class sys_role
 	{
 		private readonly Lythen.DAL.sys_role dal=new Lythen.DAL.sys_role();
-        private const string CACHE_KEY_DATATABLE = "DataTableRole";
+        private const string CACHE_KEY_DATATABLE = "sys_role";
         private string CachePath = HttpContext.Current.Server.MapPath("~/DataCache/");
 		public sys_role()
 		{}
@@ -239,6 +239,11 @@ namespace Lythen.BLL
             }
             return ReRole;
         }
+        /// <summary>
+        /// 管辖内的科目
+        /// </summary>
+        /// <param name="role_id"></param>
+        /// <returns></returns>
         public DataTable GetManagerRoleByCache(int role_id)
         {
             string cache_key = CACHE_KEY_DATATABLE + role_id;

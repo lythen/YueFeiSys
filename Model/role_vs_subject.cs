@@ -11,7 +11,7 @@ namespace Lythen.Model
 		{}
 		#region Model
 		private int _role_id;
-		private int _sub_id;
+		private string _sub_list;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -23,10 +23,10 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int sub_id
+		public string sub_list
 		{
-			set{ _sub_id=value;}
-			get{return _sub_id;}
+			set{ _sub_list=value;}
+			get{return _sub_list;}
 		}
 		#endregion Model
 
