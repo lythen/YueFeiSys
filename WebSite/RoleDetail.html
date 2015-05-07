@@ -95,16 +95,23 @@
         function btnSubmit() {
             var subList = "";
             $("[name='checkbox']:checked").each(function () {
-                subList += $(this).val();
+                subList += $(this).val() + ",";
             });
             $.post("AjaxHandler/RolevsSubjectHandler.ashx",
             { "type": "update",
-                "subList": subList
+                "subList": subList,
+                "role_id":$("#tdID").text()
             },
             function (data, status) {
                 if (status == "success") {
                     if (data == "success")
                         alert("更新成功。");
+                    else if (data == "nopower")
+                        alert("没有权限。");
+                    else if (data == "selecterror")
+                        alert("选择出错。");
+                    else if (data=="noselect")
+                        alert("没有选择科目。");
                     else
                         alert("更新失败。");
                 }
@@ -147,16 +154,16 @@
                 border="0" cellspacing="0">
                 <tr>
                     <td>
-                        <input type="checkbox" name='checkbox' value="1" />语文
+                        <input type="checkbox" name='checkbox' value="1" /> 语文
                     </td>
                     <td>
-                        <input type="checkbox" name="checkbox" value="2" />四年级作文
+                        <input type="checkbox" name="checkbox" value="2" /> 四年级作文
                     </td>
                     <td>
-                        <input type="checkbox" name="checkbox" value="3" />二年级基础提高班
+                        <input type="checkbox" name="checkbox" value="3" /> 二年级基础提高班
                     </td>
                     <td>
-                        <input type="checkbox" name="checkbox" value="3" />二年级基础提高班
+                        <input type="checkbox" id="checkbox3" name="checkbox" value="3" /> <label for="checkbox3">二年级基础提高班</label>
                     </td>
                 </tr>
                 <tr>

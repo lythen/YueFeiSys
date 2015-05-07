@@ -174,7 +174,7 @@ namespace Lythen.BLL
 		//}
         DataTable GetManagerSubjectByCache(int role_id){
             string cache_key = CACHE_KEY_DATATABLE + role_id;
-            object objDataTable = Lythen.Common.DataCache.GetCache(cache_key);
+            object objDataTable = null; //Lythen.Common.DataCache.GetCache(cache_key);
             if (objDataTable == null)
             {
                 try
@@ -186,13 +186,13 @@ namespace Lythen.BLL
                         Lythen.Common.DataCache.SetCache(cache_key, objDataTable, DateTime.Now.AddMinutes(ModelCache), TimeSpan.Zero);
                     }
                 }
-                catch { }
+                catch(Exception ex) { }
             }
             return (DataTable)objDataTable;
         }
 		#endregion  BasicMethod
 		#region  ExtensionMethod
-        public String Update(string subList, int role_id,int myrole_id)
+        public String Update(string subList,int myrole_id,int role_id)
         {
             string[] list = subList.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             if (list == null || list.Length == 0)
@@ -200,14 +200,35 @@ namespace Lythen.BLL
             //查询出当前管理员所管理的科目
             DataTable dtRoleSub = GetManagerSubjectByCache(myrole_id);
             if (dtRoleSub.Rows.Count == 0) return "nopower";
-            string mySubList = dtRoleSub.Rows[0]["sub_list"].ToString();
-            if (String.IsNullOrEmpty(mySubList)) return "nopower";
+
             //查询传入的科目是否有不包含在当前管理员的科目中的
+            bool isContain = false;
             foreach (string sub_id in list)
             {
-                
+                isContain = false;
+                int subject_id = WebUtility.FilterParam(sub_id);
+                if (subject_id == 0) return "selecterror";
+                foreach (DataRow dr in dtRoleSub.Rows)
+                {
+                    if ((int)dr["Subject_id"] == subject_id)
+                    {
+                        isContain = true;
+                        break;
+                    }
+                }
+                if (!isContain) return "nopower";
             }
-            return "success";
+            //判断是否有管理该角色的权限
+            DataTable dtRole = new BLL.sys_role().GetDataTableByCache();
+            Common.Tree.RoleTree tree = new Common.Tree.RoleTree(dtRole, 0, "Role_parent_id", "Role_id");
+            tree.Creat();
+            if (!tree.isParent(myrole_id, role_id)) return "nopower";
+            Model.role_vs_subject modelrvs = new Model.role_vs_subject();
+            modelrvs.role_id = role_id;
+            modelrvs.sub_list = subList;
+            if (Update(modelrvs))
+                return "success";
+            else return "error";
         }
 		#endregion  ExtensionMethod
 	}

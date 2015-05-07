@@ -175,7 +175,11 @@
     <Compile Include="RMB.cs" />
     <Compile Include="StringPlus.cs" />
     <Compile Include="TimeParser.cs" />
+    <Compile Include="Tree\Node.cs" />
+    <Compile Include="Tree\RoleTree.cs" />
+    <Compile Include="Tree\Tree.cs" />
     <Compile Include="UrlOper.cs" />
+    <Compile Include="WebUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

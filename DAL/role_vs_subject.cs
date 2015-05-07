@@ -291,11 +291,10 @@ namespace Lythen.DAL
 		#region  ExtensionMethod
         public DataSet GetManagerSubject(int role_id)
         {
-            string sql = "select sub_list from role_vs_subject where role_id=@role_id";
             SqlParameter[] parameters = {
 					new SqlParameter("@role_id", SqlDbType.Int,4)			};
             parameters[0].Value = role_id;
-            return DbHelperSQL.Query(sql, parameters);
+            return DbHelperSQL.RunProcedure("GetRolevsSubject", parameters, "ds");
         }
 		#endregion  ExtensionMethod
 	}

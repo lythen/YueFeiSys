@@ -2,8 +2,8 @@
 
 using System;
 using System.Web;
-
-public class RolevsSubjectHandler : IHttpHandler {
+using System.Web.SessionState;
+public class RolevsSubjectHandler : IHttpHandler,IRequiresSessionState {
 
     Admin adm = new Admin();
     int myrole_id;
@@ -28,9 +28,13 @@ public class RolevsSubjectHandler : IHttpHandler {
     private void Update(HttpContext context)
     {
         string subList = WebUtility.InputText(context.Request.Form["subList"], 200);
+        if (String.IsNullOrEmpty(subList))
+        {
+            context.Response.Write("noselect");
+            return;
+        }
+        subList = subList.Substring(0, subList.Length - 1);
         int role_id = WebUtility.FilterParam(context.Request.Form["role_id"]);
-        if (role_id == 0) context.Response.Write("iderror");
-        if (string.IsNullOrEmpty(subList)) context.Response.Write("noselect");
-        else context.Response.Write(new Lythen.BLL.role_vs_subject().Update(subList, role_id,myrole_id));
+        context.Response.Write(new Lythen.BLL.role_vs_subject().Update(subList, myrole_id, role_id));
     }
 }
