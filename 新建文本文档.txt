@@ -1,0 +1,32 @@
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[GetRoleDetail]
+	-- Add the parameters for the stored procedure here
+	@Role_id int,
+	@set_Role_id int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	select T.Role_id,T.Role_name,T.Role_parent_id,
+(select B.Role_name from sys_role B where B.Role_id=T.Role_parent_id) as parent 
+from sys_role T where T.Role_id=@Role_id
+	if @Role_id=1
+	begin
+		select Subject_id,Subject_title,Subject_parent from subject	
+	end
+	else
+	begin
+		select Subject_id,Subject_title,Subject_parent from subject
+		where Subject_id in (select col from dbo.strSplit((select sub_list from role_vs_subject where role_id=@Role_id),','))
+	end
+	select Subject_id,Subject_title,Subject_parent from subject
+		where Subject_id in (select col from dbo.strSplit((select sub_list from role_vs_subject where role_id=@set_Role_id),','))
+END
+GO
