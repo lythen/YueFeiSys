@@ -344,14 +344,15 @@ namespace Lythen.DAL
         /// </summary>
         /// <param name="role_id"></param>
         /// <returns></returns>
-        public DataSet GetList(int Role_id)
+        public DataSet GetList(int Role_id,int ser_role_id)
         {
-            string sql = "select T.Role_id,T.Role_name,T.Role_parent_id,(select B.Role_name from sys_role B where B.Role_id=T.Role_parent_id) as parent from sys_role T where T.Role_id=@Role_id";
             SqlParameter[] parameters = {
-					new SqlParameter("@Role_id", SqlDbType.Int,4)
+					new SqlParameter("@Role_id", SqlDbType.Int,4),
+					new SqlParameter("@set_Role_id", SqlDbType.Int,4)
 			};
             parameters[0].Value = Role_id;
-            return DbHelperSQL.Query(sql, parameters);
+            parameters[1].Value = ser_role_id;
+            return DbHelperSQL.RunProcedure("GetRoleDetail", parameters, "ds");
         }
 		#endregion  ExtensionMethod
 	}

@@ -171,12 +171,12 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
             context.Response.Write("iderror");
             return;
         }
-        DataTable dtRole = BLLRole.GetList(role_id).Tables[0];
-        if (dtRole.Rows.Count == 0)
+        DataTable dt = BLLRole.GetList(myrole_id, role_id);
+        if (dt == null)
         {
             context.Response.Write("nodata");
             return;
         }
-        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(dtRole, null));
+        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(dt, null));
     }
 }

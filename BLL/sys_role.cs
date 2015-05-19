@@ -445,9 +445,71 @@ namespace Lythen.BLL
         /// </summary>
         /// <param name="role_id"></param>
         /// <returns></returns>
-        public DataSet GetList(int Role_id)
+        public DataTable GetList(int Role_id,int set_role_id)
         {
-            return dal.GetList(Role_id);
+            //0 角色  1 当前角色管理的科目 2要修改的角色管理的科目
+            DataSet ds = dal.GetList(Role_id, set_role_id);
+            if (ds.Tables[0].Rows.Count == 0) return null;
+            int row2Len = ds.Tables[2].Rows.Count;
+            Common.Tree.RoleTree tree = new Common.Tree.RoleTree(ds.Tables[1], "Subject_parent", "Subject_id","Subject_title");
+            Common.Tree.Node[] nodes = tree.CreateUnknowRootTree();
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[");
+            int len = 0;
+            foreach (int index in nodes[0].Child)
+            {
+                if (len > 0) sb.Append(",");
+                sb.Append("{").Append("\"id\":").Append(nodes[index].Weight).Append(",\"text\":\"").Append(nodes[index].Name).Append("\",\"state\":\"open\"");
+                if (row2Len > 0)
+                {
+                    DataRow[] drs = ds.Tables[2].Select("Subject_id=" + nodes[index].Weight);
+                    if (drs.Length > 0)
+                        sb.Append(",\"checked\":true");
+                }
+                if (nodes[index].Child.Count > 0)
+                {
+                    sb.Append(",\"children\":[");
+                    RecursiveSetRBJson(sb, nodes, index, ds.Tables[2], row2Len);
+                    sb.Append("]");
+                }
+                sb.Append("}");
+                len++;
+            }
+            sb.Append("]");
+            
+            DataTable outtable = new DataTable("table");
+            outtable.Columns.Add(new DataColumn("dtrole", typeof(DataTable)));
+            outtable.Columns.Add(new DataColumn("subjson", typeof(string)));
+            DataRow dr = outtable.NewRow();
+            dr[0] = ds.Tables[0].Copy();
+            if (sb.Length < 3)
+                dr[1] = "nodata";
+            else dr[1] = sb.ToString();
+            outtable.Rows.Add(dr);
+            return outtable;
+        }
+        private void RecursiveSetRBJson(StringBuilder sb, Common.Tree.Node[] nodes, int parent, DataTable dt2, int row2Len)
+        {
+            int len = 0;
+            foreach (int index in nodes[parent].Child)
+            {
+                if (len > 0) sb.Append(",");
+                sb.Append("{").Append("\"id\":").Append(nodes[index].Weight).Append(",\"text\":\"").Append(nodes[index].Name).Append("\",\"state\":\"open\"");
+                if (row2Len > 0)
+                {
+                    DataRow[] drs = dt2.Select("Subject_id=" + nodes[index].Weight);
+                    if (drs.Length > 0)
+                        sb.Append(",\"checked\":true");
+                }
+                if (nodes[index].Child.Count > 0)
+                {
+                    sb.Append(",\"children\":[");
+                    RecursiveSetRBJson(sb, nodes, index, dt2,row2Len);
+                    sb.Append("]");
+                }
+                sb.Append("}");
+                len++;
+            }
         }
 		#endregion  ExtensionMethod
 	}

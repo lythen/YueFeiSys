@@ -10,13 +10,14 @@
     <link rel="stylesheet" href="css/common.css" />
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/easyui2.css" />
     <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="Scripts/typecheck.js"></script>
     <style>
         #tdetail
         {
-            font-family: verdana,arial,sans-serif;
-            font-size: 11px;
+            font-size: 14px;
             color: #333333;
             border-width: 1px;
             border-color: #666666;
@@ -50,7 +51,7 @@
         }
         .btndiv
         {
-            margin: 10px 0 0 0;
+            margin: 20px 0 0 80px;
         }
         .line
         {
@@ -62,6 +63,7 @@
         {
             margin-top: 20px;
         }
+        #tt{margin-left:80px;}
     </style>
     <script>
         var link = getQueryString("link");
@@ -88,9 +90,26 @@
         });
         function setTable(json) {
             var data = jQuery.parseJSON(json);
-            $("#tdID").text(data.Role_id);
-            $("#tdName").text(data.Role_name);
-            $("#tdParent").text(data.parent);
+            var role = data.dtrole;
+            if (role.length > 0) {
+                $("#tdID").text(role[0].Role_id);
+                $("#tdName").text(role[0].Role_name);
+                $("#tdParent").text(role[0].parent);
+            }
+            var subject = data.subjson;
+            if (subject == "nodata") {
+                $('#tt').text("没有可选的科目。");
+                return;
+            }
+            var subjson = jQuery.parseJSON(subject);
+            $('#tt').tree({
+                data: subjson,
+                checkbox:true,
+                onClick: function (node) {
+                    var cbox = $('#tt').tree('getChecked', node.target);
+                    $('#tt').tree('check',node.target);
+                }
+            });
         }
         function btnSubmit() {
             var subList = "";
@@ -150,37 +169,7 @@
         <div class="line">
         </div>
         <div class="ttl">
-            <table class="list_table tdnolbd tdnorbd tdnotbd notbd nolbd norbd lh30" cellpadding="0"
-                border="0" cellspacing="0">
-                <tr>
-                    <td>
-                        <input type="checkbox" name='checkbox' value="1" /> 语文
-                    </td>
-                    <td>
-                        <input type="checkbox" name="checkbox" value="2" /> 四年级作文
-                    </td>
-                    <td>
-                        <input type="checkbox" name="checkbox" value="3" /> 二年级基础提高班
-                    </td>
-                    <td>
-                        <input type="checkbox" id="checkbox3" name="checkbox" value="3" /> <label for="checkbox3">二年级基础提高班</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" name="checkbox" value="1" />二年级基础提高班
-                    </td>
-                    <td>
-                        <input type="checkbox" name="checkbox" value="2" />四年级作文
-                    </td>
-                    <td>
-                        <input type="checkbox" name="checkbox" value="3" />二年级基础提高班
-                    </td>
-                    <td>
-                        <input type="checkbox" name="checkbox" value="3" />语文
-                    </td>
-                </tr>
-            </table>
+            <ul id="tt"></ul>
         </div>
         <div class="btndiv">
             <a href="javascript:btnSubmit();" class="u-btn">更改</a>
