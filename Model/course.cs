@@ -18,7 +18,7 @@ namespace Lythen.Model
 		private DateTime? _course_time;
 		private string _course_info;
 		private int? _course_choool_id;
-		private string _course_cost;
+		private decimal? _course_cost;
 		private bool _course_status;
 		/// <summary>
 		/// 
@@ -87,7 +87,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Course_cost
+		public decimal? Course_cost
 		{
 			set{ _course_cost=value;}
 			get{return _course_cost;}

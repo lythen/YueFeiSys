@@ -26,7 +26,7 @@ from sys_role T where T.Role_id=@Role_id
 		select Subject_id,Subject_title,Subject_parent from subject
 		where Subject_id in (select col from dbo.strSplit((select sub_list from role_vs_subject where role_id=@Role_id),','))
 	end
-	select Subject_id,Subject_title,Subject_parent from subject
+	select Subject_id from subject
 		where Subject_id in (select col from dbo.strSplit((select sub_list from role_vs_subject where role_id=@set_Role_id),','))
 END
 GO

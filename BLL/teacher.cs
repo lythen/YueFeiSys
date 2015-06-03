@@ -191,6 +191,23 @@ namespace Lythen.BLL
         {
             return dal.GetTeacherRole(username);
         }
+        /// <summary>
+        /// 获取教师列表
+        /// </summary>
+        /// <returns></returns>
+        public DataSet GetTeacherList()
+        {
+            return dal.GetTeacherList();
+        }
+        /// <summary>
+        /// 获取教师详细信息
+        /// </summary>
+        /// <param name="Teacher_id"></param>
+        /// <returns></returns>
+        public DataSet GetDetail(int Teacher_id)
+        {
+            return dal.GetDetail(Teacher_id);
+        }
 		#endregion  ExtensionMethod
 	}
 }

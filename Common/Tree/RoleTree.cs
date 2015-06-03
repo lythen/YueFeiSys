@@ -195,13 +195,15 @@ namespace Lythen.Common.Tree
                 index++;
             }
             if (data[index].Parent == parent) return true;
-            else return RecursiveIsParent(data[index].Parent);
+            else return RecursiveIsParent(data[index].Parent,parent);
         }
-        bool RecursiveIsParent(int index)
+        bool RecursiveIsParent(int index,int parent)
         {
             if (data[index].Parent == -1) return false;
             int temp_parent = data[index].Parent;
-            return RecursiveIsParent(temp_parent);
+            if (temp_parent == parent) return true;
+            else
+            return RecursiveIsParent(temp_parent, parent);
         }
     }
 }

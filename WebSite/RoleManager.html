@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
     <base target="right" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="css/common.css" />
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -10,6 +11,9 @@
     <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="Scripts/typecheck.js"></script>
     <title>后台首页</title>
+    <style>
+        .combo{border:none;}
+    </style>
     <script>
         $(function () {
             window.res
@@ -18,7 +22,7 @@
         });
         function loadTree() {
             $('#cbt').combotree({
-                url: 'AjaxHandler/RoleHandler.ashx?type=getlist',
+                url: 'AjaxHandler/RoleHandler.ashx?type=getlist&istxt=false',
                 required: true,
                 method: 'get',
                 valueField: 'id',
@@ -40,22 +44,18 @@
         }
         function AddRole() {
             var role_name = $("#txtrolename").val();
-            var parent_title = $(".combo-value").val();
+            var parent_id = $("#cbt").combotree("getValue");
             if (role_name == "")
                 alert("输入角色名称。");
-            else if (parent_title == "") alert("请选择上级角色。");
+            else if (parent_id == "0") alert("请选择上级角色。");
             else {
-                if (isValidString(parent_title)) {
-                    alert('上级角色名称包含危险字符。');
-                    return;
-                }
                 if (isValidString(role_name)) {
                     alert('角色名称包含危险字符。');
                     return;
                 }
                 $.post("AjaxHandler/RoleHandler.ashx",
                     { 'type': 'add',
-                        'parent_title': parent_title,
+                        'parent_id': parent_title,
                         'role_name': role_name
                     },
                     function (data, status) {
@@ -89,17 +89,29 @@
                     <div class="box_top">
                         <b class="pl15">添加角色</b></div>
                     <div class="box_center pt10 pb10">
-                        &nbsp;&nbsp;上级角色：<span>
-                            <div class="select_border">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                    <td>&nbsp;&nbsp;上级角色：</td>
+                    <td>
+                    <div class="select_border">
                                 <div class="select_containers ">
                                     <input id="cbt" style="width: 200px;" />
                                 </div>
                             </div>
-                        </span>&nbsp;&nbsp; 角色名称：<input type="text" id="txtrolename" name="name" class="input-text lh30"
+                    </td>
+                    <td>&nbsp;&nbsp; 角色名称：</td>
+                    <td>
+                    <input type="text" id="txtrolename" name="name" class="input-text lh30"
                             size="30" />
-                        &nbsp;&nbsp;
+                    </td>
+                    <td>
+                    &nbsp;&nbsp;
                         <input type="button" name="button" class="btn btn82 btn_add" onclick="AddRole();"
                             value="新增" />
+                    </td>
+                    <td></td>
+                    </tr>
+                    </table>
                     </div>
                 </div>
             </div>
@@ -165,7 +177,7 @@
                             method: 'post',
                             valueField: 'id',
                             textField: 'text',
-                            url: 'AjaxHandler/RoleHandler.ashx?type=getlist',
+                            url: 'AjaxHandler/RoleHandler.ashx?type=getlist&istxt=true',
                             required: true
                         }
                     }
@@ -213,7 +225,7 @@
     }
     //编辑行
     function linkto(id) {
-        $.get("AjaxHandler/RoleHandler.ashx?type=getlink&role_id=" + id,
+        $.get("AjaxHandler/CommonHandler.ashx?type=getlink&id=" + id,
         function (data, status) {
             if (status == "success") {
                 if (data == "iderror")

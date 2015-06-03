@@ -39,11 +39,10 @@
 {
     width:430px;
     height:340px;
+    background-color:White;
 }
 .loginarea
 {
-    background-image:url("../images/login_area.png");
-    background-repeat:no-repeat;
     width:100%;
     height:100%;
 }
@@ -77,6 +76,9 @@
 .tds
 {
     height:32px;
+    background-image:url("../images/line.gif");
+    background-repeat:repeat-x;
+    background-position:top;
 }
 .tdf
 {
@@ -115,13 +117,13 @@
 .txtlogin
 {
     border:none;
-    height:35px;
-    width:205px;
-    margin-left:100px;
-    float:left;
+    height:40px;
+    width:210px;
     background-color:White;
     font-size:20px;
     padding-left:5px;
+    padding-right:5px;
+    line-height:35px;
 }
 .cbklogin
 {
@@ -134,4 +136,43 @@
 {
     float:left;
     font-size:17px;
+}
+.pictxt
+{
+    float:left;
+    width:37px;
+    height:40px;
+    background-image:url("../images/usertx.png");
+    background-repeat:no-repeat;
+    background-position:center;
+}
+.pictxtp
+{
+    float:left;
+    width:37px;
+    height:40px;
+    background-image:url("../images/pwdLock.png");
+    background-repeat:no-repeat;
+    background-position:center;
+}
+.infotxt
+{
+    width:45px;
+    float:left;
+    height:40px;
+    color:#abaaaa;
+    font-size:14px;
+    line-height:40px;
+}
+.inputtxt
+{
+    float:left;
+    width:220px;
+    margin-left:5px;
+}
+.tdin
+{
+    border:1px solid #c9c9c9;
+    width:320px;
+    height:45px;
 }

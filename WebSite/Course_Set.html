@@ -12,12 +12,20 @@
     <script type="text/javascript" src="Scripts/typecheck.js"></script>
     <title>后台首页</title>
     <style>
-    #contain{width:960px;margin-left:15px;margin-righ:15px;}
+    #contain{width:960px;margin-left:15px;margin-right:15px;}
+    #addtb td{height:40px;}
+    .input-text{padding:0px 5px 0px 5px}
+    .combo{border:none;}
     </style>
     <script>
         $(function () {
             loadTree();
-            $('#txtdate').datetimebox({ required: true });
+            $('#txtdate').timespinner({
+                min: '00:00',
+                required: true,
+                showSeconds: true
+            });
+            $('#txtdate').timespinner("setValue", "00:00:00");
         });
         function loadTree() {
             $('#cbt').combotree({
@@ -89,7 +97,7 @@
           <div class="box_border">
             <div class="box_top"><b class="pl15">添加课程</b></div>
             <div class="box_center pt10 pb10">
-            <table cellpadding="0" cellspacing="0" border="0">
+            <table id="addtb" cellpadding="0" cellspacing="0" border="0">
             <tr>
             <td>&nbsp;&nbsp;课目筛选：</td>
             <td><span>
@@ -99,26 +107,36 @@
                         </div> 
                       </div> 
                     </span></td>
-            <td>&nbsp;&nbsp;课程名称：</td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;课程名称：</td>
             <td><input type="text" id="txtcourse" name="name" class="input-text lh30" style="width:200px;" /></td>
-            <td>&nbsp;&nbsp;
-            <input type="button" name="button" onclick="AddCourse();" class="btn btn82 btn_add" value="新增"/> </td>
+            <td> </td>
             </tr>
             <tr>
             <td>&nbsp;&nbsp;选择老师：</td>
             <td><span>
                       <div class="select_border"> 
                         <div class="select_containers "> 
-                        <select name="" id="select_t" class="select"> 
+                        <select name="" id="select_t"> 
                         <option value="1">肖秤</option> 
                         <option value="2">刘德华</option> 
                         </select> 
                         </div> 
                       </div> 
                     </span></td>
-            <td>&nbsp;&nbsp;上课时间：</td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;上课时间：</td>
             <td><input id="txtdate" style="width:200px;" /></td>
             <td>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            &nbsp;&nbsp;上课时间说明：
+            </td>
+            <td colspan="3">
+            <input type="text" id="txttimeinfo" name="name" class="input-text lh30" style="width:480px;" />
+            </td>
+            <td>&nbsp;&nbsp;
+            <input type="button" name="button" onclick="AddCourse();" class="btn btn82 btn_add" value="新增"/>
             </td>
             </tr>
             </table>

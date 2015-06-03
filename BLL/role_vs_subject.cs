@@ -226,9 +226,18 @@ namespace Lythen.BLL
             Model.role_vs_subject modelrvs = new Model.role_vs_subject();
             modelrvs.role_id = role_id;
             modelrvs.sub_list = subList;
-            if (Update(modelrvs))
-                return "success";
-            else return "error";
+            if (Exists(role_id))
+            {
+                if (Update(modelrvs))
+                    return "success";
+                else return "error";
+            }
+            else
+            {
+                if(Add(modelrvs))
+                    return "success";
+                else return "error";
+            }
         }
 		#endregion  ExtensionMethod
 	}

@@ -54,11 +54,11 @@ namespace Lythen.DAL
 					new SqlParameter("@Course_title", SqlDbType.VarChar,50),
 					new SqlParameter("@Course_sub_id", SqlDbType.Int,4),
 					new SqlParameter("@Course_teacher_id", SqlDbType.Int,4),
-					new SqlParameter("@Course_date", SqlDbType.VarChar,10),
-					new SqlParameter("@Course_time", SqlDbType.DateTime),
-					new SqlParameter("@Course_info", SqlDbType.VarChar,500),
+					new SqlParameter("@Course_date", SqlDbType.VarChar,1000),
+					new SqlParameter("@Course_time", SqlDbType.time,5),
+					new SqlParameter("@Course_info", SqlDbType.VarChar,5000),
 					new SqlParameter("@Course_choool_id", SqlDbType.Int,4),
-					new SqlParameter("@Course_cost", SqlDbType.VarChar,10),
+					new SqlParameter("@Course_cost", SqlDbType.Money,8),
 					new SqlParameter("@Course_status", SqlDbType.Bit,1)};
 			parameters[0].Value = model.Course_title;
 			parameters[1].Value = model.Course_sub_id;
@@ -101,11 +101,11 @@ namespace Lythen.DAL
 					new SqlParameter("@Course_title", SqlDbType.VarChar,50),
 					new SqlParameter("@Course_sub_id", SqlDbType.Int,4),
 					new SqlParameter("@Course_teacher_id", SqlDbType.Int,4),
-					new SqlParameter("@Course_date", SqlDbType.VarChar,10),
-					new SqlParameter("@Course_time", SqlDbType.DateTime),
-					new SqlParameter("@Course_info", SqlDbType.VarChar,500),
+					new SqlParameter("@Course_date", SqlDbType.VarChar,1000),
+					new SqlParameter("@Course_time", SqlDbType.time,5),
+					new SqlParameter("@Course_info", SqlDbType.VarChar,5000),
 					new SqlParameter("@Course_choool_id", SqlDbType.Int,4),
-					new SqlParameter("@Course_cost", SqlDbType.VarChar,10),
+					new SqlParameter("@Course_cost", SqlDbType.Money,8),
 					new SqlParameter("@Course_status", SqlDbType.Bit,1),
 					new SqlParameter("@Course_id", SqlDbType.Int,4)};
 			parameters[0].Value = model.Course_title;
@@ -241,9 +241,9 @@ namespace Lythen.DAL
 				{
 					model.Course_choool_id=int.Parse(row["Course_choool_id"].ToString());
 				}
-				if(row["Course_cost"]!=null)
+				if(row["Course_cost"]!=null && row["Course_cost"].ToString()!="")
 				{
-					model.Course_cost=row["Course_cost"].ToString();
+					model.Course_cost=decimal.Parse(row["Course_cost"].ToString());
 				}
 				if(row["Course_status"]!=null && row["Course_status"].ToString()!="")
 				{

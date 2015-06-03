@@ -113,9 +113,15 @@
         }
         function btnSubmit() {
             var subList = "";
-            $("[name='checkbox']:checked").each(function () {
-                subList += $(this).val() + ",";
-            });
+            var nodes = $('#tt').tree('getChecked');
+            var len = nodes.length;
+            if (len == 0) {
+                if(!confirm("警告","您是否确认去除当前角色全部管理科目?"))
+                    return;
+            }
+            for (var i = 0; i < len; i++) {
+                subList += nodes[i].id + ",";
+            }
             $.post("AjaxHandler/RolevsSubjectHandler.ashx",
             { "type": "update",
                 "subList": subList,

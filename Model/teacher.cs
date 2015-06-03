@@ -20,6 +20,8 @@ namespace Lythen.Model
 		private int? _teacher_role;
 		private int? _teacher_job;
 		private string _teacher_sex;
+		private string _teacher_email;
+		private int? _teacher_age;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -99,6 +101,22 @@ namespace Lythen.Model
 		{
 			set{ _teacher_sex=value;}
 			get{return _teacher_sex;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Teacher_email
+		{
+			set{ _teacher_email=value;}
+			get{return _teacher_email;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public int? Teacher_age
+		{
+			set{ _teacher_age=value;}
+			get{return _teacher_age;}
 		}
 		#endregion Model
 

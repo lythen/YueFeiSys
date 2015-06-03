@@ -38,7 +38,6 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
             case "delete": Delete(context); break;
             case "getlist": GetList(context); break;
             case "gettable": GetTable(context); break;
-            case "getlink": GetLink(context); break;
             case "getdetail": GetDetail(context); break;
         }
     }
@@ -50,8 +49,8 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
     }
     void Add(HttpContext context)
     {
-        string parent_title = WebUtility.InputText(context.Request.Form["parent_title"], 30);
-        if (String.IsNullOrEmpty(parent_title))
+        int parent_id = WebUtility.FilterParam(context.Request.Form["parent_id"]);
+        if (parent_id==0)
         {
             context.Response.Write("noparent");
             return;
@@ -62,7 +61,7 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
             context.Response.Write("noname");
             return;
         }
-        context.Response.Write(BLLRole.Add(myrole_id,role_name, parent_title));
+        context.Response.Write(BLLRole.Add(myrole_id, role_name, parent_id));
     }
     void Edit(HttpContext context)
     {
@@ -104,8 +103,9 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
             context.Response.Write("nologin");
             return;
         }
+        bool istxt = WebUtility.InputText(context.Request.QueryString["istxt"], 5).ToLower() == "true";
         context.Response.ContentType = "text/json;charset=UTF-8;";
-        context.Response.Write(BLLRole.GetJsonList(myrole_id));
+        context.Response.Write(BLLRole.GetJsonList(myrole_id, istxt));
     }
     void GetTable(HttpContext context)
     {
@@ -122,24 +122,7 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
         dtCount.Rows.Add(dr);
         context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(dtCount, null));
     }
-    void GetLink(HttpContext context)
-    {
-        int role_id = WebUtility.FilterParam(context.Request.QueryString["role_id"]);
-        if (role_id == 0)
-        {
-            context.Response.Write("iderror");
-            return;
-        }
-        string link = string.Format("{0},{1}", myrole_id, role_id);
-        try
-        {
-            context.Response.Write(Lythen.Common.DEncrypt.DESEncrypt.Encrypt(link));
-        }
-        catch
-        {
-            context.Response.Write("error");
-        }
-    }
+    
     void GetDetail(HttpContext context)
     {
         string link = context.Request.Form["link"];

@@ -2,6 +2,7 @@
 * 判斷一個字符串是否是數值格式
 */
 function isNumber(numStr) {
+    if (numStr == "") return false;
     return !isNaN(numStr);
 }
 /***********************************************************************
@@ -231,4 +232,40 @@ function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
+}
+function checkisPhone(s) {
+    if (!isTel(s) && !isMobile(s)) {
+            return false;
+    }
+    return true;
+}
+
+//校验普通电话、传真号码：可以“+”开头，除数字外，可含有“-”
+function isTel(s) {
+    //国家代码(2到3位)-区号(2到3位)-电话号码(7到8位)-分机号(3位)"
+
+    var pattern = /^(([0\+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/;
+    //var pattern =/(^[0-9]{3,4}\-[0-9]{7,8}$)|(^[0-9]{7,8}$)|(^\([0-9]{3,4}\)[0-9]{3,8}$)|(^0{0,1}13[0-9]{9}$)/;
+    if (s != "") {
+        if (!pattern.exec(s)) {
+            return false;
+        } else return true;
+    } else return false;
+}
+//校验手机号码：必须以数字开头，除数字外，可含有“-”
+function isMobile(s) {
+    var reg0 = /^13\d{5,9}$/;
+    var reg1 = /^153\d{4,8}$/;
+    var reg2 = /^159\d{4,8}$/;
+    var reg3 = /^0\d{10,11}$/;
+    var my = false;
+    if (reg0.test(s)) my = true;
+    if (reg1.test(s)) my = true;
+    if (reg2.test(s)) my = true;
+    if (reg3.test(s)) my = true;
+    if (s != "") {
+        if (!my) {
+            return false;
+        } else return true;
+    } else return false;
 }
