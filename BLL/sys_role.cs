@@ -524,6 +524,30 @@ namespace Lythen.BLL
                 len++;
             }
         }
+        /// <summary>
+        /// 获取自身以及其管理下的role_id
+        /// </summary>
+        /// <param name="role_id"></param>
+        /// <returns></returns>
+        public string GetOwnRole(int role_id)
+        {
+            DataTable dtRole = GetAllList().Tables[0];
+            if (dtRole.Rows.Count == 0) return "";
+            StringBuilder sb = new StringBuilder();
+            sb.Append(role_id);
+            getAppendRole(dtRole.Select("Role_parent_id=" + role_id), sb, dtRole);
+            return sb.ToString();
+        }
+        void getAppendRole(DataRow[] drs, StringBuilder sb,DataTable dtRole)
+        {
+            int role_id;
+            foreach (DataRow dr in drs)
+            {
+                role_id = (int)dr["Role_id"];
+                sb.Append(",").Append(role_id);
+                getAppendRole(dtRole.Select("Role_parent_id=" + role_id), sb, dtRole);
+            }
+        }
         #endregion  ExtensionMethod
     }
 }

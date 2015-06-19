@@ -439,6 +439,16 @@ namespace Lythen.DAL
             parameters[0].Value = Teacher_id;
             return DbHelperSQL.Query(strSql.ToString(), parameters);
         }
+        /// <summary>
+        /// 取得一组权限对应的教师
+        /// </summary>
+        /// <param name="roles"></param>
+        /// <returns></returns>
+        public DataSet GetTeacherByRoles(string roles)
+        {
+            string sql = string.Format("select Teacher_id,Teacher_realname from teacher where Teacher_role in ({0})", roles);
+            return DbHelperSQL.Query(sql);
+        }
         #endregion  ExtensionMethod
     }
 }

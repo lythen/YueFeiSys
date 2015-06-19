@@ -3,6 +3,8 @@ using System.Data;
 using System.Collections.Generic;
 using Lythen.Common;
 using Lythen.Model;
+using System.Text;
+using System.IO;
 namespace Lythen.BLL
 {
 	/// <summary>
@@ -11,6 +13,7 @@ namespace Lythen.BLL
 	public partial class teacher
 	{
 		private readonly Lythen.DAL.teacher dal=new Lythen.DAL.teacher();
+        private string CachePath = System.Web.HttpContext.Current.Server.MapPath("~/DataCache/teacher/");
 		public teacher()
 		{}
 		#region  BasicMethod
@@ -208,9 +211,72 @@ namespace Lythen.BLL
         {
             return dal.GetDetail(Teacher_id);
         }
-        public string getJson()
+        public string getJson(int role_id)
         {
+            Lythen.BLL.sys_role roleBll = new sys_role();
+            string roles = roleBll.GetOwnRole(role_id);
+            if (roles == "") return "";
+            DataTable dtTeacher = dal.GetTeacherByRoles(roles).Tables[0];
+            if (dtTeacher.Rows.Count == 0) return "";
 
+            if (Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
+            string file_path = string.Format("{0}teacher_{1}.txt", CachePath,role_id);
+            StringBuilder sb = new StringBuilder();
+            if (!File.Exists(file_path))
+            {
+                sb.Append("[{\"id\":0,\"text\":\"请选择老师\",\"children\":[");
+                DataTable dtSub = new Lythen.BLL.subject().GetList("").Tables[0];
+                if (dtSub.Rows.Count == 0)
+                {
+                    sb.Append("	]}]");
+                    return sb.ToString();
+                }
+                else
+                {
+                    DataRow[] drs = dtSub.Select("Subject_parent=0");
+                    int len = drs.Length;
+                    foreach (DataRow dr in drs)
+                    {
+                        len--;
+                        WriteNode(dr, dtSub, sb, len);
+                    }
+                }
+                sb.Append("]}]");
+                StreamWriter sw = new StreamWriter(file_path);
+                sw.Write(sb.ToString());
+                sw.Flush();
+                sw.Close();
+                return sb.ToString();
+            }
+            else
+            {
+
+                StreamReader sr = new StreamReader(file_path);
+                string str = sr.ReadToEnd();
+                sr.Close();
+                return str;
+            }
+
+        }
+        void WriteNode(DataRow dr, DataTable dtsub, StringBuilder sb, int len)
+        {
+            sb.Append("{\"id\":\"").Append(dr["Subject_id"]).Append("\",\"text\":\"").Append(dr["Subject_title"]).Append("\",\"children\":[");
+
+            DataRow[] drs = dtsub.Select("Subject_parent=" + dr["Subject_id"].ToString());
+            if (drs.Length == 0)
+            {
+                sb.Append("]}");
+                if (len > 0) sb.Append(",");
+                return;
+            }
+            int lenc = drs.Length;
+            foreach (DataRow drc in drs)
+            {
+                lenc--;
+                WriteNode(drc, dtsub, sb, lenc);
+            }
+            sb.Append("]}");
+            if (len > 0) sb.Append(",");
         }
 		#endregion  ExtensionMethod
 	}
