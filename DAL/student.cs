@@ -213,7 +213,7 @@ namespace Lythen.DAL
 				}
 				if(row["Stu_grade"]!=null)
 				{
-					model.Stu_grade=row["Stu_grade"].ToString();
+					model.Stu_grade=(int)row["Stu_grade"];
 				}
 				if(row["Stu_school_id"]!=null && row["Stu_school_id"].ToString()!="")
 				{

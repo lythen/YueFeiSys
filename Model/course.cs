@@ -19,7 +19,7 @@ namespace Lythen.Model
 		private string _course_info;
 		private int? _course_choool_id;
 		private decimal? _course_cost;
-		private bool _course_status;
+		private string _course_status;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -95,7 +95,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool Course_status
+		public string Course_status
 		{
 			set{ _course_status=value;}
 			get{return _course_status;}

@@ -208,6 +208,10 @@ namespace Lythen.BLL
         {
             return dal.GetDetail(Teacher_id);
         }
+        public string getJson()
+        {
+
+        }
 		#endregion  ExtensionMethod
 	}
 }

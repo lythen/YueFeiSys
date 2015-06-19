@@ -132,9 +132,11 @@
     <Compile Include="student.cs" />
     <Compile Include="subject.cs" />
     <Compile Include="subject_score_ item.cs" />
+    <Compile Include="sys_grade.cs" />
     <Compile Include="Sys_job.cs" />
     <Compile Include="sys_log.cs" />
     <Compile Include="sys_role.cs" />
+    <Compile Include="sys_stu_school.cs" />
     <Compile Include="teacher.cs" />
     <Compile Include="role_vs_subject.cs" />
   </ItemGroup>

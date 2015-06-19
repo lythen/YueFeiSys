@@ -9,10 +9,10 @@ public class SubjectHandler : IHttpHandler,IRequiresSessionState
 {
 
     Admin adm = new Admin();
+    Lythen.BLL.subject BLLSub = new Lythen.BLL.subject();
     public void ProcessRequest(HttpContext context)
     {
         context.Response.ContentType = "text/plain";
-        Lythen.BLL.subject BLLSub = new Lythen.BLL.subject();
         int myrole_id = adm.GetRoleId();
         if (myrole_id == 0)
         {
@@ -20,7 +20,28 @@ public class SubjectHandler : IHttpHandler,IRequiresSessionState
             return;
         }
         string type = context.Request.Form["type"];
-        if (type == "edit")
+        if (string.IsNullOrEmpty(type)) type = context.Request.QueryString["type"];
+
+        if (type == "gettable")
+        {
+            bool IdIsTxt;
+            if (!string.IsNullOrEmpty(context.Request.Form["idistxt"]))
+            {
+                if (context.Request.Form["idistxt"] =="1") IdIsTxt = true;
+                else IdIsTxt = false;
+            }
+            else
+            {
+                if(string.IsNullOrEmpty(context.Request.QueryString["idistxt"])) IdIsTxt=false;
+                else{
+                    if (context.Request.QueryString["idistxt"] == "1") IdIsTxt = true;
+                    else IdIsTxt = false;
+                }
+            }
+            context.Response.Write(BLLSub.GetListJson(IdIsTxt));
+            return;
+        }
+        else if (type == "edit")
         {
             int sub_id = WebUtility.FilterParam(context.Request.Form["id"]);
             string parent_title = WebUtility.InputText(context.Request.Form["parent_title"],100);

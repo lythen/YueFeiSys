@@ -3,21 +3,16 @@ using System.Data;
 using System.Collections.Generic;
 using Lythen.Common;
 using Lythen.Model;
-using System.Text;
-using System.IO;
 namespace Lythen.BLL
 {
 	/// <summary>
-	/// course
+	/// sys_grade
 	/// </summary>
-	public partial class course
+	public partial class sys_grade
 	{
-		private readonly Lythen.DAL.course dal=new Lythen.DAL.course();
-        private string CACHE_PATH;
-		public course()
-		{
-            CACHE_PATH = System.Web.HttpContext.Current.Server.MapPath("~/DataCache/course/");
-        }
+		private readonly Lythen.DAL.sys_grade dal=new Lythen.DAL.sys_grade();
+		public sys_grade()
+		{}
 		#region  BasicMethod
 
 		/// <summary>
@@ -31,15 +26,15 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(int Course_id)
+		public bool Exists(int g_id)
 		{
-			return dal.Exists(Course_id);
+			return dal.Exists(g_id);
 		}
 
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
-		public int  Add(Lythen.Model.course model)
+		public int  Add(Lythen.Model.sys_grade model)
 		{
 			return dal.Add(model);
 		}
@@ -47,7 +42,7 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 更新一条数据
 		/// </summary>
-		public bool Update(Lythen.Model.course model)
+		public bool Update(Lythen.Model.sys_grade model)
 		{
 			return dal.Update(model);
 		}
@@ -55,41 +50,41 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete(int Course_id)
+		public bool Delete(int g_id)
 		{
 			
-			return dal.Delete(Course_id);
+			return dal.Delete(g_id);
 		}
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool DeleteList(string Course_idlist )
+		public bool DeleteList(string g_idlist )
 		{
-			return dal.DeleteList(Lythen.Common.PageValidate.SafeLongFilter(Course_idlist,0) );
+			return dal.DeleteList(Lythen.Common.PageValidate.SafeLongFilter(g_idlist,0) );
 		}
 
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public Lythen.Model.course GetModel(int Course_id)
+		public Lythen.Model.sys_grade GetModel(int g_id)
 		{
 			
-			return dal.GetModel(Course_id);
+			return dal.GetModel(g_id);
 		}
 
 		/// <summary>
 		/// 得到一个对象实体，从缓存中
 		/// </summary>
-		public Lythen.Model.course GetModelByCache(int Course_id)
+		public Lythen.Model.sys_grade GetModelByCache(int g_id)
 		{
 			
-			string CacheKey = "courseModel-" + Course_id;
+			string CacheKey = "sys_gradeModel-" + g_id;
 			object objModel = Lythen.Common.DataCache.GetCache(CacheKey);
 			if (objModel == null)
 			{
 				try
 				{
-					objModel = dal.GetModel(Course_id);
+					objModel = dal.GetModel(g_id);
 					if (objModel != null)
 					{
 						int ModelCache = Lythen.Common.ConfigHelper.GetConfigInt("ModelCache");
@@ -98,7 +93,7 @@ namespace Lythen.BLL
 				}
 				catch{}
 			}
-			return (Lythen.Model.course)objModel;
+			return (Lythen.Model.sys_grade)objModel;
 		}
 
 		/// <summary>
@@ -118,7 +113,7 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 获得数据列表
 		/// </summary>
-		public List<Lythen.Model.course> GetModelList(string strWhere)
+		public List<Lythen.Model.sys_grade> GetModelList(string strWhere)
 		{
 			DataSet ds = dal.GetList(strWhere);
 			return DataTableToList(ds.Tables[0]);
@@ -126,13 +121,13 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 获得数据列表
 		/// </summary>
-		public List<Lythen.Model.course> DataTableToList(DataTable dt)
+		public List<Lythen.Model.sys_grade> DataTableToList(DataTable dt)
 		{
-			List<Lythen.Model.course> modelList = new List<Lythen.Model.course>();
+			List<Lythen.Model.sys_grade> modelList = new List<Lythen.Model.sys_grade>();
 			int rowsCount = dt.Rows.Count;
 			if (rowsCount > 0)
 			{
-				Lythen.Model.course model;
+				Lythen.Model.sys_grade model;
 				for (int n = 0; n < rowsCount; n++)
 				{
 					model = dal.DataRowToModel(dt.Rows[n]);
@@ -177,27 +172,7 @@ namespace Lythen.BLL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
-        /// <summary>
-        /// 获取课程列表
-        /// </summary>
-        /// <param name="subject_id">科目ID</param>
-        /// <param name="teacher_id">教师ID</param>
-        /// <param name="status">课程状态</param>
-        /// <returns></returns>
-        public DataTable GetListForTable(int subject_id, int teacher_id, string status)
-        {
-            DataSet ds = dal.GetListForTable(subject_id, teacher_id, status);
-            DataTable dtSub = ds.Tables[0];
-            DataTable dtCount = new DataTable("table");
-            dtCount.Columns.Add(new DataColumn("total", typeof(int)));
-            dtCount.Columns.Add(new DataColumn("rows", typeof(DataTable)));
 
-            DataRow dr = dtCount.NewRow();
-            dr[0] = dtSub.Rows.Count;
-            dr[1] = dtSub;
-            dtCount.Rows.Add(dr);
-            return dtCount;
-        }
 		#endregion  ExtensionMethod
 	}
 }

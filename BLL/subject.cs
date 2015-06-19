@@ -5,6 +5,7 @@ using Lythen.Common;
 using Lythen.Model;
 using System.Web;
 using System.IO;
+using System.Text;
 namespace Lythen.BLL
 {
     /// <summary>
@@ -249,6 +250,74 @@ namespace Lythen.BLL
                     return (int)dr["Subject_id"];
             }
             return 0;
+        }
+        /// <summary>
+        /// 返回下拉列表所需要的JSON
+        /// </summary>
+        /// <param name="IdIsTxt">ID的参数是否为科目的title，即ID，与txt一样，都是名称</param>
+        /// <returns></returns>
+        public string GetListJson(bool IdIsTxt)
+        {
+            if (Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
+            string file_path;
+            if (IdIsTxt) file_path = CachePath + "subject_txt.txt";
+            else file_path = CachePath + "subject_id.txt";
+            StringBuilder sb = new StringBuilder();
+            if (!File.Exists(file_path))
+            {
+                sb.Append("[{\"id\":0,\"text\":\"请选择科目\",\"children\":[");
+                DataTable dtSub = new Lythen.BLL.subject().GetList("").Tables[0];
+                if (dtSub.Rows.Count == 0)
+                {
+                    sb.Append("	]}]");
+                    return sb.ToString();
+                }
+                else
+                {
+                    DataRow[] drs = dtSub.Select("Subject_parent=0");
+                    int len = drs.Length;
+                    foreach (DataRow dr in drs)
+                    {
+                        len--;
+                        WriteNode(dr, dtSub, sb, len, IdIsTxt);
+                    }
+                }
+                sb.Append("]}]");
+                StreamWriter sw = new StreamWriter(file_path);
+                sw.Write(sb.ToString());
+                sw.Flush();
+                sw.Close();
+                return sb.ToString();
+            }
+            else
+            {
+
+                StreamReader sr = new StreamReader(file_path);
+                string str = sr.ReadToEnd();
+                sr.Close();
+                return str;
+            }
+        }
+        void WriteNode(DataRow dr, DataTable dtsub, StringBuilder sb, int len,bool IdIsTxt)
+        {
+            if(IdIsTxt) sb.Append("{\"id\":\"").Append(dr["Subject_title"]).Append("\",\"text\":\"").Append(dr["Subject_title"]).Append("\",\"children\":[");
+            else sb.Append("{\"id\":\"").Append(dr["Subject_id"]).Append("\",\"text\":\"").Append(dr["Subject_title"]).Append("\",\"children\":[");
+
+            DataRow[] drs = dtsub.Select("Subject_parent=" + dr["Subject_id"].ToString());
+            if (drs.Length == 0)
+            {
+                sb.Append("]}");
+                if (len > 0) sb.Append(",");
+                return;
+            }
+            int lenc = drs.Length;
+            foreach (DataRow drc in drs)
+            {
+                lenc--;
+                WriteNode(drc, dtsub, sb, lenc, IdIsTxt);
+            }
+            sb.Append("]}");
+            if (len > 0) sb.Append(",");
         }
         #endregion  ExtensionMethod
     }

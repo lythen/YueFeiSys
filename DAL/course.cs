@@ -55,11 +55,11 @@ namespace Lythen.DAL
 					new SqlParameter("@Course_sub_id", SqlDbType.Int,4),
 					new SqlParameter("@Course_teacher_id", SqlDbType.Int,4),
 					new SqlParameter("@Course_date", SqlDbType.VarChar,1000),
-					new SqlParameter("@Course_time", SqlDbType.time,5),
+					new SqlParameter("@Course_time", SqlDbType.Time,5),
 					new SqlParameter("@Course_info", SqlDbType.VarChar,5000),
 					new SqlParameter("@Course_choool_id", SqlDbType.Int,4),
 					new SqlParameter("@Course_cost", SqlDbType.Money,8),
-					new SqlParameter("@Course_status", SqlDbType.Bit,1)};
+					new SqlParameter("@Course_status", SqlDbType.Char,1)};
 			parameters[0].Value = model.Course_title;
 			parameters[1].Value = model.Course_sub_id;
 			parameters[2].Value = model.Course_teacher_id;
@@ -102,11 +102,11 @@ namespace Lythen.DAL
 					new SqlParameter("@Course_sub_id", SqlDbType.Int,4),
 					new SqlParameter("@Course_teacher_id", SqlDbType.Int,4),
 					new SqlParameter("@Course_date", SqlDbType.VarChar,1000),
-					new SqlParameter("@Course_time", SqlDbType.time,5),
+					new SqlParameter("@Course_time", SqlDbType.Time,5),
 					new SqlParameter("@Course_info", SqlDbType.VarChar,5000),
 					new SqlParameter("@Course_choool_id", SqlDbType.Int,4),
 					new SqlParameter("@Course_cost", SqlDbType.Money,8),
-					new SqlParameter("@Course_status", SqlDbType.Bit,1),
+					new SqlParameter("@Course_status", SqlDbType.Char,1),
 					new SqlParameter("@Course_id", SqlDbType.Int,4)};
 			parameters[0].Value = model.Course_title;
 			parameters[1].Value = model.Course_sub_id;
@@ -245,16 +245,9 @@ namespace Lythen.DAL
 				{
 					model.Course_cost=decimal.Parse(row["Course_cost"].ToString());
 				}
-				if(row["Course_status"]!=null && row["Course_status"].ToString()!="")
+				if(row["Course_status"]!=null)
 				{
-					if((row["Course_status"].ToString()=="1")||(row["Course_status"].ToString().ToLower()=="true"))
-					{
-						model.Course_status=true;
-					}
-					else
-					{
-						model.Course_status=false;
-					}
+					model.Course_status=row["Course_status"].ToString();
 				}
 			}
 			return model;
@@ -370,7 +363,32 @@ namespace Lythen.DAL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
-
+        /// <summary>
+        /// 获取课程列表
+        /// </summary>
+        /// <param name="subject_id"></param>
+        /// <param name="teacher_id"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public DataSet GetListForTable(int subject_id, int teacher_id, string status)
+        {
+            string sql = @"select Course_id,Course_title,Subject_title,Teacher_realname,Course_sub_id,Course_teacher_id,
+Course_cost,Course_status,Course_date 
+from course 
+left join [subject] on Subject_id=Course_sub_id 
+left join teacher on Teacher_id=Course_teacher_id 
+where Course_sub_id=(case when @subject_id=0 then  Course_sub_id else @subject_id end) 
+and Course_teacher_id=(case when @teacher_id=0 then  Course_teacher_id else @teacher_id end) 
+and Course_status=(case when @status='0' then  Course_status else @status end)";
+            SqlParameter[] parameters = {
+					new SqlParameter("@subject_id", SqlDbType.Int,4),
+					new SqlParameter("@teacher_id", SqlDbType.Int,4),
+					new SqlParameter("@status", SqlDbType.Char,1)};
+            parameters[0].Value = subject_id;
+            parameters[1].Value = teacher_id;
+            parameters[2].Value = status;
+            return DbHelperSQL.Query(sql, parameters);
+        }
 		#endregion  ExtensionMethod
 	}
 }

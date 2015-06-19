@@ -13,7 +13,7 @@ namespace Lythen.Model
 		private string _stu_id;
 		private string _stu_name;
 		private DateTime? _stu_birthday;
-		private string _stu_grade;
+		private int? _stu_grade;
 		private int? _stu_school_id;
 		private string _stu_pic_path;
 		private bool _stu_status;
@@ -47,7 +47,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Stu_grade
+		public int? Stu_grade
 		{
 			set{ _stu_grade=value;}
 			get{return _stu_grade;}
