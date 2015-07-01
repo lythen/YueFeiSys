@@ -28,6 +28,7 @@ public class TeacherHandler : IHttpHandler, IRequiresSessionState
             case "add": Add(context); break;
             case "getdetail": GetDetail(context); break;
             case "edit": Edit(context); break;
+            case "getjson": GetJson(context); break;
         }
         
     }
@@ -219,5 +220,10 @@ public class TeacherHandler : IHttpHandler, IRequiresSessionState
             return;
         }
         context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(dtTe, null));
+    }
+    void GetJson(HttpContext context)
+    {
+        context.Response.Write(bllTe.getJson(myrole_id));
+        return;
     }
 }

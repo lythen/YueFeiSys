@@ -17,14 +17,14 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(string Stu_id)
+		public bool Exists(string stu_id)
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("select count(1) from student");
-			strSql.Append(" where Stu_id=@Stu_id ");
+			strSql.Append(" where stu_id=@stu_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Stu_id", SqlDbType.VarChar,20)			};
-			parameters[0].Value = Stu_id;
+					new SqlParameter("@stu_id", SqlDbType.VarChar,20)			};
+			parameters[0].Value = stu_id;
 
 			return DbHelperSQL.Exists(strSql.ToString(),parameters);
 		}
@@ -37,30 +37,36 @@ namespace Lythen.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into student(");
-			strSql.Append("Stu_id,Stu_name,Stu_birthday,Stu_grade,Stu_school_id,Stu_pic_path,Stu_Status,Parent_name,Parent_mobile,Parent_dep)");
+			strSql.Append("stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,parent_name,parent_mobile,parent_dep,parent_email,address)");
 			strSql.Append(" values (");
-			strSql.Append("@Stu_id,@Stu_name,@Stu_birthday,@Stu_grade,@Stu_school_id,@Stu_pic_path,@Stu_Status,@Parent_name,@Parent_mobile,@Parent_dep)");
+			strSql.Append("@stu_id,@stu_name,@stu_birthday,@stu_grade,@stu_school_id,@stu_pic_path,@stu_Status,@stu_sex,@parent_name,@parent_mobile,@parent_dep,@parent_email,@address)");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Stu_id", SqlDbType.VarChar,20),
-					new SqlParameter("@Stu_name", SqlDbType.VarChar,30),
-					new SqlParameter("@Stu_birthday", SqlDbType.DateTime),
-					new SqlParameter("@Stu_grade", SqlDbType.VarChar,10),
-					new SqlParameter("@Stu_school_id", SqlDbType.Int,4),
-					new SqlParameter("@Stu_pic_path", SqlDbType.VarChar,50),
-					new SqlParameter("@Stu_Status", SqlDbType.Bit,1),
-					new SqlParameter("@Parent_name", SqlDbType.VarChar,30),
-					new SqlParameter("@Parent_mobile", SqlDbType.VarChar,12),
-					new SqlParameter("@Parent_dep", SqlDbType.VarChar,150)};
-			parameters[0].Value = model.Stu_id;
-			parameters[1].Value = model.Stu_name;
-			parameters[2].Value = model.Stu_birthday;
-			parameters[3].Value = model.Stu_grade;
-			parameters[4].Value = model.Stu_school_id;
-			parameters[5].Value = model.Stu_pic_path;
-			parameters[6].Value = model.Stu_Status;
-			parameters[7].Value = model.Parent_name;
-			parameters[8].Value = model.Parent_mobile;
-			parameters[9].Value = model.Parent_dep;
+					new SqlParameter("@stu_id", SqlDbType.VarChar,20),
+					new SqlParameter("@stu_name", SqlDbType.VarChar,30),
+					new SqlParameter("@stu_birthday", SqlDbType.DateTime),
+					new SqlParameter("@stu_grade", SqlDbType.Int,4),
+					new SqlParameter("@stu_school_id", SqlDbType.Int,4),
+					new SqlParameter("@stu_pic_path", SqlDbType.VarChar,50),
+					new SqlParameter("@stu_Status", SqlDbType.Bit,1),
+					new SqlParameter("@stu_sex", SqlDbType.VarChar,1),
+					new SqlParameter("@parent_name", SqlDbType.VarChar,30),
+					new SqlParameter("@parent_mobile", SqlDbType.VarChar,12),
+					new SqlParameter("@parent_dep", SqlDbType.VarChar,150),
+					new SqlParameter("@parent_email", SqlDbType.VarChar,250),
+					new SqlParameter("@address", SqlDbType.NChar,10)};
+			parameters[0].Value = model.stu_id;
+			parameters[1].Value = model.stu_name;
+			parameters[2].Value = model.stu_birthday;
+			parameters[3].Value = model.stu_grade;
+			parameters[4].Value = model.stu_school_id;
+			parameters[5].Value = model.stu_pic_path;
+			parameters[6].Value = model.stu_Status;
+			parameters[7].Value = model.stu_sex;
+			parameters[8].Value = model.parent_name;
+			parameters[9].Value = model.parent_mobile;
+			parameters[10].Value = model.parent_dep;
+			parameters[11].Value = model.parent_email;
+			parameters[12].Value = model.address;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -79,37 +85,46 @@ namespace Lythen.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("update student set ");
-			strSql.Append("Stu_name=@Stu_name,");
-			strSql.Append("Stu_birthday=@Stu_birthday,");
-			strSql.Append("Stu_grade=@Stu_grade,");
-			strSql.Append("Stu_school_id=@Stu_school_id,");
-			strSql.Append("Stu_pic_path=@Stu_pic_path,");
-			strSql.Append("Stu_Status=@Stu_Status,");
-			strSql.Append("Parent_name=@Parent_name,");
-			strSql.Append("Parent_mobile=@Parent_mobile,");
-			strSql.Append("Parent_dep=@Parent_dep");
-			strSql.Append(" where Stu_id=@Stu_id ");
+			strSql.Append("stu_name=@stu_name,");
+			strSql.Append("stu_birthday=@stu_birthday,");
+			strSql.Append("stu_grade=@stu_grade,");
+			strSql.Append("stu_school_id=@stu_school_id,");
+			strSql.Append("stu_pic_path=@stu_pic_path,");
+			strSql.Append("stu_Status=@stu_Status,");
+			strSql.Append("stu_sex=@stu_sex,");
+			strSql.Append("parent_name=@parent_name,");
+			strSql.Append("parent_mobile=@parent_mobile,");
+			strSql.Append("parent_dep=@parent_dep,");
+			strSql.Append("parent_email=@parent_email,");
+			strSql.Append("address=@address");
+			strSql.Append(" where stu_id=@stu_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Stu_name", SqlDbType.VarChar,30),
-					new SqlParameter("@Stu_birthday", SqlDbType.DateTime),
-					new SqlParameter("@Stu_grade", SqlDbType.VarChar,10),
-					new SqlParameter("@Stu_school_id", SqlDbType.Int,4),
-					new SqlParameter("@Stu_pic_path", SqlDbType.VarChar,50),
-					new SqlParameter("@Stu_Status", SqlDbType.Bit,1),
-					new SqlParameter("@Parent_name", SqlDbType.VarChar,30),
-					new SqlParameter("@Parent_mobile", SqlDbType.VarChar,12),
-					new SqlParameter("@Parent_dep", SqlDbType.VarChar,150),
-					new SqlParameter("@Stu_id", SqlDbType.VarChar,20)};
-			parameters[0].Value = model.Stu_name;
-			parameters[1].Value = model.Stu_birthday;
-			parameters[2].Value = model.Stu_grade;
-			parameters[3].Value = model.Stu_school_id;
-			parameters[4].Value = model.Stu_pic_path;
-			parameters[5].Value = model.Stu_Status;
-			parameters[6].Value = model.Parent_name;
-			parameters[7].Value = model.Parent_mobile;
-			parameters[8].Value = model.Parent_dep;
-			parameters[9].Value = model.Stu_id;
+					new SqlParameter("@stu_name", SqlDbType.VarChar,30),
+					new SqlParameter("@stu_birthday", SqlDbType.DateTime),
+					new SqlParameter("@stu_grade", SqlDbType.Int,4),
+					new SqlParameter("@stu_school_id", SqlDbType.Int,4),
+					new SqlParameter("@stu_pic_path", SqlDbType.VarChar,50),
+					new SqlParameter("@stu_Status", SqlDbType.Bit,1),
+					new SqlParameter("@stu_sex", SqlDbType.VarChar,1),
+					new SqlParameter("@parent_name", SqlDbType.VarChar,30),
+					new SqlParameter("@parent_mobile", SqlDbType.VarChar,12),
+					new SqlParameter("@parent_dep", SqlDbType.VarChar,150),
+					new SqlParameter("@parent_email", SqlDbType.VarChar,250),
+					new SqlParameter("@address", SqlDbType.NChar,10),
+					new SqlParameter("@stu_id", SqlDbType.VarChar,20)};
+			parameters[0].Value = model.stu_name;
+			parameters[1].Value = model.stu_birthday;
+			parameters[2].Value = model.stu_grade;
+			parameters[3].Value = model.stu_school_id;
+			parameters[4].Value = model.stu_pic_path;
+			parameters[5].Value = model.stu_Status;
+			parameters[6].Value = model.stu_sex;
+			parameters[7].Value = model.parent_name;
+			parameters[8].Value = model.parent_mobile;
+			parameters[9].Value = model.parent_dep;
+			parameters[10].Value = model.parent_email;
+			parameters[11].Value = model.address;
+			parameters[12].Value = model.stu_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -125,15 +140,15 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete(string Stu_id)
+		public bool Delete(string stu_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("delete from student ");
-			strSql.Append(" where Stu_id=@Stu_id ");
+			strSql.Append(" where stu_id=@stu_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Stu_id", SqlDbType.VarChar,20)			};
-			parameters[0].Value = Stu_id;
+					new SqlParameter("@stu_id", SqlDbType.VarChar,20)			};
+			parameters[0].Value = stu_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -148,11 +163,11 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 批量删除数据
 		/// </summary>
-		public bool DeleteList(string Stu_idlist )
+		public bool DeleteList(string stu_idlist )
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("delete from student ");
-			strSql.Append(" where Stu_id in ("+Stu_idlist + ")  ");
+			strSql.Append(" where stu_id in ("+stu_idlist + ")  ");
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString());
 			if (rows > 0)
 			{
@@ -168,15 +183,15 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public Lythen.Model.student GetModel(string Stu_id)
+		public Lythen.Model.student GetModel(string stu_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select  top 1 Stu_id,Stu_name,Stu_birthday,Stu_grade,Stu_school_id,Stu_pic_path,Stu_Status,Parent_name,Parent_mobile,Parent_dep from student ");
-			strSql.Append(" where Stu_id=@Stu_id ");
+			strSql.Append("select  top 1 stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,parent_name,parent_mobile,parent_dep,parent_email,address from student ");
+			strSql.Append(" where stu_id=@stu_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Stu_id", SqlDbType.VarChar,20)			};
-			parameters[0].Value = Stu_id;
+					new SqlParameter("@stu_id", SqlDbType.VarChar,20)			};
+			parameters[0].Value = stu_id;
 
 			Lythen.Model.student model=new Lythen.Model.student();
 			DataSet ds=DbHelperSQL.Query(strSql.ToString(),parameters);
@@ -199,52 +214,64 @@ namespace Lythen.DAL
 			Lythen.Model.student model=new Lythen.Model.student();
 			if (row != null)
 			{
-				if(row["Stu_id"]!=null)
+				if(row["stu_id"]!=null)
 				{
-					model.Stu_id=row["Stu_id"].ToString();
+					model.stu_id=row["stu_id"].ToString();
 				}
-				if(row["Stu_name"]!=null)
+				if(row["stu_name"]!=null)
 				{
-					model.Stu_name=row["Stu_name"].ToString();
+					model.stu_name=row["stu_name"].ToString();
 				}
-				if(row["Stu_birthday"]!=null && row["Stu_birthday"].ToString()!="")
+				if(row["stu_birthday"]!=null && row["stu_birthday"].ToString()!="")
 				{
-					model.Stu_birthday=DateTime.Parse(row["Stu_birthday"].ToString());
+					model.stu_birthday=DateTime.Parse(row["stu_birthday"].ToString());
 				}
-				if(row["Stu_grade"]!=null)
+				if(row["stu_grade"]!=null && row["stu_grade"].ToString()!="")
 				{
-					model.Stu_grade=(int)row["Stu_grade"];
+					model.stu_grade=int.Parse(row["stu_grade"].ToString());
 				}
-				if(row["Stu_school_id"]!=null && row["Stu_school_id"].ToString()!="")
+				if(row["stu_school_id"]!=null && row["stu_school_id"].ToString()!="")
 				{
-					model.Stu_school_id=int.Parse(row["Stu_school_id"].ToString());
+					model.stu_school_id=int.Parse(row["stu_school_id"].ToString());
 				}
-				if(row["Stu_pic_path"]!=null)
+				if(row["stu_pic_path"]!=null)
 				{
-					model.Stu_pic_path=row["Stu_pic_path"].ToString();
+					model.stu_pic_path=row["stu_pic_path"].ToString();
 				}
-				if(row["Stu_Status"]!=null && row["Stu_Status"].ToString()!="")
+				if(row["stu_Status"]!=null && row["stu_Status"].ToString()!="")
 				{
-					if((row["Stu_Status"].ToString()=="1")||(row["Stu_Status"].ToString().ToLower()=="true"))
+					if((row["stu_Status"].ToString()=="1")||(row["stu_Status"].ToString().ToLower()=="true"))
 					{
-						model.Stu_Status=true;
+						model.stu_Status=true;
 					}
 					else
 					{
-						model.Stu_Status=false;
+						model.stu_Status=false;
 					}
 				}
-				if(row["Parent_name"]!=null)
+				if(row["stu_sex"]!=null)
 				{
-					model.Parent_name=row["Parent_name"].ToString();
+					model.stu_sex=row["stu_sex"].ToString();
 				}
-				if(row["Parent_mobile"]!=null)
+				if(row["parent_name"]!=null)
 				{
-					model.Parent_mobile=row["Parent_mobile"].ToString();
+					model.parent_name=row["parent_name"].ToString();
 				}
-				if(row["Parent_dep"]!=null)
+				if(row["parent_mobile"]!=null)
 				{
-					model.Parent_dep=row["Parent_dep"].ToString();
+					model.parent_mobile=row["parent_mobile"].ToString();
+				}
+				if(row["parent_dep"]!=null)
+				{
+					model.parent_dep=row["parent_dep"].ToString();
+				}
+				if(row["parent_email"]!=null)
+				{
+					model.parent_email=row["parent_email"].ToString();
+				}
+				if(row["address"]!=null)
+				{
+					model.address=row["address"].ToString();
 				}
 			}
 			return model;
@@ -256,7 +283,7 @@ namespace Lythen.DAL
 		public DataSet GetList(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select Stu_id,Stu_name,Stu_birthday,Stu_grade,Stu_school_id,Stu_pic_path,Stu_Status,Parent_name,Parent_mobile,Parent_dep ");
+			strSql.Append("select stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,parent_name,parent_mobile,parent_dep,parent_email,address ");
 			strSql.Append(" FROM student ");
 			if(strWhere.Trim()!="")
 			{
@@ -276,7 +303,7 @@ namespace Lythen.DAL
 			{
 				strSql.Append(" top "+Top.ToString());
 			}
-			strSql.Append(" Stu_id,Stu_name,Stu_birthday,Stu_grade,Stu_school_id,Stu_pic_path,Stu_Status,Parent_name,Parent_mobile,Parent_dep ");
+			strSql.Append(" stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,parent_name,parent_mobile,parent_dep,parent_email,address ");
 			strSql.Append(" FROM student ");
 			if(strWhere.Trim()!="")
 			{
@@ -321,7 +348,7 @@ namespace Lythen.DAL
 			}
 			else
 			{
-				strSql.Append("order by T.Stu_id desc");
+				strSql.Append("order by T.stu_id desc");
 			}
 			strSql.Append(")AS Row, T.*  from student T ");
 			if (!string.IsNullOrEmpty(strWhere.Trim()))
@@ -349,7 +376,7 @@ namespace Lythen.DAL
 					new SqlParameter("@strWhere", SqlDbType.VarChar,1000),
 					};
 			parameters[0].Value = "student";
-			parameters[1].Value = "Stu_id";
+			parameters[1].Value = "stu_id";
 			parameters[2].Value = PageSize;
 			parameters[3].Value = PageIndex;
 			parameters[4].Value = 0;

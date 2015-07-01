@@ -26,15 +26,15 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(int Sc_stu_id)
+		public bool Exists(string Sc_stu_id,int Sc_course_id)
 		{
-			return dal.Exists(Sc_stu_id);
+			return dal.Exists(Sc_stu_id,Sc_course_id);
 		}
 
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
-		public int  Add(Lythen.Model.stu_vs_course model)
+		public bool Add(Lythen.Model.stu_vs_course model)
 		{
 			return dal.Add(model);
 		}
@@ -50,41 +50,34 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete(int Sc_stu_id)
+		public bool Delete(string Sc_stu_id,int Sc_course_id)
 		{
 			
-			return dal.Delete(Sc_stu_id);
-		}
-		/// <summary>
-		/// 删除一条数据
-		/// </summary>
-		public bool DeleteList(string Sc_stu_idlist )
-		{
-			return dal.DeleteList(Lythen.Common.PageValidate.SafeLongFilter(Sc_stu_idlist,0) );
+			return dal.Delete(Sc_stu_id,Sc_course_id);
 		}
 
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public Lythen.Model.stu_vs_course GetModel(int Sc_stu_id)
+		public Lythen.Model.stu_vs_course GetModel(string Sc_stu_id,int Sc_course_id)
 		{
 			
-			return dal.GetModel(Sc_stu_id);
+			return dal.GetModel(Sc_stu_id,Sc_course_id);
 		}
 
 		/// <summary>
 		/// 得到一个对象实体，从缓存中
 		/// </summary>
-		public Lythen.Model.stu_vs_course GetModelByCache(int Sc_stu_id)
+		public Lythen.Model.stu_vs_course GetModelByCache(string Sc_stu_id,int Sc_course_id)
 		{
 			
-			string CacheKey = "stu_vs_courseModel-" + Sc_stu_id;
+			string CacheKey = "stu_vs_courseModel-" + Sc_stu_id+Sc_course_id;
 			object objModel = Lythen.Common.DataCache.GetCache(CacheKey);
 			if (objModel == null)
 			{
 				try
 				{
-					objModel = dal.GetModel(Sc_stu_id);
+					objModel = dal.GetModel(Sc_stu_id,Sc_course_id);
 					if (objModel != null)
 					{
 						int ModelCache = Lythen.Common.ConfigHelper.GetConfigInt("ModelCache");
@@ -172,7 +165,55 @@ namespace Lythen.BLL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
+        /// <summary>
+        /// 报名课程
+        /// </summary>
+        /// <param name="listCourse"></param>
+        /// <param name="cost"></param>
+        /// <returns></returns>
+        public bool AddStudentCourse(string listCourse, decimal cost, string stu_id)
+        {
+            if (string.IsNullOrEmpty(listCourse)) return false;
+            if (listCourse.EndsWith(","))
+                listCourse = listCourse.Substring(0, listCourse.Length - 1);
+            string[] list = listCourse.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            int len = list.Length;
+            int[] cids = new int[len];
 
+            for (int i = 0; i < len; i++)
+            {
+                cids[i] = WebUtility.FilterParam(list[i]);
+                if (cids[i] == 0) return false;
+            }
+            DataSet dsCost = new course().getSUMCost(listCourse);
+            DataTable dtCost = dsCost.Tables[1];
+            if (dtCost.Rows.Count != len) return false;
+            decimal[] cost_list = new decimal[len];
+            
+            decimal allCost;
+            decimal per;
+            if (dsCost.Tables[0].Rows.Count == 0)
+            {
+                allCost = 0;
+                per = 0;
+            }
+            else
+            {
+                allCost = (decimal)dsCost.Tables[0].Rows[0][0];
+                per = cost / allCost;
+            }
+
+            int thispay;
+            for (int i = 0; i < len; i++)
+            {
+                thispay = (int)((decimal)dtCost.Rows[i]["Course_cost"] * per);
+                cost_list[i] = thispay;
+                allCost = allCost - thispay;
+            }
+            if (allCost != 0) cost_list[len - 1] = cost_list[len - 1] + allCost;
+            return dal.AddStudentCourse(cids, cost_list, stu_id);
+
+        }
 		#endregion  ExtensionMethod
 	}
 }

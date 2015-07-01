@@ -10,15 +10,15 @@ namespace Lythen.Model
 		public stu_vs_course()
 		{}
 		#region Model
-		private int _sc_stu_id;
-		private int? _sc_course_id;
+		private string _sc_stu_id;
+		private int _sc_course_id;
 		private DateTime? _sc_register_date;
 		private string _sc_pay;
 		private bool _sc_status;
 		/// <summary>
 		/// 
 		/// </summary>
-		public int Sc_stu_id
+		public string Sc_stu_id
 		{
 			set{ _sc_stu_id=value;}
 			get{return _sc_stu_id;}
@@ -26,7 +26,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int? Sc_course_id
+		public int Sc_course_id
 		{
 			set{ _sc_course_id=value;}
 			get{return _sc_course_id;}

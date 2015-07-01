@@ -219,29 +219,26 @@ namespace Lythen.BLL
             DataTable dtTeacher = dal.GetTeacherByRoles(roles).Tables[0];
             if (dtTeacher.Rows.Count == 0) return "";
 
-            if (Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
+            if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
             string file_path = string.Format("{0}teacher_{1}.txt", CachePath,role_id);
             StringBuilder sb = new StringBuilder();
             if (!File.Exists(file_path))
             {
-                sb.Append("[{\"id\":0,\"text\":\"请选择老师\",\"children\":[");
+                sb.Append("[{\"id\":0,\"text\":\"请选择老师\"}");
                 DataTable dtSub = new Lythen.BLL.subject().GetList("").Tables[0];
-                if (dtSub.Rows.Count == 0)
+                if (dtTeacher.Rows.Count == 0)
                 {
-                    sb.Append("	]}]");
+                    sb.Append("]");
                     return sb.ToString();
                 }
                 else
                 {
-                    DataRow[] drs = dtSub.Select("Subject_parent=0");
-                    int len = drs.Length;
-                    foreach (DataRow dr in drs)
+                    foreach (DataRow dr in dtTeacher.Rows)
                     {
-                        len--;
-                        WriteNode(dr, dtSub, sb, len);
+                        sb.Append(",{\"id\":\"").Append(dr["Teacher_id"]).Append("\",\"text\":\"").Append(dr["Teacher_realname"]).Append("\"}");
                     }
                 }
-                sb.Append("]}]");
+                sb.Append("]");
                 StreamWriter sw = new StreamWriter(file_path);
                 sw.Write(sb.ToString());
                 sw.Flush();
@@ -257,26 +254,6 @@ namespace Lythen.BLL
                 return str;
             }
 
-        }
-        void WriteNode(DataRow dr, DataTable dtsub, StringBuilder sb, int len)
-        {
-            sb.Append("{\"id\":\"").Append(dr["Subject_id"]).Append("\",\"text\":\"").Append(dr["Subject_title"]).Append("\",\"children\":[");
-
-            DataRow[] drs = dtsub.Select("Subject_parent=" + dr["Subject_id"].ToString());
-            if (drs.Length == 0)
-            {
-                sb.Append("]}");
-                if (len > 0) sb.Append(",");
-                return;
-            }
-            int lenc = drs.Length;
-            foreach (DataRow drc in drs)
-            {
-                lenc--;
-                WriteNode(drc, dtsub, sb, lenc);
-            }
-            sb.Append("]}");
-            if (len > 0) sb.Append(",");
         }
 		#endregion  ExtensionMethod
 	}

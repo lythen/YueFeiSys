@@ -17,9 +17,9 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(string Stu_id)
+		public bool Exists(string stu_id)
 		{
-			return dal.Exists(Stu_id);
+			return dal.Exists(stu_id);
 		}
 
 		/// <summary>
@@ -41,41 +41,41 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete(string Stu_id)
+		public bool Delete(string stu_id)
 		{
 			
-			return dal.Delete(Stu_id);
+			return dal.Delete(stu_id);
 		}
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool DeleteList(string Stu_idlist )
+		public bool DeleteList(string stu_idlist )
 		{
-			return dal.DeleteList(Lythen.Common.PageValidate.SafeLongFilter(Stu_idlist,0) );
+			return dal.DeleteList(Lythen.Common.PageValidate.SafeLongFilter(stu_idlist,0) );
 		}
 
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public Lythen.Model.student GetModel(string Stu_id)
+		public Lythen.Model.student GetModel(string stu_id)
 		{
 			
-			return dal.GetModel(Stu_id);
+			return dal.GetModel(stu_id);
 		}
 
 		/// <summary>
 		/// 得到一个对象实体，从缓存中
 		/// </summary>
-		public Lythen.Model.student GetModelByCache(string Stu_id)
+		public Lythen.Model.student GetModelByCache(string stu_id)
 		{
 			
-			string CacheKey = "studentModel-" + Stu_id;
+			string CacheKey = "studentModel-" + stu_id;
 			object objModel = Lythen.Common.DataCache.GetCache(CacheKey);
 			if (objModel == null)
 			{
 				try
 				{
-					objModel = dal.GetModel(Stu_id);
+					objModel = dal.GetModel(stu_id);
 					if (objModel != null)
 					{
 						int ModelCache = Lythen.Common.ConfigHelper.GetConfigInt("ModelCache");
@@ -163,7 +163,18 @@ namespace Lythen.BLL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
-
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public string AddStudent(Lythen.Model.student model)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                model.stu_id = DateTime.Now.ToString("yyyyMMddHHmmssff");
+                if (dal.Add(model)) return model.stu_id;
+            }
+            return "";
+        }
 		#endregion  ExtensionMethod
 	}
 }

@@ -184,8 +184,13 @@ namespace Lythen.BLL
         /// <param name="teacher_id">教师ID</param>
         /// <param name="status">课程状态</param>
         /// <returns></returns>
-        public DataTable GetListForTable(int subject_id, int teacher_id, string status)
+        public DataTable GetListForTable(int subject_id, int teacher_id, string status, int role_id, int adminid)
         {
+            if (teacher_id == 0)
+            {
+                if (role_id != 1)
+                    teacher_id = adminid;
+            }
             DataSet ds = dal.GetListForTable(subject_id, teacher_id, status);
             DataTable dtSub = ds.Tables[0];
             DataTable dtCount = new DataTable("table");
@@ -197,6 +202,48 @@ namespace Lythen.BLL
             dr[1] = dtSub;
             dtCount.Rows.Add(dr);
             return dtCount;
+        }
+        /// <summary>
+        /// 添加科目
+        /// </summary>
+        /// <param name="sch_id"></param>
+        /// <param name="cost"></param>
+        /// <param name="dtatinfo"></param>
+        /// <param name="cinfo"></param>
+        /// <param name="status"></param>
+        /// <param name="sub_id"></param>
+        /// <param name="teacher_id"></param>
+        /// <param name="ctime"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        public bool Add(int sch_id, decimal cost, string dtatinfo, string cinfo, string status, int sub_id, int teacher_id,  string title)
+        {
+            Model.course model = new Model.course();
+            model.Course_choool_id = 1;
+            model.Course_cost = cost;
+            model.Course_date = dtatinfo;
+            model.Course_info = cinfo;
+            model.Course_status = status;
+            model.Course_sub_id = sub_id;
+            model.Course_teacher_id = teacher_id;
+            model.Course_title = title;
+            return Add(model) > 0;
+        }
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int Course_sub_id, string Course_title)
+        {
+            return dal.Exists(Course_sub_id, Course_title);
+        }
+        /// <summary>
+        /// 选择课程的总价格
+        /// </summary>
+        /// <param name="list_id"></param>
+        /// <returns></returns>
+        public DataSet getSUMCost(string list_id)
+        {
+            return dal.getSUMCost(list_id);
         }
 		#endregion  ExtensionMethod
 	}

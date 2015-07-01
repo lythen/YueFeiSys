@@ -18,7 +18,7 @@ namespace Lythen.Model
 		private DateTime? _course_time;
 		private string _course_info;
 		private int? _course_choool_id;
-		private decimal? _course_cost;
+        private decimal? _course_cost = 0;
 		private string _course_status;
 		/// <summary>
 		/// 

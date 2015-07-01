@@ -16,6 +16,8 @@
     #addtb td{height:40px;}
     .input-text{padding:0px 5px 0px 5px}
     .combo{border:none;}
+    .select_border2{padding:0 0 0 0;height: 30px;  display: inline-block;  border: 1px solid #bac7d2;background: #fff;}
+    .input-text2{  padding: 0px 5px 0px 5px;}
     </style>
     <script>
         function checkAll(obj) {
@@ -26,9 +28,10 @@
             }
         }
         function AddCourse() {
-            var sub_id = $(".combo-value").val();
-            var info;
-            var cost;
+            var sub_id = $('#cbt').combotree("getValue");
+            var teacher = $('#cbtTe').combotree("getValue");
+            var info = $('#txtinfo').val();
+            var cost = $('#txtcost').val();
             if (sub_id == "" || sub_id == "0")
                 alert("请选择科目");
             else {
@@ -37,29 +40,24 @@
                     alert("请选择课程名称。");
                     return;
                 }
-                var datetime = $("#txtdate").datetimebox('getValue');
-                if (!isDateStr(datetime)) {
-                    alert("时间格式不正确。");
-                    return;
-                }
                 if (!isValidString(course)) {
-                    var teacher = $("#select_t").val();
                     $.post("AjaxHandler/CourseHandler.ashx",
                     { 'type': 'add',
                         'sub_id': sub_id,
-                        'course': course,
+                        'title': course,
                         'teacher': teacher,
-                        'info':info,
-                        'cost':cost
+                        'info': info,
+                        'cost': cost
                     },
                     function (data, status) {
                         if (status == "success") {
                             if (data == "success") {
                                 alert("添加成功。");
-                                loadTree();
+                                //loadTree();
+                                $('#dg').datagrid("reload");
                             } else if (data == "hasname") alert("科目重复。");
                             else {
-                                alert("添加失败。")
+                                alert(data)
                             }
                         } else {
                             alert("添加失败。");
@@ -99,24 +97,22 @@
             <td><span>
                       <div class="select_border"> 
                         <div class="select_containers "> 
-                        <select name="" id="select_t"> 
-                        <option value="1">肖秤</option> 
-                        <option value="2">刘德华</option> 
-                        </select> 
+
+                        <input id="cbtTe" style="width:200px;" />
                         </div> 
                       </div> 
                     </span></td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;上课时间：</td>
-            <td><input id="txtdate" style="width:200px;" /></td>
+            <td></td>
+            <td></td>
             <td colspan="2">
             </td>
             </tr>
             <tr>
             <td>
-            &nbsp;&nbsp;上课时间说明：
+            &nbsp;&nbsp;课程介绍：
             </td>
             <td colspan="3">
-            <input type="text" id="txttimeinfo" name="name" class="input-text lh30" style="width:480px;" />
+            <textarea id="txtinfo" rows="10" name="name" class="input-text2" style="width:480px;" ></textarea>
             </td>
             <td colspan="2">&nbsp;&nbsp;
             <input type="button" name="button" onclick="AddCourse();" class="btn btn82 btn_add" value="新增"/>
@@ -133,7 +129,7 @@
               <div class="search_bar_btn">
         &nbsp;&nbsp;
                     课程状态：<span>
-                      <div class="select_border"> 
+                      <div class="select_border2"> 
                         <div class="select_containers "> 
                         <select name="" id="sestatus" class="select"> 
                         <option value="0">全部</option> 
@@ -158,9 +154,10 @@
     var subject_id;
     var status;
     loadTree();
+    loadteacher();
     $(function () {
         InitDataTxt();
-        setTimeout(function () { getVal(loadtable); }, 3000);
+        getVal(loadtable);
     });
     function loadTree() {
         $('#cbt').combotree({
@@ -175,6 +172,19 @@
         });
         $('#cbt').combotree("setValue", 0);
     }
+    function loadteacher() {
+        $('#cbtTe').combotree({
+            url: 'AjaxHandler/TeacherHandler.ashx?type=getjson',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                getVal(loadtable);
+            }
+        });
+        $('#cbtTe').combotree("setValue", 0);
+    }
     function InitDataTxt() {
         $('#txtdate').timespinner({
             min: '00:00',
@@ -184,12 +194,9 @@
         $('#txtdate').timespinner("setValue", "00:00:00");
     }
     function getVal(callback) {
-        teacher_id = $('#select_t').val();
+        teacher_id = $('#cbtTe').combotree("getValue");
         subject_id = $('#cbt').combotree("getValue");
         status = $('#sestatus').val();
-        alert(teacher_id);
-        alert(subject_id);
-        alert(status);
         callback();
     }
     function pagerFilter(data) {
@@ -246,7 +253,7 @@
                 { field: 'Subject_title', title: '所属科目', width: 100, align: 'center' },
                 { field: 'Teacher_realname', title: '任课老师', width: 100, align: 'center' },
                 { field: 'Course_cost', title: '收费(元)', width: 70, align: 'center' },
-                { field: 'Course_date', title: '时间说明', width: 200, align: 'center' },
+                { field: 'Course_info', title: '时间说明', width: 200, align: 'center' },
                 { field: 'action', title: '操作', width: 100, align: 'center',
                     formatter: function (value, row, index) {
                             var e = '<a href="#" onclick="editrow(this)">编辑</a> ';

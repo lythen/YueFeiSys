@@ -10,55 +10,85 @@
     <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
     <title>学生录入</title>
     <style>
-    .contain
-    {
-        margin:20px 0px 0px 20px;
+        .contain
+        {
+            width: 960px;
+            margin-left: 15px;
+            margin-right: 15px;
         }
-    .logtable
-    {
-        width:750px;
-        margin:0px auto;
-    }
-    .msgtb{width:750px;margin-top:20px;border-left:1px solid #d3dbde;}
-    .msgtb td
-    {
-        border-left:none;
-        border-right:none;
-        padding-right:25px;
-    }
-    .tdtxt
-    {
-        background-color:#f6f6f6;
-    }
-    .ttl
-    {
-        text-align:left;
-    }
-    .spttl
-    {
-        font-size:20px;
-        margin-left:10px;
-    }
-    .tdcontent
-    {
-        background-color:#fbfbfb;
-        text-align:left;
-        height:30px;
-    }
-    .input_long
-    {
-        width:100%;
-    }
-    .select2
-    {
-        height:100%;
-        width:100%;
-    }
-    #addsignup
-    {
-        display:none;
-    }
-    .combo{border:none;}
+        .logtable
+        {
+            width: 960px;
+            margin: 0px auto;
+        }
+        .msgtb
+        {
+            width: 960px;
+            margin-top: 20px;
+            border-left: 1px solid #d3dbde;
+        }
+        .msgtb td
+        {
+            border-left: none;
+            border-right: none;
+            padding-right: 25px;
+        }
+        .tdtxt
+        {
+            background-color: #f6f6f6;
+        }
+        .ttl
+        {
+            text-align: left;
+        }
+        .spttl
+        {
+            font-size: 20px;
+            margin-left: 10px;
+        }
+        .tdcontent
+        {
+            background-color: #fbfbfb;
+            text-align: left;
+            height: 30px;
+        }
+        .input_long
+        {
+            width: 100%;
+        }
+        .select2
+        {
+            height: 100%;
+            width: 100%;
+        }
+        #addsignup
+        {
+            display: none;
+        }
+        .combo
+        {
+            border: none;
+        }
+        #addtb td
+        {
+            height: 40px;
+        }
+        .input-text
+        {
+            padding: 0px 5px 0px 5px;
+        }
+        .select_border2
+        {
+            padding: 0 0 0 0;
+            height: 30px;
+            display: inline-block;
+            border: 1px solid #bac7d2;
+            background: #fff;
+        }
+        .input-text2
+        {
+            padding: 0px 5px 0px 5px;
+        }
     </style>
     <script>
         function addStu() {
@@ -72,14 +102,35 @@
             var txtparent_phone = $("#txtparent_phone").val();
             var txtparent_dep = $("#txtparent_dep").val();
             var txtparent_address = $("#txtparent_address").val();
-            var txtpay = $("#txtpay").val();
             var txtemail = $("#txtemail").val();
-            var stu_age = $("#txtage").val();
             //报名信息
-
+            var reg = "";
+            var ac = $('#dg').datagrid("getChecked");
+            if (ac.length > 0) {
+                for (var i = 0; i < ac.length; i++) {
+                    reg = reg + ac[i].Course_id + ",";
+                }
+            }
+            var cost = $("#txtpay").val();
             $.post('AjaxHandler/StudentHandler.ashx',
-            '',
-            function (data,status) {
+            {
+                'name': txtstuname,
+                'age': txtage,
+                'sex': slsex,
+                'school': txtschool,
+                'grade': slgrade,
+                'pname': txtparent_name,
+                'pphone': txtparent_phone,
+                'pdep': txtparent_dep,
+                'paddress': txtparent_address,
+                'pemail': txtemail,
+                'regsub': reg,
+                'regpay': cost
+            },
+            function (data, status) {
+                if (status == 'success') {
+                    
+                } else alert("添加失败。");
             });
         }
         function clearall() {
@@ -87,229 +138,338 @@
             $("#txtage").val('');
             $("#txtschool").val('');
             $("#slgrade").val();
-             $("#txtparent_name").val('');
+            $("#txtparent_name").val('');
             $("#txtparent_phone").val('');
-             $("#txtparent_dep").val('');
+            $("#txtparent_dep").val('');
             $("#txtparent_address").val('');
             $("#txtpay").val('');
             $("#txtemail").val('');
             $("#txtage").val('');
         }
-        function courseSlide() {
-            $("#addsignup").slideToggle();
-            $('#cbt').combotree({
-                url: 'AjaxHandler/SubjectComboTreeHandler.ashx',
-                required: true,
-                method: 'get',
-                valueField: 'id',
-                textField: 'text'
-            });
-        }
     </script>
 </head>
 <body>
-<div class="contain">
-    <div class="logtable">
-    <h1>跃飞教育-学生录入</h1>
-    <table class="list_table msgtb" cellpadding="0" cellspacing="0">
-        <tr>
-            <td class="tdtxt ttl" colspan="4"><span class="spttl">学生信息</span></td>
-        </tr>
-        <tr>
-            <td class="tdtxt">学生姓名：</td><td class="tdcontent"><input id="txtstuname" type="text" class="input-text lh30" /></td><td class="tdcontent"></td><td class="tdcontent"></td>
-        </tr>
-        <tr>
-            <td class="tdtxt">年龄：</td><td class="tdcontent"><input id="txtage" class="input-text lh30" type="text" /></td>
-            <td class="tdtxt">姓别：</td><td class="tdcontent">
-            <div class="select_containers "> 
-            <select id="slsex" class="select" name="slsex">
-            <option selected="selected" value="1">男</option>
-            <option value="2">女</option>
-            </select>
-            </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="tdtxt">在读学校：</td><td class="tdcontent"><input id="txtschool" class="input-text lh30" type="text" /></td>
-            <td class="tdtxt">年级：</td><td class="tdcontent">
-            <div class="select_containers "> 
-            <select id="slgrade" name="slsex" class="select">
-            <option selected="selected" value="1">一年级</option>
-            <option value="2">二年级</option>
-            <option value="3">三年级</option>
-            <option value="4">四年级</option>
-            <option value="5">五年级</option>
-            <option value="6">六年级</option>
-            <option value="7">初一</option>
-            <option value="8">初二</option>
-            <option value="9">初三</option>
-            </select>
-            </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="tdtxt ttl"  colspan="4"><span class="spttl">家长信息：</span></td>
-         </tr>
-        <tr>
-            <td class="tdtxt">家长姓名：</td><td class="tdcontent"><input id="txtparent_name" class="input-text lh30" type="text" /></td>
-            <td class="tdtxt">联系电话：</td><td class="tdcontent"><input id="txtparent_phone" class="input-text lh30" type="text" /></td>
-        </tr>
-         <tr>
-            <td class="tdtxt">电子邮箱：</td><td class="tdcontent"  colspan="2"><input id="txtemail" class="input-text lh30" type="text" size="30" /></td>
-            <td class="tdcontent"></td>
-        </tr>
-        <tr>
-            <td  class="tdtxt">工作单位：</td><td class="tdcontent" colspan="3"><input id="txtparent_dep" class="input-text lh30 input_long" type="text" /></td>
-        </tr>
-        <tr>
-            <td  class="tdtxt">家庭住址：</td><td class="tdcontent" colspan="3"><input id="txtparent_address" class="input-text lh30 input_long" type="text" /></td>
-        </tr>
-    </table>
-
-    <a href="javascript:courseSlide();" class="ext_btn" style="float:left;margin-top:15px;"><span class="add"></span>添加报名信息</a>
-    <br /> <br />
-    <div id="addsignup" class="box">
-    
-     <div class="mt10">
-        <div class="box span10 oh">
-        <div class="box_bottom pb5 pt5 pr10" style="border:1px solid #dadada;">
-              <div class="search_bar_btn">
-               &nbsp;&nbsp;
-                    科目筛选：<span>
-                      <div class="select_border"> 
-                        <div class="select_containers "> 
-                        <input id="cbt" style="width:200px;" /> 
-                        </div> 
-                      </div> 
-                    </span>
-        &nbsp;&nbsp;
-                    课程状态：<span>
-                      <div class="select_border"> 
-                        <div> 
-                        <select name="" class="select2"> 
-                        <option value="2">进行中</option> 
-                        <option value="3">未开始</option> 
-                        </select> 
-                        </div> 
-                      </div> 
-                    </span>
-        </div></div>
-        <br />
-              <table width="100%" border="0" cellpadding="0" cellspacing="0" class="list_table">
+    <div class="contain">
+        <div class="logtable">
+            <h1>
+                跃飞教育-学生录入</h1>
+            <table class="list_table msgtb" cellpadding="0" cellspacing="0">
                 <tr>
-                   <th>选择 </th>
-                   <th>课程ID</th>
-                   <th>课程名称</th>
-                   <th>所属科目</th>
-                   <th>上课时间</th>
-                   <th>任课老师</th>
-                   <th>学费</th>
-                   <th>状态</th>
-                    </tr>
-                <tr class="tr">
-                   <td class="td_center"><input id="checkbox1" class="cbk" type="checkbox"></td>
-                   <td>aad</td>
-                   <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                 </tr>
-                 <tr class="tr"> 
-                   <td class="td_center"><input type="checkbox"/></td>
-                   <td>aad</td>
-                   <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                 </tr>
-                 <tr class="tr">
-                    <td class="td_center"><input type="checkbox"/></td>
-                   <td>aad</td>
-                   <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                 </tr>
-                 <tr class="tr">
-                    <td class="td_center"><input type="checkbox"/></td>
-                   <td>aad</td>
-                   <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                 </tr>
-                 <tr class="tr">
-                    <td class="td_center"><input type="checkbox"/></td>
-                   <td>aad</td>
-                   <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                 </tr>
-                 <tr class="tr">
-                   <td class="td_center"><input type="checkbox"/></td>
-                   <td>aad</td>
-                   <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                 </tr>
-                 <tr class="tr">
-                   <td class="td_center"><input type="checkbox"/></td>
-                   <td>aad</td>
-                   <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                 </tr>
-                 <tr class="tr">
-                   <td class="td_center"><input type="checkbox"/></td>
-                   <td>aad</td>
-                   <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                 </tr>
-                 <tr class="tr">
-                   <td class="td_center"><input type="checkbox" /></td>
-                   <td>aad</td>
-                   <td>aad</td>
-                   <td>aad</td>
-                <td>aad</td>
-                 </tr>
-              
-              </table>
-              <div class="page mt10">
-                <div class="pagination">
-                  <ul>
-                      <li class="first-child"><a href="#">首页</a></li>
-                      <li class="disabled"><span>上一页</span></li>
-                      <li class="active"><span>1</span></li>
-                      <li><a href="#">2</a></li>
-                      <li><a href="#">下一页</a></li>
-                      <li class="last-child"><a href="#">末页</a></li>
-                  </ul>
+                    <td class="tdtxt ttl" colspan="4">
+                        <span class="spttl">学生信息</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdtxt">
+                        学生姓名：
+                    </td>
+                    <td class="tdcontent">
+                        <input id="txtstuname" type="text" class="input-text lh30" />
+                    </td>
+                    <td class="tdcontent">
+                    </td>
+                    <td class="tdcontent">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdtxt">
+                        年龄：
+                    </td>
+                    <td class="tdcontent">
+                        <input id="txtage" class="input-text lh30" type="text" />
+                    </td>
+                    <td class="tdtxt">
+                        姓别：
+                    </td>
+                    <td class="tdcontent">
+                        <div class="select_containers ">
+                            <select id="slsex" class="select" name="slsex">
+                                <option selected="selected" value="1">男</option>
+                                <option value="2">女</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdtxt">
+                        在读学校：
+                    </td>
+                    <td class="tdcontent">
+                        <input id="txtschool" class="input-text lh30" type="text" />
+                    </td>
+                    <td class="tdtxt">
+                        年级：
+                    </td>
+                    <td class="tdcontent">
+                        <div class="select_containers ">
+                            <select id="slgrade" name="slsex" class="select">
+                                <option selected="selected" value="1">一年级</option>
+                                <option value="2">二年级</option>
+                                <option value="3">三年级</option>
+                                <option value="4">四年级</option>
+                                <option value="5">五年级</option>
+                                <option value="6">六年级</option>
+                                <option value="7">初一</option>
+                                <option value="8">初二</option>
+                                <option value="9">初三</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdtxt ttl" colspan="4">
+                        <span class="spttl">家长信息：</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdtxt">
+                        家长姓名：
+                    </td>
+                    <td class="tdcontent">
+                        <input id="txtparent_name" class="input-text lh30" type="text" />
+                    </td>
+                    <td class="tdtxt">
+                        联系电话：
+                    </td>
+                    <td class="tdcontent">
+                        <input id="txtparent_phone" class="input-text lh30" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdtxt">
+                        电子邮箱：
+                    </td>
+                    <td class="tdcontent" colspan="2">
+                        <input id="txtemail" class="input-text lh30" type="text" size="30" />
+                    </td>
+                    <td class="tdcontent">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdtxt">
+                        工作单位：
+                    </td>
+                    <td class="tdcontent" colspan="3">
+                        <input id="txtparent_dep" class="input-text lh30 input_long" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdtxt">
+                        家庭住址：
+                    </td>
+                    <td class="tdcontent" colspan="3">
+                        <input id="txtparent_address" class="input-text lh30 input_long" type="text" />
+                    </td>
+                </tr>
+            </table>
+                     <div class="mt10">
+                <input type="button" value="确定" onclick="addStu();" class="ext_btn ext_btn_submit" />
+                <input type="button" onclick="clearall();" class="ext_btn ext_btn_success" value="重填" />
+                <input type="button" value="返回" onclick="location.href='javascript:history.go(-1)'"
+                    class="ext_btn" />
+            </div>
+            <a href="javascript:courseSlide();" class="ext_btn" style="float: left; margin-top: 15px;">
+                <span class="add"></span>添加报名信息</a>
+            <br />
+            <br />
+            <div id="addsignup" class="box">
+                <div class="mt10">
+                    <div class="box span10 oh">
+                        <div class="box_bottom pb5 pt5 pr10" style="border: 1px solid #dadada;">
+                            <div class="search_bar_btn">
+                                &nbsp;&nbsp; 科目筛选：<span>
+                                    <div class="select_border">
+                                        <div class="select_containers ">
+                                            <input id="cbt" style="width: 200px;" />
+                                        </div>
+                                    </div>
+                                </span>&nbsp;&nbsp;选择老师： <span>
+                                    <div class="select_border">
+                                        <div class="select_containers ">
+                                            <input id="cbtTe" style="width: 200px;" />
+                                        </div>
+                                    </div>
+                                </span>
+                                &nbsp;&nbsp; 课程状态：<span>
+                                    <div class="select_border2">
+                                        <div class="select_containers ">
+                                            <select name="" id="sestatus" class="select">
+                                                <option value="0">全部</option>
+                                                <option value="1">已结束</option>
+                                                <option value="2">进行中</option>
+                                                <option value="3">未开始</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                        <br />
+                        <table id="dg" title="课程列表显示" />
+                    </div>
+                    <div class="box_bottom pb5 pt5 pr10" style="border: 1px solid #dadada;">
+                        <div class="search_bar_btn">
+                            &nbsp;&nbsp; 交费：&nbsp;<input type="text" id="txtpay" name="name" class="input-text lh30"
+                                size="10" />&nbsp;元
+                        </div>
+                    </div>
                 </div>
-
-              </div>
+            </div>
+           
         </div>
-        <div class="box_bottom pb5 pt5 pr10" style="border:1px solid #dadada;">
-              <div class="search_bar_btn">
-               &nbsp;&nbsp;
-                    交费：&nbsp;<input type="text" id="txtpay" name="name" class="input-text lh30" size="10" />&nbsp;元
-        </div></div>
-     </div>
+
+        <div class="box_bottom pb5 pt5 pr10">
+            <div class="search_bar_btn">
+                &nbsp;&nbsp;<br />
+            </div>
+        </div>
     </div>
-    <div id="button" class="mt10">
-    <input type="button" value="确定" onclick="addStu();" class="ext_btn ext_btn_submit"/>
-    <input type="button" onclick="clearall();" class="ext_btn ext_btn_success" value="重填"/>
-                 <input type="button" value="返回" onclick="location.href='javascript:history.go(-1)'" class="ext_btn"/>
-                 
-    </div>
-    </div>
-    <div class="box_bottom pb5 pt5 pr10">
-              <div class="search_bar_btn">
-               &nbsp;&nbsp;<br />
-                    
-        </div></div>
-</div>
 </body>
+<script>
+    var teacher_id;
+    var subject_id;
+    var status;
+    function courseSlide() {
+        $("#addsignup").slideToggle();
+        loadTree();
+        loadteacher();
+        getVal(loadtable);
+    }
+    function loadTree() {
+        $('#cbt').combotree({
+            url: 'AjaxHandler/SubjectHandler.ashx?type=gettable',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                getVal(loadtable);
+            }
+        });
+        $('#cbt').combotree("setValue", 0);
+    }
+    function loadteacher() {
+        $('#cbtTe').combotree({
+            url: 'AjaxHandler/TeacherHandler.ashx?type=getjson',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                getVal(loadtable);
+            }
+        });
+        $('#cbtTe').combotree("setValue", 0);
+    }
+    function getVal(callback) {
+        teacher_id = $('#cbtTe').combotree("getValue");
+        subject_id = $('#cbt').combotree("getValue");
+        status = $('#sestatus').val();
+        callback();
+    }
+    function pagerFilter(data) {
+        if (typeof data.length == 'number' && typeof data.splice == 'function') {	// is array
+            data = {
+                total: data.length,
+                rows: data
+            }
+        }
+        var dg = $(this);
+        var opts = dg.datagrid('options');
+        var pager = dg.datagrid('getPager');
+        pager.pagination({
+            onSelectPage: function (pageNum, pageSize) {
+                opts.pageNumber = pageNum;
+                opts.pageSize = pageSize;
+                pager.pagination('refresh', {
+                    pageNumber: pageNum,
+                    pageSize: pageSize
+                });
+                dg.datagrid('loadData', data);
+            }
+        });
+        if (!data.originalRows) {
+            data.originalRows = (data.rows);
+        }
+        var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
+        var end = start + parseInt(opts.pageSize);
+        data.rows = (data.originalRows.slice(start, end));
+        return data;
+    }
+    var pagesize = 10;
+    var pagenumber = 1;
+    function loadtable() {
+        $('#dg').datagrid({ loadFilter: pagerFilter }).datagrid({
+            title: '课程列表显示',
+            iconCls: 'icon-edit',
+            singleSelect: false,
+            idField: 'Course_id',
+            url: 'AjaxHandler/CourseHandler.ashx',
+            pagination: true,
+            pageSize: pagesize,
+            pageNumber: pagenumber,
+            queryParams: {
+                type: 'gettable',
+                teacher_id: teacher_id,
+                subject_id: subject_id,
+                status: status
+            },
+            width: 960,
+            columns: [[
+                { field: 'cb', title: '全选', width: 100, align: 'center', checkbox: true },
+                { field: 'Course_id', title: '课程ID', width: 60 },
+                { field: 'Course_title', title: '科目名称', width: 200, align: 'center', editor: 'text' },
+                { field: 'Subject_title', title: '所属科目', width: 100, align: 'center' },
+                { field: 'Teacher_realname', title: '任课老师', width: 100, align: 'center' },
+                { field: 'Course_cost', title: '收费(元)', width: 70, align: 'center' },
+                { field: 'Course_info', title: '时间说明', width: 200, align: 'center' }
+            ]],
+            onCheck: function (index, row) {
+                setCost(index, row);
+            },
+            onUncheck: function (index, row) {
+                setCost(index, row);
+            },
+            onCheckAll: function (index, row) {
+                setCost(index, row);
+            },
+            onUncheckAll: function (index, row) {
+                setCost(index, row);
+            }
+        });
+        //分页事件
+        var pg = $('#dg').datagrid("getPager");
+        $(pg).pagination({
+            //选择每页显示列表数量
+            onChangePageSize: function (pageSize) {
+                pagesize = pageSize;
+                loadtable();
+            },
+            //刷新列表
+            onRefresh: function (pageNumber, pageSize) {
+                pagesize = pageSize;
+                pagenumber = pageNumber;
+                loadtable();
+            },
+            //直接点击页码
+            onSelectPage: function (pageNumber, pageSize) {
+                pagesize = pageSize;
+                pagenumber = pageNumber;
+                loadtable();
+            }
+        });
+    }
+    function getRowIndex(target) {
+        var tr = $(target).closest('tr.datagrid-row');
+        return parseInt(tr.attr('datagrid-row-index'));
+    }
+    function setCost(index, row) {
+        var ac = $('#dg').datagrid("getChecked");
+        var mo = 0;
+        for (var i = 0; i < ac.length; i++) {
+            mo = parseFloat(ac[i].Course_cost) + mo;
+        }
+        $("#txtpay").val(mo);
+    }
+</script>
 </html>

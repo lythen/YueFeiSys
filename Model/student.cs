@@ -17,13 +17,16 @@ namespace Lythen.Model
 		private int? _stu_school_id;
 		private string _stu_pic_path;
 		private bool _stu_status;
+		private string _stu_sex;
 		private string _parent_name;
 		private string _parent_mobile;
 		private string _parent_dep;
+		private string _parent_email;
+		private string _address;
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Stu_id
+		public string stu_id
 		{
 			set{ _stu_id=value;}
 			get{return _stu_id;}
@@ -31,7 +34,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Stu_name
+		public string stu_name
 		{
 			set{ _stu_name=value;}
 			get{return _stu_name;}
@@ -39,7 +42,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public DateTime? Stu_birthday
+		public DateTime? stu_birthday
 		{
 			set{ _stu_birthday=value;}
 			get{return _stu_birthday;}
@@ -47,7 +50,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int? Stu_grade
+		public int? stu_grade
 		{
 			set{ _stu_grade=value;}
 			get{return _stu_grade;}
@@ -55,7 +58,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int? Stu_school_id
+		public int? stu_school_id
 		{
 			set{ _stu_school_id=value;}
 			get{return _stu_school_id;}
@@ -63,7 +66,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Stu_pic_path
+		public string stu_pic_path
 		{
 			set{ _stu_pic_path=value;}
 			get{return _stu_pic_path;}
@@ -71,7 +74,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool Stu_Status
+		public bool stu_Status
 		{
 			set{ _stu_status=value;}
 			get{return _stu_status;}
@@ -79,7 +82,15 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Parent_name
+		public string stu_sex
+		{
+			set{ _stu_sex=value;}
+			get{return _stu_sex;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string parent_name
 		{
 			set{ _parent_name=value;}
 			get{return _parent_name;}
@@ -87,7 +98,7 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Parent_mobile
+		public string parent_mobile
 		{
 			set{ _parent_mobile=value;}
 			get{return _parent_mobile;}
@@ -95,10 +106,26 @@ namespace Lythen.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Parent_dep
+		public string parent_dep
 		{
 			set{ _parent_dep=value;}
 			get{return _parent_dep;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string parent_email
+		{
+			set{ _parent_email=value;}
+			get{return _parent_email;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string address
+		{
+			set{ _address=value;}
+			get{return _address;}
 		}
 		#endregion Model
 

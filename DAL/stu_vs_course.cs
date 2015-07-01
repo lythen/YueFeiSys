@@ -19,21 +19,22 @@ namespace Lythen.DAL
 		/// </summary>
 		public int GetMaxId()
 		{
-		return DbHelperSQL.GetMaxID("Sc_stu_id", "stu_vs_course"); 
+		return DbHelperSQL.GetMaxID("Sc_course_id", "stu_vs_course"); 
 		}
 
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(int Sc_stu_id)
+		public bool Exists(string Sc_stu_id,int Sc_course_id)
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("select count(1) from stu_vs_course");
-			strSql.Append(" where Sc_stu_id=@Sc_stu_id");
+			strSql.Append(" where Sc_stu_id=@Sc_stu_id and Sc_course_id=@Sc_course_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Sc_stu_id", SqlDbType.Int,4)
-			};
+					new SqlParameter("@Sc_stu_id", SqlDbType.VarChar,20),
+					new SqlParameter("@Sc_course_id", SqlDbType.Int,4)			};
 			parameters[0].Value = Sc_stu_id;
+			parameters[1].Value = Sc_course_id;
 
 			return DbHelperSQL.Exists(strSql.ToString(),parameters);
 		}
@@ -42,32 +43,33 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
-		public int Add(Lythen.Model.stu_vs_course model)
+		public bool Add(Lythen.Model.stu_vs_course model)
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into stu_vs_course(");
-			strSql.Append("Sc_course_id,Sc_register_date,Sc_pay,Sc_status)");
+			strSql.Append("Sc_stu_id,Sc_course_id,Sc_register_date,Sc_pay,Sc_status)");
 			strSql.Append(" values (");
-			strSql.Append("@Sc_course_id,@Sc_register_date,@Sc_pay,@Sc_status)");
-			strSql.Append(";select @@IDENTITY");
+			strSql.Append("@Sc_stu_id,@Sc_course_id,@Sc_register_date,@Sc_pay,@Sc_status)");
 			SqlParameter[] parameters = {
+					new SqlParameter("@Sc_stu_id", SqlDbType.VarChar,20),
 					new SqlParameter("@Sc_course_id", SqlDbType.Int,4),
 					new SqlParameter("@Sc_register_date", SqlDbType.DateTime),
 					new SqlParameter("@Sc_pay", SqlDbType.VarChar,50),
 					new SqlParameter("@Sc_status", SqlDbType.Bit,1)};
-			parameters[0].Value = model.Sc_course_id;
-			parameters[1].Value = model.Sc_register_date;
-			parameters[2].Value = model.Sc_pay;
-			parameters[3].Value = model.Sc_status;
+			parameters[0].Value = model.Sc_stu_id;
+			parameters[1].Value = model.Sc_course_id;
+			parameters[2].Value = model.Sc_register_date;
+			parameters[3].Value = model.Sc_pay;
+			parameters[4].Value = model.Sc_status;
 
-			object obj = DbHelperSQL.GetSingle(strSql.ToString(),parameters);
-			if (obj == null)
+			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
+			if (rows > 0)
 			{
-				return 0;
+				return true;
 			}
 			else
 			{
-				return Convert.ToInt32(obj);
+				return false;
 			}
 		}
 		/// <summary>
@@ -77,22 +79,21 @@ namespace Lythen.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("update stu_vs_course set ");
-			strSql.Append("Sc_course_id=@Sc_course_id,");
 			strSql.Append("Sc_register_date=@Sc_register_date,");
 			strSql.Append("Sc_pay=@Sc_pay,");
 			strSql.Append("Sc_status=@Sc_status");
-			strSql.Append(" where Sc_stu_id=@Sc_stu_id");
+			strSql.Append(" where Sc_stu_id=@Sc_stu_id and Sc_course_id=@Sc_course_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Sc_course_id", SqlDbType.Int,4),
 					new SqlParameter("@Sc_register_date", SqlDbType.DateTime),
 					new SqlParameter("@Sc_pay", SqlDbType.VarChar,50),
 					new SqlParameter("@Sc_status", SqlDbType.Bit,1),
-					new SqlParameter("@Sc_stu_id", SqlDbType.Int,4)};
-			parameters[0].Value = model.Sc_course_id;
-			parameters[1].Value = model.Sc_register_date;
-			parameters[2].Value = model.Sc_pay;
-			parameters[3].Value = model.Sc_status;
-			parameters[4].Value = model.Sc_stu_id;
+					new SqlParameter("@Sc_stu_id", SqlDbType.VarChar,20),
+					new SqlParameter("@Sc_course_id", SqlDbType.Int,4)};
+			parameters[0].Value = model.Sc_register_date;
+			parameters[1].Value = model.Sc_pay;
+			parameters[2].Value = model.Sc_status;
+			parameters[3].Value = model.Sc_stu_id;
+			parameters[4].Value = model.Sc_course_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -108,36 +109,19 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete(int Sc_stu_id)
+		public bool Delete(string Sc_stu_id,int Sc_course_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("delete from stu_vs_course ");
-			strSql.Append(" where Sc_stu_id=@Sc_stu_id");
+			strSql.Append(" where Sc_stu_id=@Sc_stu_id and Sc_course_id=@Sc_course_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Sc_stu_id", SqlDbType.Int,4)
-			};
+					new SqlParameter("@Sc_stu_id", SqlDbType.VarChar,20),
+					new SqlParameter("@Sc_course_id", SqlDbType.Int,4)			};
 			parameters[0].Value = Sc_stu_id;
+			parameters[1].Value = Sc_course_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
-			if (rows > 0)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		/// <summary>
-		/// 批量删除数据
-		/// </summary>
-		public bool DeleteList(string Sc_stu_idlist )
-		{
-			StringBuilder strSql=new StringBuilder();
-			strSql.Append("delete from stu_vs_course ");
-			strSql.Append(" where Sc_stu_id in ("+Sc_stu_idlist + ")  ");
-			int rows=DbHelperSQL.ExecuteSql(strSql.ToString());
 			if (rows > 0)
 			{
 				return true;
@@ -152,16 +136,17 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public Lythen.Model.stu_vs_course GetModel(int Sc_stu_id)
+		public Lythen.Model.stu_vs_course GetModel(string Sc_stu_id,int Sc_course_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("select  top 1 Sc_stu_id,Sc_course_id,Sc_register_date,Sc_pay,Sc_status from stu_vs_course ");
-			strSql.Append(" where Sc_stu_id=@Sc_stu_id");
+			strSql.Append(" where Sc_stu_id=@Sc_stu_id and Sc_course_id=@Sc_course_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@Sc_stu_id", SqlDbType.Int,4)
-			};
+					new SqlParameter("@Sc_stu_id", SqlDbType.VarChar,20),
+					new SqlParameter("@Sc_course_id", SqlDbType.Int,4)			};
 			parameters[0].Value = Sc_stu_id;
+			parameters[1].Value = Sc_course_id;
 
 			Lythen.Model.stu_vs_course model=new Lythen.Model.stu_vs_course();
 			DataSet ds=DbHelperSQL.Query(strSql.ToString(),parameters);
@@ -184,9 +169,9 @@ namespace Lythen.DAL
 			Lythen.Model.stu_vs_course model=new Lythen.Model.stu_vs_course();
 			if (row != null)
 			{
-				if(row["Sc_stu_id"]!=null && row["Sc_stu_id"].ToString()!="")
+				if(row["Sc_stu_id"]!=null)
 				{
-					model.Sc_stu_id=int.Parse(row["Sc_stu_id"].ToString());
+					model.Sc_stu_id=row["Sc_stu_id"].ToString();
 				}
 				if(row["Sc_course_id"]!=null && row["Sc_course_id"].ToString()!="")
 				{
@@ -286,7 +271,7 @@ namespace Lythen.DAL
 			}
 			else
 			{
-				strSql.Append("order by T.Sc_stu_id desc");
+				strSql.Append("order by T.Sc_course_id desc");
 			}
 			strSql.Append(")AS Row, T.*  from stu_vs_course T ");
 			if (!string.IsNullOrEmpty(strWhere.Trim()))
@@ -314,7 +299,7 @@ namespace Lythen.DAL
 					new SqlParameter("@strWhere", SqlDbType.VarChar,1000),
 					};
 			parameters[0].Value = "stu_vs_course";
-			parameters[1].Value = "Sc_stu_id";
+			parameters[1].Value = "Sc_course_id";
 			parameters[2].Value = PageSize;
 			parameters[3].Value = PageIndex;
 			parameters[4].Value = 0;
@@ -325,7 +310,27 @@ namespace Lythen.DAL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
-
+        /// <summary>
+        /// 报名课程
+        /// </summary>
+        /// <param name="listCourse"></param>
+        /// <param name="cost"></param>
+        /// <returns></returns>
+        public bool AddStudentCourse(int[] listCourse, decimal[] cost,string stu_id)
+        {
+            StringBuilder sbsql = new StringBuilder();
+            DateTime dt = DateTime.Now;
+            int len = listCourse.Length;
+            for (int i = 0; i < len; i++)
+            {
+                sbsql.Append("if not exists(select Sc_stu_id from stu_vs_course where Sc_stu_id='").Append(stu_id).Append("' and Sc_course_id=").Append(listCourse[i]);
+                sbsql.Append(") begin insert into stu_vs_course(Sc_stu_id,Sc_course_id,Sc_register_date,Sc_pay,Sc_status) values ('").Append(stu_id).Append("',").Append(listCourse[i]);
+                sbsql.Append(",'").Append(dt).Append("','").Append(cost[i]).Append("','1') end else begin update stu_vs_course set Sc_register_date='").Append(dt).Append("',Sc_pay='").Append(cost[i]).Append("',Sc_status='1' where Sc_stu_id='").Append(stu_id).Append("' and Sc_course_id=").Append(listCourse[i]).Append(" end;");
+            }
+            int row = DbHelperSQL.ExecuteSql(sbsql.ToString());
+            if (row == len) return true;
+            else return false;
+        }
 		#endregion  ExtensionMethod
 	}
 }
