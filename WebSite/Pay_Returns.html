@@ -3,11 +3,197 @@
 <head>
     <base target="right" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="css/common.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/com.css" />
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/easyui.css" />
+    <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="Scripts/typecheck.js"></script>
+    <script type="text/javascript" src="Scripts/login.js"></script>
     <title>后台首页</title>
+    <style>
+        #contain
+        {
+            width: 960px;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        #addtb td
+        {
+            height: 40px;
+        }
+        .input-text
+        {
+            padding: 0px 5px 0px 5px;
+        }
+        .combo
+        {
+            border: none;
+        }
+        .select_border2
+        {
+            padding: 0 0 0 0;
+            height: 30px;
+            display: inline-block;
+            background: #fff;
+        }
+        .input-text
+        {
+            height:27px;
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="f-mr20 f-mt10">
+        <div class="s-box f-m10 f-p10 m-f">
+            学生id：<input type="text" class="input-text" id="txtstuid" />&nbsp;&nbsp;&nbsp;学生姓名：<input
+                type="text" class="input-text" id="txtstuname" />&nbsp;&nbsp;&nbsp;<input type="button" onclick="search();" class="u-btn" id="btnsearch" value="查询" />
+        </div>
+        <div class="s-box f-m10 f-p10 m-f">
+            <div class="search_bar_btn">
+                &nbsp;&nbsp; 科目筛选：<span>
+                    <div class="select_border">
+                        <div class="select_containers ">
+                            <input id="cbt" style="width: 200px;" />
+                        </div>
+                    </div>
+                </span>&nbsp;&nbsp;选择老师： <span>
+                    <div class="select_border">
+                        <div class="select_containers ">
+                            <input id="cbtTe" style="width: 200px;" />
+                        </div>
+                    </div>
+                </span>&nbsp;&nbsp; 课程状态：<span>
+                    <div class="select_border2">
+                        <div class="select_containers ">
+                            <select name="" id="sestatus" class="select">
+                                <option value="0">全部</option>
+                                <option value="1">已结束</option>
+                                <option value="2">进行中</option>
+                                <option value="3">未开始</option>
+                            </select>
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+        <div class="s-box f-m10 f-p10 m-f">
+            <table id="dg" title="课程列表显示" />
+        </div>
+    </div>
 </body>
+<script>
+    var teacher_id;
+    var subject_id;
+    var student_id;
+    var status;
+    $(function () {
+        loadTree();
+        loadteacher();
+    });
+    function loadTree() {
+        $('#cbt').combotree({
+            url: 'AjaxHandler/SubjectHandler.ashx?type=gettable',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                getVal(loadtable);
+            }
+        });
+        $('#cbt').combotree("setValue", 0);
+    }
+    function loadteacher() {
+        $('#cbtTe').combotree({
+            url: 'AjaxHandler/TeacherHandler.ashx?type=getjson',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                getVal(loadtable);
+            }
+        });
+        $('#cbtTe').combotree("setValue", 0);
+    }
+    function search() {
+        student_id = $("#txtstuid").val();
+        var stu_name = $("#txtstuname").val();
+        $.post("AjaxHandler/StudentHandler.ashx",
+        { 'stu_id': student_id,
+            'stu_name': stu_name
+        },
+        function (data, status) {
+            if (status == "success") {
+                checkLogin(data);
+                try {
+                    var json = jQuery.parseJSON(data);
+                    if (json.length == 0) {
+                        alert("没有学生记录。");
+                        return;
+                    }
+                    $("#txtstuid").val(json.stu_id);
+                    $("#txtstuname").val(json.stu_name);
+                } catch (e) {
+                    alert("没有学生记录。");
+                }
+            } else alert("查询出错。");
+        });
+    }
+    function getVal(callback) {
+        teacher_id = $('#cbtTe').combotree("getValue");
+        subject_id = $('#cbt').combotree("getValue");
+        status = $('#sestatus').val();
+        callback();
+    }
+    function loadtable() {
+        $('#dg').datagrid({
+            title: '课程列表显示',
+            iconCls: 'icon-edit',
+            singleSelect: false,
+            idField: 'Course_id',
+            url: 'AjaxHandler/CourseHandler.ashx',
+            pagination: true,
+            pageSize: 10,
+            queryParams: {
+                type: 'gettable',
+                teacher_id: teacher_id,
+                subject_id: subject_id,
+                status: status,
+                stu_id: student_id
+            },
+            width: 960,
+            columns: [[
+                { field: 'Sc_stu_id', title: '全选', width: 100, align: 'center', checkbox: true },
+                { field: 'Course_id', title: '课程ID', width: 60 },
+                { field: 'Course_title', title: '科目名称', width: 200, align: 'center', editor: 'text' },
+                { field: 'Subject_title', title: '所属科目', width: 100, align: 'center' },
+                { field: 'Teacher_realname', title: '任课老师', width: 100, align: 'center' },
+                { field: 'Course_cost', title: '收费(元)', width: 70, align: 'center' },
+                { field: 'Course_info', title: '时间说明', width: 200, align: 'center' }
+            ]],
+            onLoadSuccess: function (row) {//当表格成功加载时执行               
+                var rowData = row.rows;
+                $.each(rowData, function (idx, val) {//遍历JSON
+                    if (!$.isEmptyObject(val.Sc_stu_id)) {
+                        $("#dg").datagrid("selectRow", idx); //如果数据行为已选中则选中改行
+                    }
+                });
+            },
+            onCheck: function (index, row) {
+                setCost(index, row);
+            },
+            onUncheck: function (index, row) {
+                setCost(index, row);
+            },
+            onCheckAll: function (index, row) {
+                setCost(index, row);
+            },
+            onUncheckAll: function (index, row) {
+                setCost(index, row);
+            }
+        });
+    }
+</script>
 </html>

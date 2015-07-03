@@ -27,6 +27,7 @@ public class StudentHandler : IHttpHandler, IRequiresSessionState
             case "getdetail": getDetail(context); break;
             case "edit": edit(context); break;
             case "deletelist": delete(context); break;
+            case "check": getCheck(context); break;
         }
     }
  
@@ -178,5 +179,11 @@ public class StudentHandler : IHttpHandler, IRequiresSessionState
     {
         string stu_id = WebUtility.InputText(context.Request.Form["stu_id"], 20);
         context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(stuBLL.GetStudent(stu_id), null));
+    }
+    void getCheck(HttpContext context)
+    {
+        string stu_id = WebUtility.InputText(context.Request.Form["stu_id"], 20);
+        string stu_name = WebUtility.InputText(context.Request.Form["stu_name"], 30);
+        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(stuBLL.GetStudent(stu_id,stu_name), null));
     }
 }

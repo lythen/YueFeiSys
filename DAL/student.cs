@@ -432,6 +432,15 @@ namespace Lythen.DAL
             if (DbHelperSQL.ExecuteSql(sql) > 0) return true;
             else return false;
         }
+        public DataSet GetStudent(string stu_id, string stu_name)
+        {
+            string sql;
+            if (!string.IsNullOrEmpty(stu_name))
+                sql = string.Format("select stu_id,stu_name from student where stu_name='{0}'", stu_name);
+            else
+                sql = string.Format("select stu_id,stu_name from student where stu_id='{0}'", stu_id);
+            return DbHelperSQL.Query(sql);
+        }
 		#endregion  ExtensionMethod
 	}
 }

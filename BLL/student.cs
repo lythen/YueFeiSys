@@ -206,6 +206,10 @@ namespace Lythen.BLL
             if (dal.DeleteStudent(stu_list)) return "删除成功。";
             else return "删除失败。";
         }
+        public DataTable GetStudent(string stu_id, string stu_name)
+        {
+            return dal.GetStudent(stu_id, stu_name).Tables[0];
+        }
 		#endregion  ExtensionMethod
 	}
 }
