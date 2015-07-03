@@ -327,7 +327,13 @@ namespace Lythen.DAL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
-
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetAllLiteList()
+        {
+            return DbHelperSQL.Query("select School_id,School_name FROM schools");
+        }
 		#endregion  ExtensionMethod
 	}
 }

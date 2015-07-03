@@ -175,6 +175,37 @@ namespace Lythen.BLL
             }
             return "";
         }
+        /// <summary>
+        /// 获取全体学生列表
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetStudentList(int PageSize, int PageIndex, int school_id, int grade, string sex, string stu_name, string parent_name)
+        {
+            DataSet ds = dal.GetStudentList(PageSize, PageIndex, school_id, grade, sex, stu_name, parent_name);
+            DataTable Student = ds.Tables[0];
+
+            DataTable dtCount = new DataTable("table");
+            dtCount.Columns.Add(new DataColumn("total", typeof(int)));
+            dtCount.Columns.Add(new DataColumn("rows", typeof(DataTable)));
+
+            DataRow dr = dtCount.NewRow();
+            dr[0] = (int)ds.Tables[1].Rows[0][0];
+            dr[1] = Student;
+            dtCount.Rows.Add(dr);
+            return dtCount;
+        }
+        public DataTable GetStudent(string stu_id)
+        {
+            return dal.GetStudent(stu_id).Tables[0];
+        }
+        public string DeleteStudent(string stu_list,int role_id)
+        {
+            if (role_id != 1) return "没有权限。";
+            if (stu_list.EndsWith(",")) stu_list = stu_list.Substring(0, stu_list.Length - 1);
+            stu_list = string.Format("'{0}'", stu_list.Replace(",", "','"));
+            if (dal.DeleteStudent(stu_list)) return "删除成功。";
+            else return "删除失败。";
+        }
 		#endregion  ExtensionMethod
 	}
 }

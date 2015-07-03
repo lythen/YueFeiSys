@@ -258,7 +258,7 @@ namespace Lythen.BLL
         /// <returns></returns>
         public string GetListJson(bool IdIsTxt)
         {
-            if (Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
+            if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
             string file_path;
             if (IdIsTxt) file_path = CachePath + "subject_txt.txt";
             else file_path = CachePath + "subject_id.txt";

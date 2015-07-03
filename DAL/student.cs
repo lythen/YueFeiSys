@@ -37,9 +37,9 @@ namespace Lythen.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into student(");
-			strSql.Append("stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,parent_name,parent_mobile,parent_dep,parent_email,address)");
+			strSql.Append("stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,stu_age,parent_name,parent_mobile,parent_dep,parent_email,address)");
 			strSql.Append(" values (");
-			strSql.Append("@stu_id,@stu_name,@stu_birthday,@stu_grade,@stu_school_id,@stu_pic_path,@stu_Status,@stu_sex,@parent_name,@parent_mobile,@parent_dep,@parent_email,@address)");
+			strSql.Append("@stu_id,@stu_name,@stu_birthday,@stu_grade,@stu_school_id,@stu_pic_path,@stu_Status,@stu_sex,@stu_age,@parent_name,@parent_mobile,@parent_dep,@parent_email,@address)");
 			SqlParameter[] parameters = {
 					new SqlParameter("@stu_id", SqlDbType.VarChar,20),
 					new SqlParameter("@stu_name", SqlDbType.VarChar,30),
@@ -48,12 +48,13 @@ namespace Lythen.DAL
 					new SqlParameter("@stu_school_id", SqlDbType.Int,4),
 					new SqlParameter("@stu_pic_path", SqlDbType.VarChar,50),
 					new SqlParameter("@stu_Status", SqlDbType.Bit,1),
-					new SqlParameter("@stu_sex", SqlDbType.VarChar,1),
+					new SqlParameter("@stu_sex", SqlDbType.VarChar,2),
+					new SqlParameter("@stu_age", SqlDbType.Int,4),
 					new SqlParameter("@parent_name", SqlDbType.VarChar,30),
 					new SqlParameter("@parent_mobile", SqlDbType.VarChar,12),
 					new SqlParameter("@parent_dep", SqlDbType.VarChar,150),
 					new SqlParameter("@parent_email", SqlDbType.VarChar,250),
-					new SqlParameter("@address", SqlDbType.NChar,10)};
+					new SqlParameter("@address", SqlDbType.VarChar,250)};
 			parameters[0].Value = model.stu_id;
 			parameters[1].Value = model.stu_name;
 			parameters[2].Value = model.stu_birthday;
@@ -62,11 +63,12 @@ namespace Lythen.DAL
 			parameters[5].Value = model.stu_pic_path;
 			parameters[6].Value = model.stu_Status;
 			parameters[7].Value = model.stu_sex;
-			parameters[8].Value = model.parent_name;
-			parameters[9].Value = model.parent_mobile;
-			parameters[10].Value = model.parent_dep;
-			parameters[11].Value = model.parent_email;
-			parameters[12].Value = model.address;
+			parameters[8].Value = model.stu_age;
+			parameters[9].Value = model.parent_name;
+			parameters[10].Value = model.parent_mobile;
+			parameters[11].Value = model.parent_dep;
+			parameters[12].Value = model.parent_email;
+			parameters[13].Value = model.address;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -92,6 +94,7 @@ namespace Lythen.DAL
 			strSql.Append("stu_pic_path=@stu_pic_path,");
 			strSql.Append("stu_Status=@stu_Status,");
 			strSql.Append("stu_sex=@stu_sex,");
+			strSql.Append("stu_age=@stu_age,");
 			strSql.Append("parent_name=@parent_name,");
 			strSql.Append("parent_mobile=@parent_mobile,");
 			strSql.Append("parent_dep=@parent_dep,");
@@ -105,12 +108,13 @@ namespace Lythen.DAL
 					new SqlParameter("@stu_school_id", SqlDbType.Int,4),
 					new SqlParameter("@stu_pic_path", SqlDbType.VarChar,50),
 					new SqlParameter("@stu_Status", SqlDbType.Bit,1),
-					new SqlParameter("@stu_sex", SqlDbType.VarChar,1),
+					new SqlParameter("@stu_sex", SqlDbType.VarChar,2),
+					new SqlParameter("@stu_age", SqlDbType.Int,4),
 					new SqlParameter("@parent_name", SqlDbType.VarChar,30),
 					new SqlParameter("@parent_mobile", SqlDbType.VarChar,12),
 					new SqlParameter("@parent_dep", SqlDbType.VarChar,150),
 					new SqlParameter("@parent_email", SqlDbType.VarChar,250),
-					new SqlParameter("@address", SqlDbType.NChar,10),
+					new SqlParameter("@address", SqlDbType.VarChar,250),
 					new SqlParameter("@stu_id", SqlDbType.VarChar,20)};
 			parameters[0].Value = model.stu_name;
 			parameters[1].Value = model.stu_birthday;
@@ -119,12 +123,13 @@ namespace Lythen.DAL
 			parameters[4].Value = model.stu_pic_path;
 			parameters[5].Value = model.stu_Status;
 			parameters[6].Value = model.stu_sex;
-			parameters[7].Value = model.parent_name;
-			parameters[8].Value = model.parent_mobile;
-			parameters[9].Value = model.parent_dep;
-			parameters[10].Value = model.parent_email;
-			parameters[11].Value = model.address;
-			parameters[12].Value = model.stu_id;
+			parameters[7].Value = model.stu_age;
+			parameters[8].Value = model.parent_name;
+			parameters[9].Value = model.parent_mobile;
+			parameters[10].Value = model.parent_dep;
+			parameters[11].Value = model.parent_email;
+			parameters[12].Value = model.address;
+			parameters[13].Value = model.stu_id;
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -187,7 +192,7 @@ namespace Lythen.DAL
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select  top 1 stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,parent_name,parent_mobile,parent_dep,parent_email,address from student ");
+			strSql.Append("select  top 1 stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,stu_age,parent_name,parent_mobile,parent_dep,parent_email,address from student ");
 			strSql.Append(" where stu_id=@stu_id ");
 			SqlParameter[] parameters = {
 					new SqlParameter("@stu_id", SqlDbType.VarChar,20)			};
@@ -253,6 +258,10 @@ namespace Lythen.DAL
 				{
 					model.stu_sex=row["stu_sex"].ToString();
 				}
+				if(row["stu_age"]!=null && row["stu_age"].ToString()!="")
+				{
+					model.stu_age=int.Parse(row["stu_age"].ToString());
+				}
 				if(row["parent_name"]!=null)
 				{
 					model.parent_name=row["parent_name"].ToString();
@@ -283,7 +292,7 @@ namespace Lythen.DAL
 		public DataSet GetList(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,parent_name,parent_mobile,parent_dep,parent_email,address ");
+			strSql.Append("select stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,stu_age,parent_name,parent_mobile,parent_dep,parent_email,address ");
 			strSql.Append(" FROM student ");
 			if(strWhere.Trim()!="")
 			{
@@ -303,7 +312,7 @@ namespace Lythen.DAL
 			{
 				strSql.Append(" top "+Top.ToString());
 			}
-			strSql.Append(" stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,parent_name,parent_mobile,parent_dep,parent_email,address ");
+			strSql.Append(" stu_id,stu_name,stu_birthday,stu_grade,stu_school_id,stu_pic_path,stu_Status,stu_sex,stu_age,parent_name,parent_mobile,parent_dep,parent_email,address ");
 			strSql.Append(" FROM student ");
 			if(strWhere.Trim()!="")
 			{
@@ -387,7 +396,42 @@ namespace Lythen.DAL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
+        public DataSet GetStudentList(int PageSize, int PageIndex, int school_id, int grade, string sex, string stu_name, string parent_name)
+        {
+            SqlParameter[] parameters = {
+					new SqlParameter("@pagesize", SqlDbType.Int),
+					new SqlParameter("@pageindex", SqlDbType.Int),
+					new SqlParameter("@school_id", SqlDbType.Int),
+					new SqlParameter("@grade", SqlDbType.Int),
+					new SqlParameter("@sex", SqlDbType.VarChar, 255),
+					new SqlParameter("@stu_nme", SqlDbType.VarChar, 255),
+					new SqlParameter("@parent_name", SqlDbType.VarChar, 255)
+					};
+            parameters[0].Value = PageSize;
+            parameters[1].Value = PageIndex;
+            parameters[2].Value = school_id;
+            parameters[3].Value = grade;
+            parameters[4].Value = sex;
+            parameters[5].Value = stu_name;
+            parameters[6].Value = parent_name;
+            return DbHelperSQL.RunProcedure("proGetStudentList", parameters, "ds");
+        }
+        public DataSet GetStudent(string stu_id)
+        {
+            string sql = "select stu_id,stu_name,stu_grade,stu_school_id,stu_sex,stu_age,parent_name,parent_mobile,parent_dep,parent_email,[address] from student where stu_id=@stu_id";
 
+            SqlParameter[] parameters = {
+					new SqlParameter("@stu_id", SqlDbType.VarChar, 20)
+					};
+            parameters[0].Value = stu_id;
+            return DbHelperSQL.Query(sql, parameters);
+        }
+        public bool DeleteStudent(string list)
+        {
+            string sql = string.Format("delete from student where stu_id in ({0})",list);
+            if (DbHelperSQL.ExecuteSql(sql) > 0) return true;
+            else return false;
+        }
 		#endregion  ExtensionMethod
 	}
 }

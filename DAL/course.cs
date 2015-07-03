@@ -386,23 +386,26 @@ namespace Lythen.DAL
         /// <param name="teacher_id"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public DataSet GetListForTable(int subject_id, int teacher_id, string status)
+        public DataSet GetListForTable(int subject_id, int teacher_id, string status,string stu_id)
         {
             string sql = @"select Course_id,Course_title,Subject_title,Teacher_realname,Course_sub_id,Course_teacher_id,Course_info,
-Course_cost,Course_status,Course_date 
+Course_cost,Course_status,Course_date,Sc_stu_id 
 from course 
 left join [subject] on Subject_id=Course_sub_id 
 left join teacher on Teacher_id=Course_teacher_id 
+left join stu_vs_course on Sc_course_id=Course_id and Sc_stu_id=@Sc_stu_id 
 where Course_sub_id=(case when @subject_id=0 then  Course_sub_id else @subject_id end) 
 and Course_teacher_id=(case when @teacher_id=0 then  Course_teacher_id else @teacher_id end) 
-and Course_status=(case when @status='0' then  Course_status else @status end)";
+and Course_status=(case when @status='0' then  Course_status else @status end) order by Sc_stu_id desc";
             SqlParameter[] parameters = {
 					new SqlParameter("@subject_id", SqlDbType.Int,4),
 					new SqlParameter("@teacher_id", SqlDbType.Int,4),
-					new SqlParameter("@status", SqlDbType.Char,1)};
+					new SqlParameter("@status", SqlDbType.Char,1),
+					new SqlParameter("@Sc_stu_id", SqlDbType.VarChar,20)};
             parameters[0].Value = subject_id;
             parameters[1].Value = teacher_id;
             parameters[2].Value = status;
+            parameters[3].Value = stu_id;
             return DbHelperSQL.Query(sql, parameters);
         }
         /// <summary>

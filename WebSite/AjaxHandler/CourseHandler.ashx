@@ -37,9 +37,9 @@ public class CourseHandler : IHttpHandler, IRequiresSessionState
         context.Response.ContentType = "text/json;charset=UTF-8;";
         int subject_id = WebUtility.FilterParam(context.Request.Form["subject_id"]);
         int teacher_id = WebUtility.FilterParam(context.Request.Form["teacher_id"]);
-
+        string stu_id = WebUtility.InputText(context.Request.Form["stu_id"], 20);
         string status = WebUtility.InputText(context.Request.Form["status"], 1);
-        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(cBLL.GetListForTable(subject_id, teacher_id, status, myrole_id, adm.GetTeacherId()), null));
+        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(cBLL.GetListForTable(subject_id, teacher_id, status, myrole_id, adm.GetTeacherId(), stu_id), null));
     }
     void Add(HttpContext context)
     {

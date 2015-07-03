@@ -214,7 +214,22 @@ namespace Lythen.BLL
             return dal.AddStudentCourse(cids, cost_list, stu_id);
 
         }
-		#endregion  ExtensionMethod
+        public DataTable GetStudentCourse(string stu_id)
+        {
+            DataSet ds = dal.GetStudentCourse(stu_id);
+            DataTable dtStudent = ds.Tables[0];
+
+            DataTable dtCount = new DataTable("table");
+            dtCount.Columns.Add(new DataColumn("total", typeof(int)));
+            dtCount.Columns.Add(new DataColumn("rows", typeof(DataTable)));
+
+            DataRow dr = dtCount.NewRow();
+            dr[0] = dtStudent.Rows.Count;
+            dr[1] = dtStudent;
+            dtCount.Rows.Add(dr);
+            return dtCount;
+        }
+        #endregion  ExtensionMethod
 	}
 }
 

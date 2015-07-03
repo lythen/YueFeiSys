@@ -331,6 +331,20 @@ namespace Lythen.DAL
             if (row == len) return true;
             else return false;
         }
+        public DataSet GetStudentCourse(string stu_id)
+        {
+            string sql = @"select Sc_stu_id,Course_id,Course_title,Sc_pay,Teacher_realname,Course_info,Subject_title
+from stu_vs_course
+left join course on Sc_course_id=Course_id
+left join teacher on Course_teacher_id=Teacher_id
+left join [subject] on Course_sub_id=Subject_id
+where Sc_stu_id=@Sc_stu_id";
+            SqlParameter[] parameters = {
+					new SqlParameter("@Sc_stu_id", SqlDbType.VarChar, 20)
+					};
+            parameters[0].Value = stu_id;
+            return DbHelperSQL.Query(sql,parameters);
+        }
 		#endregion  ExtensionMethod
 	}
 }

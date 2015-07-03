@@ -18,6 +18,7 @@ namespace Lythen.Model
 		private string _stu_pic_path;
 		private bool _stu_status;
 		private string _stu_sex;
+		private int? _stu_age=0;
 		private string _parent_name;
 		private string _parent_mobile;
 		private string _parent_dep;
@@ -86,6 +87,14 @@ namespace Lythen.Model
 		{
 			set{ _stu_sex=value;}
 			get{return _stu_sex;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public int? stu_age
+		{
+			set{ _stu_age=value;}
+			get{return _stu_age;}
 		}
 		/// <summary>
 		/// 

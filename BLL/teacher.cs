@@ -217,7 +217,6 @@ namespace Lythen.BLL
             string roles = roleBll.GetOwnRole(role_id);
             if (roles == "") return "";
             DataTable dtTeacher = dal.GetTeacherByRoles(roles).Tables[0];
-            if (dtTeacher.Rows.Count == 0) return "";
 
             if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
             string file_path = string.Format("{0}teacher_{1}.txt", CachePath,role_id);

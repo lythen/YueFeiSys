@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="css/easyui.css" />
     <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="Scripts/login.js"></script>
+    <script type="text/javascript" src="Scripts/typecheck.js"></script>
     <title>学生录入</title>
     <style>
         .contain
@@ -90,63 +92,6 @@
             padding: 0px 5px 0px 5px;
         }
     </style>
-    <script>
-        function addStu() {
-            //学生基本信息
-            var txtstuname = $("#txtstuname").val();
-            var txtage = $("#txtage").val();
-            var slsex = $("#slsex").val();
-            var txtschool = $("#txtschool").val();
-            var slgrade = $("#slgrade").val();
-            var txtparent_name = $("#txtparent_name").val();
-            var txtparent_phone = $("#txtparent_phone").val();
-            var txtparent_dep = $("#txtparent_dep").val();
-            var txtparent_address = $("#txtparent_address").val();
-            var txtemail = $("#txtemail").val();
-            //报名信息
-            var reg = "";
-            var ac = $('#dg').datagrid("getChecked");
-            if (ac.length > 0) {
-                for (var i = 0; i < ac.length; i++) {
-                    reg = reg + ac[i].Course_id + ",";
-                }
-            }
-            var cost = $("#txtpay").val();
-            $.post('AjaxHandler/StudentHandler.ashx',
-            {
-                'name': txtstuname,
-                'age': txtage,
-                'sex': slsex,
-                'school': txtschool,
-                'grade': slgrade,
-                'pname': txtparent_name,
-                'pphone': txtparent_phone,
-                'pdep': txtparent_dep,
-                'paddress': txtparent_address,
-                'pemail': txtemail,
-                'regsub': reg,
-                'regpay': cost
-            },
-            function (data, status) {
-                if (status == 'success') {
-                    
-                } else alert("添加失败。");
-            });
-        }
-        function clearall() {
-            $("#txtstuname").val('');
-            $("#txtage").val('');
-            $("#txtschool").val('');
-            $("#slgrade").val();
-            $("#txtparent_name").val('');
-            $("#txtparent_phone").val('');
-            $("#txtparent_dep").val('');
-            $("#txtparent_address").val('');
-            $("#txtpay").val('');
-            $("#txtemail").val('');
-            $("#txtage").val('');
-        }
-    </script>
 </head>
 <body>
     <div class="contain">
@@ -166,9 +111,11 @@
                     <td class="tdcontent">
                         <input id="txtstuname" type="text" class="input-text lh30" />
                     </td>
-                    <td class="tdcontent">
+                    <td class="tdtxt">
+                        学生ID：
                     </td>
                     <td class="tdcontent">
+                        <label id="labStuid"></label>
                     </td>
                 </tr>
                 <tr>
@@ -184,8 +131,8 @@
                     <td class="tdcontent">
                         <div class="select_containers ">
                             <select id="slsex" class="select" name="slsex">
-                                <option selected="selected" value="1">男</option>
-                                <option value="2">女</option>
+                                <option selected="selected" value="男">男</option>
+                                <option value="女">女</option>
                             </select>
                         </div>
                     </td>
@@ -195,24 +142,18 @@
                         在读学校：
                     </td>
                     <td class="tdcontent">
-                        <input id="txtschool" class="input-text lh30" type="text" />
+                       <div class="select_border">
+                                        <div class="select_containers ">
+                                            <input id="cbtsc" style="width: 200px;" />
+                                        </div>
+                                    </div>
                     </td>
                     <td class="tdtxt">
                         年级：
                     </td>
                     <td class="tdcontent">
                         <div class="select_containers ">
-                            <select id="slgrade" name="slsex" class="select">
-                                <option selected="selected" value="1">一年级</option>
-                                <option value="2">二年级</option>
-                                <option value="3">三年级</option>
-                                <option value="4">四年级</option>
-                                <option value="5">五年级</option>
-                                <option value="6">六年级</option>
-                                <option value="7">初一</option>
-                                <option value="8">初二</option>
-                                <option value="9">初三</option>
-                            </select>
+                           <input id="cbtsg" style="width: 200px;" />
                         </div>
                     </td>
                 </tr>
@@ -262,13 +203,18 @@
                     </td>
                 </tr>
             </table>
-                     <div class="mt10">
+                     <div id="divbtn" class="mt10">
                 <input type="button" value="确定" onclick="addStu();" class="ext_btn ext_btn_submit" />
                 <input type="button" onclick="clearall();" class="ext_btn ext_btn_success" value="重填" />
                 <input type="button" value="返回" onclick="location.href='javascript:history.go(-1)'"
                     class="ext_btn" />
             </div>
-            <a href="javascript:courseSlide();" class="ext_btn" style="float: left; margin-top: 15px;">
+             <div id="divexit" style="display:none;" class="mt10">
+                <input type="button" value="修改" onclick="EditStu();" class="ext_btn ext_btn_submit" />
+                <input type="button" value="返回" onclick="location.href='javascript:history.go(-1)'"
+                    class="ext_btn" />
+            </div>
+            <a href="javascript:courseSlide();" id="acourse" class="ext_btn" style="float: left; margin-top: 15px;">
                 <span class="add"></span>添加报名信息</a>
             <br />
             <br />
@@ -328,12 +274,186 @@
 <script>
     var teacher_id;
     var subject_id;
+    var student_id;
     var status;
+    $(function () {
+        student_id = getQueryString("link");
+        if (!$.isEmptyObject(student_id)) {
+            setMSGStyle();
+            setStuMsg();
+        } else {
+            setSchool(0);
+            setGrade(0);
+        }
+
+    });
+    function setSchool(id) {
+        $('#cbtsc').combotree({
+            url: 'AjaxHandler/SchoolHandler.ashx?type=getjson',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text'
+        });
+        $('#cbtsc').combotree("setValue", id);
+    }
+    function setGrade(id) {
+        $('#cbtsg').combotree({
+            url: 'AjaxHandler/GradeHandler.ashx?type=getjson',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text'
+        });
+        $('#cbtsg').combotree("setValue", id);
+    }
+    function addStu() {
+        //学生基本信息
+        var txtstuname = $("#txtstuname").val();
+        var txtage = $("#txtage").val();
+        var slsex = $("#slsex").val();
+        var txtschool = $('#cbtsc').combotree("getValue");
+        var slgrade = $('#cbtsg').combotree("getValue");
+        var txtparent_name = $("#txtparent_name").val();
+        var txtparent_phone = $("#txtparent_phone").val();
+        var txtparent_dep = $("#txtparent_dep").val();
+        var txtparent_address = $("#txtparent_address").val();
+        var txtemail = $("#txtemail").val();
+        //报名信息
+        var reg = "";
+        var cost = 0;
+        try {
+            if ($('#dg').datagrid("getChecked")) {
+                var ac = $('#dg').datagrid("getChecked");
+                if (ac.length > 0) {
+                    for (var i = 0; i < ac.length; i++) {
+                        reg = reg + ac[i].Course_id + ",";
+                    }
+                }
+            }
+            cost = $("#txtpay").val();
+        } catch (e) { }
+        $.post('AjaxHandler/StudentHandler.ashx',
+            {
+                'type': 'add',
+                'name': txtstuname,
+                'age': txtage,
+                'sex': slsex,
+                'school': txtschool,
+                'grade': slgrade,
+                'pname': txtparent_name,
+                'pphone': txtparent_phone,
+                'pdep': txtparent_dep,
+                'paddress': txtparent_address,
+                'pemail': txtemail,
+                'regsub': reg,
+                'regpay': cost
+            },
+            function (data, status) {
+
+                if (status == 'success') {
+                    checkLogin(data);
+                    if (data == "success")
+                        alert("添加学生并且报名成功。");
+                    else if (data == "nopower") alert("没有登陆或没有权限。");
+                    else alert(data);
+                } else alert("添加失败。");
+            });
+    }
+    function clearall() {
+        $("#txtstuname").val('');
+        $("#txtage").val('');
+        $("#txtparent_name").val('');
+        $("#txtparent_phone").val('');
+        $("#txtparent_dep").val('');
+        $("#txtparent_address").val('');
+        $("#txtemail").val('');
+        $("#txtage").val('');
+    }
     function courseSlide() {
         $("#addsignup").slideToggle();
         loadTree();
         loadteacher();
         getVal(loadtable);
+    }
+    function setMSGStyle() {
+        $('#addsignup').css('display', 'inherit');
+        $('#acourse').css('display', 'none');
+        $('#divbtn').css('display', 'none');
+        $('.box_bottom').css('display', 'none');
+        $('#divexit').css('display', 'inherit');
+        loadhastable();
+    }
+    function EditStu(){
+        if (confirm('是否确定修改学生信息？')) {
+            //学生基本信息
+            var txtstuname = $("#txtstuname").val();
+            var txtage = $("#txtage").val();
+            var slsex = $("#slsex").val();
+            var txtschool = $('#cbtsc').combotree("getValue");
+            var slgrade = $('#cbtsg').combotree("getValue");
+            var txtparent_name = $("#txtparent_name").val();
+            var txtparent_phone = $("#txtparent_phone").val();
+            var txtparent_dep = $("#txtparent_dep").val();
+            var txtparent_address = $("#txtparent_address").val();
+            var txtemail = $("#txtemail").val();
+            $.post('AjaxHandler/StudentHandler.ashx',
+            {
+                'type': 'edit',
+                'stu_id':student_id,
+                'name': txtstuname,
+                'age': txtage,
+                'sex': slsex,
+                'school': txtschool,
+                'grade': slgrade,
+                'pname': txtparent_name,
+                'pphone': txtparent_phone,
+                'pdep': txtparent_dep,
+                'paddress': txtparent_address,
+                'pemail': txtemail
+            },
+            function (data, status) {
+
+                if (status == 'success') {
+                    checkLogin(data);
+                    if (data == "success")
+                        alert("修改成功。");
+                    else if (data == "nopower") alert("没有登陆或没有权限。");
+                    else alert(data);
+                } else alert("修改失败。");
+            });
+        }else return;
+    }
+    function setStuMsg() {
+        $.post('AjaxHandler/StudentHandler.ashx',
+        {
+            'type': 'getdetail',
+            'stu_id': student_id
+        },
+        function (data, status) {
+            if (status == "success") {
+                try {
+                    var json = jQuery.parseJSON(data);
+                    $("#txtstuname").val(json.stu_name);
+                    $("#labStuid").text(json.stu_id);
+                    $("#txtage").val(json.stu_age);
+                    setSchool(json.stu_school_id);
+                    setGrade(json.stu_grade);
+                    $("#txtparent_name").val(json.parent_name);
+                    $("#txtparent_phone").val(json.parent_mobile);
+                    $("#txtparent_dep").val(json.parent_dep);
+                    $("#txtparent_address").val(json.address);
+                    $("#txtemail").val(json.stu_grade);
+                    $('#slsex').val(json.stu_sex);
+                } catch (e) {
+                    alert("加载学生信息出错。");
+                    history.go(-1);
+                }
+            } else {
+                alert("获取学生信息出错。");
+                history.go(-1);
+            }
+        });
     }
     function loadTree() {
         $('#cbt').combotree({
@@ -367,56 +487,25 @@
         status = $('#sestatus').val();
         callback();
     }
-    function pagerFilter(data) {
-        if (typeof data.length == 'number' && typeof data.splice == 'function') {	// is array
-            data = {
-                total: data.length,
-                rows: data
-            }
-        }
-        var dg = $(this);
-        var opts = dg.datagrid('options');
-        var pager = dg.datagrid('getPager');
-        pager.pagination({
-            onSelectPage: function (pageNum, pageSize) {
-                opts.pageNumber = pageNum;
-                opts.pageSize = pageSize;
-                pager.pagination('refresh', {
-                    pageNumber: pageNum,
-                    pageSize: pageSize
-                });
-                dg.datagrid('loadData', data);
-            }
-        });
-        if (!data.originalRows) {
-            data.originalRows = (data.rows);
-        }
-        var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
-        var end = start + parseInt(opts.pageSize);
-        data.rows = (data.originalRows.slice(start, end));
-        return data;
-    }
-    var pagesize = 10;
-    var pagenumber = 1;
     function loadtable() {
-        $('#dg').datagrid({ loadFilter: pagerFilter }).datagrid({
+        $('#dg').datagrid({
             title: '课程列表显示',
             iconCls: 'icon-edit',
             singleSelect: false,
             idField: 'Course_id',
             url: 'AjaxHandler/CourseHandler.ashx',
             pagination: true,
-            pageSize: pagesize,
-            pageNumber: pagenumber,
+            pageSize: 10,
             queryParams: {
                 type: 'gettable',
                 teacher_id: teacher_id,
                 subject_id: subject_id,
-                status: status
+                status: status,
+                stu_id: subject_id
             },
             width: 960,
             columns: [[
-                { field: 'cb', title: '全选', width: 100, align: 'center', checkbox: true },
+                { field: 'Sc_stu_id', title: '全选', width: 100, align: 'center', checkbox: true },
                 { field: 'Course_id', title: '课程ID', width: 60 },
                 { field: 'Course_title', title: '科目名称', width: 200, align: 'center', editor: 'text' },
                 { field: 'Subject_title', title: '所属科目', width: 100, align: 'center' },
@@ -424,6 +513,14 @@
                 { field: 'Course_cost', title: '收费(元)', width: 70, align: 'center' },
                 { field: 'Course_info', title: '时间说明', width: 200, align: 'center' }
             ]],
+            onLoadSuccess: function (row) {//当表格成功加载时执行               
+                var rowData = row.rows;
+                $.each(rowData, function (idx, val) {//遍历JSON
+                    if (!$.isEmptyObject(val.Sc_stu_id)) {
+                        $("#dg").datagrid("selectRow", idx); //如果数据行为已选中则选中改行
+                    }
+                });
+            },
             onCheck: function (index, row) {
                 setCost(index, row);
             },
@@ -437,26 +534,29 @@
                 setCost(index, row);
             }
         });
-        //分页事件
-        var pg = $('#dg').datagrid("getPager");
-        $(pg).pagination({
-            //选择每页显示列表数量
-            onChangePageSize: function (pageSize) {
-                pagesize = pageSize;
-                loadtable();
+    }
+    function loadhastable() {
+        $('#dg').datagrid({
+            title: '已选课程列表显示',
+            iconCls: 'icon-edit',
+            singleSelect: false,
+            idField: 'Course_id',
+            url: 'AjaxHandler/StudentVsCourseHandler.ashx',
+            pagination: true,
+            pageSize: 10,
+            queryParams: {
+                type: 'gettable',
+                stu_id: student_id
             },
-            //刷新列表
-            onRefresh: function (pageNumber, pageSize) {
-                pagesize = pageSize;
-                pagenumber = pageNumber;
-                loadtable();
-            },
-            //直接点击页码
-            onSelectPage: function (pageNumber, pageSize) {
-                pagesize = pageSize;
-                pagenumber = pageNumber;
-                loadtable();
-            }
+            width: 960,
+            columns: [[
+                { field: 'Course_id', title: '课程ID', width: 50 },
+                { field: 'Course_title', title: '科目名称', width: 150, align: 'center', editor: 'text' },
+                { field: 'Subject_title', title: '所属科目', width: 100, align: 'center' },
+                { field: 'Teacher_realname', title: '任课老师', width: 100, align: 'center' },
+                { field: 'Sc_pay', title: '交费(元)', width: 70, align: 'center' },
+                { field: 'Course_info', title: '时间说明', width: 300, align: 'center' }
+            ]]
         });
     }
     function getRowIndex(target) {
