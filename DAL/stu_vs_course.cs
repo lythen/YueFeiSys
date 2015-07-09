@@ -345,6 +345,17 @@ where Sc_stu_id=@Sc_stu_id";
             parameters[0].Value = stu_id;
             return DbHelperSQL.Query(sql,parameters);
         }
+        public int DeleteStudentCourse(int[] listCourse, string stu_id)
+        {
+            StringBuilder sbsql = new StringBuilder();
+            DateTime dt = DateTime.Now;
+            int len = listCourse.Length;
+            for (int i = 0; i < len; i++)
+            {
+                sbsql.Append("delete from stu_vs_course where Sc_stu_id='").Append(stu_id).Append("' and Sc_course_id=").Append(listCourse[i]).Append(";");
+            }
+            return DbHelperSQL.ExecuteSql(sbsql.ToString());
+        }
 		#endregion  ExtensionMethod
 	}
 }

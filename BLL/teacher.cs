@@ -254,6 +254,26 @@ namespace Lythen.BLL
             }
 
         }
+        public string ChangePassword(int t_id,string user_name, string oldpwd, string newpwd, string newpwd2)
+        {
+            user_name = WebUtility.InputText(user_name, 30);
+            oldpwd = WebUtility.InputText(oldpwd, 16);
+            newpwd = WebUtility.InputText(newpwd, 16);
+            newpwd2 = WebUtility.InputText(newpwd2, 16);
+            oldpwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(oldpwd, "MD5"), "MD5");
+            if (!Login(user_name, oldpwd))
+                return "原始密码不正确。";
+            if (newpwd != newpwd2)
+                return "两次输入密码不一致。";
+            Model.teacher model = GetModel(t_id);
+            if (model == null || model.Teacher_name != user_name)
+                return "教师信息获取失败或者被删除。";
+            string pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(newpwd, "MD5");
+            pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(pwd, "MD5");
+            model.Teacher_password = pwd;
+            if (Update(model)) return "修改成功。";
+            else return "修改失败。";
+        }
 		#endregion  ExtensionMethod
 	}
 }

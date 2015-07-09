@@ -7,10 +7,10 @@
 <META HTTP-EQUIV="expires" CONTENT="0"> 
     <title></title>
     <base target="right" />
-    <link rel="stylesheet" href="css/common.css" />
-    <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" type="text/css" href="css/easyui2.css" />
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+    <link rel="stylesheet" type="text/css" href="css/com.css" />
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/easyui.css" />
     <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="Scripts/typecheck.js"></script>
@@ -23,6 +23,7 @@
             border-color: #666666;
             border-collapse: collapse;
             margin: 10px 0 0 10px;
+            width:600px;
         }
         #tdetail th
         {
@@ -64,6 +65,7 @@
             margin-top: 20px;
         }
         #tt{margin-left:80px;}
+        .tree-title{font-size:16px;}
     </style>
     <script>
         var link = getQueryString("link");
@@ -147,7 +149,11 @@
     </script>
 </head>
 <body>
+<div class="f-mr20 f-mt10">
+<div class="s-box f-m10 f-p10 m-f">
     <a id="aback" class="u-btn" href="RoleManager.html">返回角色管理</a>
+    </div>
+    <div class="s-box f-m10 f-p10 m-f">
     <table id="tdetail" class="divSc" cellpadding="0" cellspacing="0">
         <tr>
             <th>
@@ -169,7 +175,8 @@
             </td>
         </tr>
     </table>
-    <div class="divSc divDe">
+    </div>
+    <div class="s-box f-m10 f-p10 m-f">
         <div class="ttl lh30">
             可选管理科目：</div>
         <div class="line">
@@ -181,5 +188,6 @@
             <a href="javascript:btnSubmit();" class="u-btn">更改</a>
         </div>
     </div>
+</div>
 </body>
 </html>

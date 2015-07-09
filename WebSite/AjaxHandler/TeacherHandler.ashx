@@ -29,6 +29,7 @@ public class TeacherHandler : IHttpHandler, IRequiresSessionState
             case "getdetail": GetDetail(context); break;
             case "edit": Edit(context); break;
             case "getjson": GetJson(context); break;
+            case "changepwd": ChangePassword(context); break;
         }
         
     }
@@ -225,5 +226,13 @@ public class TeacherHandler : IHttpHandler, IRequiresSessionState
     {
         context.Response.Write(bllTe.getJson(myrole_id));
         return;
+    }
+    void ChangePassword(HttpContext context)
+    {
+        string oldpwd = context.Request.Form["oldpwd"];
+        string newpwd = context.Request.Form["newpwd"];
+        string newpwd2 = context.Request.Form["newpwd2"];
+        context.Response.Write(bllTe.ChangePassword(adm.GetTeacherId(), adm.GetUserName(), oldpwd, newpwd, newpwd2));
+        
     }
 }

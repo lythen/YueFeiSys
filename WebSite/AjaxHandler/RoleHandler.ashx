@@ -109,18 +109,11 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
     }
     void GetTable(HttpContext context)
     {
-        int size = WebUtility.FilterParam(context.Request.Form["size"]);
-        DataTable dtRole = BLLRole.GetManagerRoleByCache(myrole_id);
-        
-        DataTable dtCount = new DataTable("table");
-        dtCount.Columns.Add(new DataColumn("total", typeof(int)));
-        dtCount.Columns.Add(new DataColumn("rows", typeof(DataTable)));
-
-        DataRow dr = dtCount.NewRow();
-        dr[0] = dtRole.Rows.Count;
-        dr[1] = dtRole;
-        dtCount.Rows.Add(dr);
-        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(dtCount, null));
+        int role_id = WebUtility.FilterParam(context.Request.Form["role_id"]);
+        int PageSize = WebUtility.FilterParam(context.Request.Form["rows"]);
+        int PageIndex = WebUtility.FilterParam(context.Request.Form["page"]);
+        if (role_id == 0) role_id = myrole_id;
+        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(BLLRole.GetRoleTable(role_id, PageIndex, PageSize), null));
     }
     
     void GetDetail(HttpContext context)

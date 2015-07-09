@@ -1,0 +1,137 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+    <base target="right" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/easyui.css" />
+    <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="Scripts/typecheck.js"></script>
+    <title>后台首页</title>
+        <style>
+    #contain{width:960px;margin-left:15px;margin-righ:15px;}
+    </style>
+    <script>
+    $(function () {
+            loadtable();
+        });
+        </script>
+</head>
+<body>
+    <div id="contain">
+    <div id="table" class="mt10">
+        <div class="box span10 oh">
+        <table id="dg" title="教师列表" />
+        </div>
+     </div>
+     </div>
+</body>
+<script>
+    function pagerFilter(data) {
+        if (typeof data.length == 'number' && typeof data.splice == 'function') {	// is array
+            data = {
+                total: data.length,
+                rows: data
+            }
+        }
+        var dg = $(this);
+        var opts = dg.datagrid('options');
+        var pager = dg.datagrid('getPager');
+        pager.pagination({
+            onSelectPage: function (pageNum, pageSize) {
+                opts.pageNumber = pageNum;
+                opts.pageSize = pageSize;
+                pager.pagination('refresh', {
+                    pageNumber: pageNum,
+                    pageSize: pageSize
+                });
+                dg.datagrid('loadData', data);
+            }
+        });
+        if (!data.originalRows) {
+            data.originalRows = (data.rows);
+        }
+        var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
+        var end = start + parseInt(opts.pageSize);
+        data.rows = (data.originalRows.slice(start, end));
+        return data;
+    }
+    function loadtable() {
+        $('#dg').datagrid({ loadFilter: pagerFilter }).datagrid({
+            title: '教师列表 ',
+            iconCls: 'icon-edit',
+            singleSelect: false,
+            idField: 'Teacher_id',
+            url: 'AjaxHandler/TeacherHandler.ashx?type=getlist',
+            pagination: true,
+            pageSize: 10,
+            columns: [[
+                { field: 'Teacher_id', title: '教师ID', width: 60 },
+                { field: 'Teacher_name', title: '帐号', width: 100, align: 'center' },
+                { field: 'Teacher_realname', title: '姓名', width: 100, align: 'center' },
+                { field: 'Teacher_sex', title: '性别', width: 40, align: 'center' },
+                { field: 'Teacher_job', title: '职务', width: 100, align: 'center' },
+                { field: 'Role_name', title: '角色', width: 100, align: 'center' },
+                { field: 'action', title: '操作', width: 100, align: 'center',
+                    formatter: function (value, row, index) {
+                        var e = '<a href="#" onclick="linkto(' + row.Teacher_id + ')">详细</a> ';
+                        var d = '<a href="#" onclick="deleterow(this)">删除</a>';
+                        return e + d;
+                    }
+                }
+            ]],
+            onBeforeEdit: function (index, row) {
+                row.editing = true;
+                updateActions(index);
+            },
+            onAfterEdit: function (index, row) {
+                row.editing = false;
+                updateActions(index);
+            },
+            onCancelEdit: function (index, row) {
+                row.editing = false;
+                updateActions(index);
+            }
+        });
+    }
+    function updateActions(index) {
+        $('#dg').datagrid('updateRow', {
+            index: index,
+            row: {}
+        });
+    }
+    function getRowIndex(target) {
+        var tr = $(target).closest('tr.datagrid-row');
+        return parseInt(tr.attr('datagrid-row-index'));
+    }
+    function linkto(id) {
+        $.get("AjaxHandler/CommonHandler.ashx?type=getlink&id=" + id,
+        function (data, status) {
+            if (status == "success") {
+                if (data == "iderror")
+                    alert("获取角色失败。");
+                else if (data == "error") alert("获取连接失败。");
+                else
+                    location.href = "addTeacher.html?link=" + data + "&s=" + Math.random();
+
+            } else alert("获取连接失败。");
+        });
+    }
+    function deleterow(target) {
+        $.messager.confirm('Confirm', '确实删除?', function (r) {
+            if (r) {
+                $('#dg').datagrid('deleteRow', getRowIndex(target));
+            }
+        });
+    }
+    function saverow(target) {
+        $('#dg').datagrid('endEdit', getRowIndex(target));
+    }
+    function cancelrow(target) {
+        $('#dg').datagrid('cancelEdit', getRowIndex(target));
+    }
+</script>
+</html>

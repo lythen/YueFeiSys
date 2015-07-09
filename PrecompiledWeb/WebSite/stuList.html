@@ -1,0 +1,244 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+    <base target="right" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/easyui.css" />
+    <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="Scripts/login.js"></script>
+    <title>后台首页</title>
+    <style>
+        #contain
+        {
+            width: 960px;
+            margin-left: 15px;
+            margin-righ: 15px;
+        }
+        .select_border2
+        {
+            padding: 0 0 0 0;
+            height: 30px;
+            display: inline-block;
+            background: #fff;
+        }
+        .combo
+        {
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="contain">
+        <div id="search_bar" class="mt10">
+            <div class="box">
+                <div class="box_border">
+                    <div class="box_top">
+                        <b class="pl15">搜索</b></div>
+                    <div class="box_center pt10 pb10">
+                        <table class="form_table" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td>
+                                    姓名
+                                </td>
+                                <td>
+                                    <input type="text" name="name" id="txtstuname" class="input-text lh25" size="10" />
+                                </td>
+                                <td>
+                                    学生编号
+                                </td>
+                                <td>
+                                    <input type="text" name="name" class="input-text lh25" size="10" />
+                                </td>
+                                <td>
+                                    性别
+                                </td>
+                                <td>
+                                    <span class="fl">
+                                        <div class="select_border2">
+                                            <div class="select_containers ">
+                                                <select name="" id="select_sex" class="select">
+                                                    <option value="0">全部</option>
+                                                    <option value="男">男</option>
+                                                    <option value="女">女</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </td>
+                                <td>
+                                    家长姓名
+                                </td>
+                                <td>
+                                    <input type="text" name="name" id="txtparentname" class="input-text lh25" size="10" />
+                                </td>
+                                <td align="right">
+                                    <input type="submit" value="确定" class="ext_btn ext_btn_submit" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    就读学校
+                                </td>
+                                <td colspan="3">
+                                    <span class="fl">
+                                        <div class="select_border">
+                                            <div class="select_containers ">
+                                                <input id="cbtsc" style="width: 200px;" />
+                                            </div>
+                                        </div>
+                                    </span>
+                                </td>
+                                <td>
+                                    年级
+                                </td>
+                                <td>
+                                    <span class="fl">
+                                        <div class="select_border2">
+                                            <div class="select_containers ">
+                                                <select name="" id="select_grade" class="select">
+                                                    <option selected="selected" value="0">全部</option>
+                                                    <option value="1">一年级</option>
+                                                    <option value="2">二年级</option>
+                                                    <option value="3">三年级</option>
+                                                    <option value="4">四年级</option>
+                                                    <option value="5">五年级</option>
+                                                    <option value="6">六年级</option>
+                                                    <option value="7">初一</option>
+                                                    <option value="8">初二</option>
+                                                    <option value="9">初三</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="table" class="mt10">
+            <div class="box span10 oh">
+                <div class="box_bottom pb5 pt5 pr10" style="border-top: 1px solid #dadada;">
+                    <div class="search_bar_btn">
+                        <input type="button" name="button" onclick="Delete();" class="btn btn82 btn_del" value="删除">
+                        <input type="button" name="button" class="btn btn82 btn_export" value="导出">
+                    </div>
+                </div>
+                <table id="dg" title="学生列表" />
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+<script>
+    var school_id = 0;
+    var grade = 0;
+    var sex = '0';
+    var stu_name = '';
+    var parent_name = '';
+    $(function () {
+        $('#cbtsc').combotree({
+            url: 'AjaxHandler/SchoolHandler.ashx?type=getjson',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                getVal(loadtable);
+            }
+        });
+        $('#cbtsc').combotree("setValue", 0);
+        getVal(loadtable);
+        $("#select_grade").change(function () {
+            getVal(loadtable);
+        });
+    });
+    function getVal(callback) {
+        school_id = $('#cbtsc').combotree("getValue");
+        grade = $('#select_grade').val();
+        sex = $('#select_sex').val();
+        stu_name = $('#txtstuname').val();
+        parent_name = $('#txtparentname').val();
+        callback();
+    }
+    function loadtable() {
+        $('#dg').datagrid({
+            title: '课程列表显示',
+            iconCls: 'icon-edit',
+            singleSelect: false,
+            idField: 'stu_id',
+            url: 'AjaxHandler/StudentHandler.ashx',
+            pagination: true,
+            pageSize: 10,
+            queryParams: {
+                type: 'getlist',
+                school_id: school_id,
+                grade: grade,
+                sex: sex,
+                stu_name: stu_name,
+                parent_name: parent_name
+            },
+            columns: [[
+                { field: 'cb', title: '全选', width: 60, align: 'center', checkbox: true },
+                { field: 'stu_id', title: '学生id', width: 140 },
+                { field: 'stu_name', title: '姓名', width: 100, align: 'center', editor: 'text' },
+                { field: 'stu_sex', title: '姓别', width: 100, align: 'center' },
+                { field: 'parent_name', title: '家长', width: 100, align: 'center' },
+                { field: 'parent_mobile', title: '联系电话', width: 100, align: 'center' },
+                { field: 'School_name', title: '学校', width: 100, align: 'center' },
+                { field: 'g_title', title: '年级', width: 60, align: 'center' },
+                { field: 'action', title: '操作', width: 60, align: 'center',
+                    formatter: function (value, row, index) {
+                        var d = '<a href="addStudent.html?link=' + row.stu_id + '" >详细</a>';
+                        return d;
+                    }
+                }
+            ]]
+        });
+    }
+    function getRowIndex(target) {
+        var tr = $(target).closest('tr.datagrid-row');
+        return parseInt(tr.attr('datagrid-row-index'));
+    }
+    function Delete() {
+        $.messager.confirm('警告', '确实删除?', function (r) {
+            if (r) {
+                var debox = $('#dg').datagrid('getChecked');
+                var len = debox.length;
+                if (len == 0) {
+                    alert("没有选择任何行。");
+                    return;
+                }
+                var ids = "";
+                for (var i = 0; i < len; i++) {
+                    ids += debox[i].stu_id + ',';
+                }
+                $.post("AjaxHandler/StudentHandler.ashx",
+                { "type": "deletelist",
+                    "ids": ids
+                },
+                function (data, status) {
+                    if (status == "success") {
+                        checkLogin(data);
+                        alert(data);
+                        loadtable();
+                    } else alert("删除失败。");
+                });
+            }
+        });
+    }
+    function detail(stu_id) {
+        location.href = "addStudent.html?link=" + stu_id;
+    }
+</script>
+</html>

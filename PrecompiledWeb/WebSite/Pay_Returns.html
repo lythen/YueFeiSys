@@ -1,0 +1,322 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+    <base target="right" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/com.css" />
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/easyui.css" />
+    <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="Scripts/typecheck.js"></script>
+    <script type="text/javascript" src="Scripts/login.js"></script>
+    <title>后台首页</title>
+    <style>
+        #contain
+        {
+            width: 960px;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        #addtb td
+        {
+            height: 40px;
+        }
+        .input-text
+        {
+            padding: 0px 5px 0px 5px;
+        }
+        .combo
+        {
+            border: none;
+        }
+        .select_border2
+        {
+            padding: 0 0 0 0;
+            height: 30px;
+            display: inline-block;
+            background: #fff;
+        }
+        .input-text
+        {
+            height: 27px;
+        }
+        .out_tip
+        {
+            height: 24px;
+            line-height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="f-mr20 f-mt10">
+        <input type="hidden" id="hidcid" />
+        <div class="s-box f-m10 f-p10 m-f">
+            学生id：<input type="text" class="input-text" id="txtstuid" value="2015070208552361" />&nbsp;&nbsp;&nbsp;学生姓名：<input
+                type="text" class="input-text" id="txtstuname" />&nbsp;&nbsp;&nbsp;<input type="button"
+                    onclick="search();" class="u-btn" id="btnsearch" value="查询" />
+        </div>
+        <div class="s-box f-m10 f-p10 m-f">
+            <div class="search_bar_btn">
+                &nbsp;&nbsp; 科目筛选：<span>
+                    <div class="select_border">
+                        <div class="select_containers ">
+                            <input id="cbt" style="width: 200px;" />
+                        </div>
+                    </div>
+                </span>&nbsp;&nbsp;选择老师： <span>
+                    <div class="select_border">
+                        <div class="select_containers ">
+                            <input id="cbtTe" style="width: 200px;" />
+                        </div>
+                    </div>
+                </span>&nbsp;&nbsp; 课程状态：<span>
+                    <div class="select_border2">
+                        <div class="select_containers ">
+                            <select name="" id="sestatus" class="select">
+                                <option value="0">全部</option>
+                                <option value="1">已结束</option>
+                                <option value="2">进行中</option>
+                                <option value="3">未开始</option>
+                            </select>
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+        <div class="s-box f-m10 f-p10 m-f">
+            课程价格：<input type="text" class="input-text" id="txtpay" />&nbsp;&nbsp;<input type="button"
+                id="btnsubmit" onclick="SubmitCourse();" value="报名所选课程" class="u-btn" />
+        </div>
+        <div class="s-box f-m10 f-p10 m-f">
+            <table id="dg" title="课程列表显示" />
+        </div>
+    </div>
+    <div id="win" class="easyui-window" title="报名提示" style="width: 600px;" data-options="iconCls:'icon-save',modal:true,closed:true">
+        <div class="s-box f-m10 f-p10 m-f cadd" id="divadd">
+        </div>
+        <div class="s-box f-m10 f-p10 m-f cminus" id="divdelete">
+        </div>
+        <div class="s-box f-m10 f-p10 m-f" style="text-align: center">
+            <input type="button" id="btnpay" value="确  定" onclick="submitPay();" class="u-btn" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" id="btncancel" onclick="submitBack();" value="取  消" class="u-btn u-btn-c2" />
+        </div>
+    </div>
+</body>
+<script>
+    var teacher_id;
+    var subject_id;
+    var student_id;
+    var status;
+    var isSet = 0;
+    $(function () {
+        var arr = ["xml", "html", "css", "js"];
+        loadTree();
+        loadteacher();
+    });
+    function loadTree() {
+        $('#cbt').combotree({
+            url: 'AjaxHandler/SubjectHandler.ashx?type=gettable',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                loadtable();
+            }
+        });
+        $('#cbt').combotree("setValue", 0);
+    }
+    function loadteacher() {
+        $('#cbtTe').combotree({
+            url: 'AjaxHandler/TeacherHandler.ashx?type=getjson',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                loadtable();
+            }
+        });
+        $('#cbtTe').combotree("setValue", 0);
+    }
+    function search() {
+        student_id = $("#txtstuid").val();
+        var stu_name = $("#txtstuname").val();
+        $.post("AjaxHandler/StudentHandler.ashx",
+        {
+            'type': 'check',
+            'stu_id': student_id,
+            'stu_name': stu_name
+        },
+        function (data, status) {
+            if (status == "success") {
+                checkLogin(data);
+                try {
+                    var json = jQuery.parseJSON(data);
+                    if (json.length == 0) {
+                        alert("没有学生记录。");
+                        return;
+                    }
+                    $("#txtstuid").val(json.stu_id);
+                    $("#txtstuname").val(json.stu_name);
+                    loadtable();
+                } catch (e) {
+                    alert("没有学生记录。");
+                }
+            } else alert("查询出错。");
+        });
+    }
+    function loadtable() {
+        $('#dg').datagrid({
+            title: '课程列表显示',
+            iconCls: 'icon-edit',
+            singleSelect: false,
+            idField: 'Course_id',
+            url: 'AjaxHandler/CourseHandler.ashx',
+            pagination: true,
+            pageSize: 10,
+            queryParams: {
+                type: 'gettable',
+                teacher_id: $('#cbtTe').combotree("getValue"),
+                subject_id: $('#cbt').combotree("getValue"),
+                status: $('#sestatus').val(),
+                stu_id: $("#txtstuid").val()
+            },
+            width: 960,
+            columns: [[
+                { field: 'Sc_stu_id', title: '全选', width: 100, align: 'center', checkbox: true },
+                { field: 'Course_id', title: '课程ID', width: 60 },
+                { field: 'Course_title', title: '科目名称', width: 200, align: 'center', editor: 'text' },
+                { field: 'Subject_title', title: '所属科目', width: 100, align: 'center' },
+                { field: 'Teacher_realname', title: '任课老师', width: 100, align: 'center' },
+                { field: 'Course_cost', title: '收费(元)', width: 70, align: 'center' },
+                { field: 'Course_info', title: '时间说明', width: 200, align: 'center' }
+            ]],
+            onLoadSuccess: function (row) {//当表格成功加载时执行               
+                var rowData = row.rows;
+                var cids = "";
+                //[{'id':'1','name':'name'},{'id':'2','name':'name2'}]
+                var isadd = false;
+                $.each(rowData, function (idx, val) {//遍历JSON
+                    if (!$.isEmptyObject(val.Sc_stu_id)) {
+                        $("#dg").datagrid("selectRow", idx); //如果数据行为已选中则选中改行
+                        if (isadd) {
+                            cids = cids + ",";
+                        } else isadd = true;
+                        cids = cids + val.Course_id;
+                    }
+                });
+                $("#hidcid").val(cids);
+                isSet = 1;
+            },
+            onCheck: function (index, row) {
+                setCost(index, row);
+            },
+            onUncheck: function (index, row) {
+                setCost(index, row);
+            },
+            onCheckAll: function (index, row) {
+                setCost(index, row);
+            },
+            onUncheckAll: function (index, row) {
+                setCost(index, row);
+            }
+        });
+    }
+    function setCost(index, row) {
+        if (isSet == 0) return;
+        var ac = $('#dg').datagrid("getChecked");
+        var cids = $("#hidcid").val();
+        var mo = 0;
+        var arr = new Array();
+        if (!$.isEmptyObject(cids)) {
+            arr = cids.split(",");
+        }
+        var lenac = ac.length;
+        for (var i = 0; i < lenac; i++) {
+            if ($.inArray(ac[i].Course_id.toString(), arr) == -1)
+                mo = parseFloat(ac[i].Course_cost) + mo;
+        }
+        $("#txtpay").val(mo);
+    }
+    var newCourse = "";
+    var DeleteCourse = "";
+    function SubmitCourse() {
+        var cids = $("#hidcid").val(); //原来课程
+        var ac = $('#dg').datagrid("getChecked"); //已选课程
+        var arr = new Array();
+        if (!$.isEmptyObject(cids)) {
+            var arr = cids.split(",");
+        }
+        var lenac = ac.length;
+        var index;
+        var json = $('#dg').datagrid("getData").rows;
+        var lenj = json.length;
+        var cid;
+        var newadd = "";
+        var newc = 0;
+        for (var i = 0; i < lenac; i++) {
+            cid = ac[i].Course_id.toString();
+            index = $.inArray(cid, arr);
+            if (index == -1)//说明是新增课程
+            {
+                for (var j = 0; j < lenj; j++) {
+                    if (json[j].Course_id == cid) {
+                        newadd = newadd + "<span class='out_tip'>新增报名：" + json[i].Course_title + "</span><br />";
+                        newc++;
+                        newCourse = newCourse + cid + ",";
+                    }
+                }
+            } else {//说明是原来课程
+                arr.splice(index, 1);
+            }
+        }
+        if (newc == 0) $("#divadd").css("display", "none");
+        else {
+            newadd += "<span class='out_tip' id='allpay'>合计新增报名： " + newc + "，实交金额： " + $("#txtpay").val();
+            $("#divadd").html(newadd);
+        }
+        var cdelete = "";
+        var lena = arr.length;
+        var newd = 0;
+        if (lena > 0) {
+            for (var j = 0; j < lenj; j++) {
+                for (var i = 0; i < lena; i++) {
+                    if (json[j].Course_id == arr[i]) {
+                        cdelete = cdelete + "<span class='out_tip'>退费课程：" + json[j].Course_title + "</span><br />";
+                        newd++;
+                        DeleteCourse = DeleteCourse + arr[i] + ",";
+                    }
+                }
+            }
+        }
+        if (newd == 0) $("#divdelete").css("display", "none");
+        else {
+            cdelete += "<span class='out_tip' id='alldelete'>合计退费： " + newd;
+            $("#divdelete").html(cdelete);
+        }
+        $('#win').window('open');
+    }
+    function submitBack() {
+        $('#win').window('close');
+    }
+    function submitPay() {
+        $.post("AjaxHandler/StudentVsCourseHandler.ashx",
+        {
+            "type": "adddelete",
+            "stu_id": student_id,
+            "addlist": newCourse,
+            "deletelist": DeleteCourse,
+            "regpay": $("#txtpay").val()
+        },
+        function (data, status) {
+            if (status == "success") {
+                if(!checkLogin(data)) return;
+                alert(data);
+            } else alert("网络错误，请重试。");
+        });
+        $('#win').window('close');
+    }
+</script>
+</html>

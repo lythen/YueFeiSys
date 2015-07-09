@@ -219,7 +219,7 @@ namespace Lythen.BLL
         /// </summary>
         /// <param name="role_id"></param>
         /// <returns></returns>
-        private DataTable GetManagerRole(int role_id)
+        public DataTable GetManagerRole(int role_id)
         {
             DataTable dtRole = GetDataTableByCache();
             //管理员返回全部数据
@@ -239,14 +239,28 @@ namespace Lythen.BLL
             }
             return ReRole;
         }
+        public DataTable GetRoleTable(int role_id,int pageIndex,int pageSize)
+        {
+            DataTable dtRole = GetManagerRole(role_id);
+
+            DataTable dtCount = new DataTable("table");
+            dtCount.Columns.Add(new DataColumn("total", typeof(int)));
+            dtCount.Columns.Add(new DataColumn("rows", typeof(DataTable)));
+
+            DataRow dr = dtCount.NewRow();
+            dr[0] = dtRole.Rows.Count;
+            dr[1] = dtRole;
+            dtCount.Rows.Add(dr);
+            return dtCount;
+        }
         /// <summary>
         /// 管辖内的科目
         /// </summary>
         /// <param name="role_id"></param>
         /// <returns></returns>
-        public DataTable GetManagerRoleByCache(int role_id)
+        private DataTable GetManagerRoleByCache()
         {
-            string cache_key = CACHE_KEY_DATATABLE + role_id;
+            string cache_key = CACHE_KEY_DATATABLE + "ROLE";
             object objDataTable = Lythen.Common.DataCache.GetCache(cache_key);
             if (objDataTable == null)
             {
@@ -305,7 +319,7 @@ namespace Lythen.BLL
             if (parent_id == 0)
                 return "pdelete";
             //只能把角色添加到自己管辖的科目范围内
-            DataTable dtRole = GetManagerRoleByCache(myrole_id);
+            DataTable dtRole = GetManagerRole(myrole_id);
             DataRow[] drs = dtRole.Select("Role_id=" + parent_id);
             if (drs.Length == 0) return "nopower";
 
@@ -335,7 +349,7 @@ namespace Lythen.BLL
             if (parent_id == 0)//添加时有人删除了父科目
                 return "pdelete";
             //只能把角色添加到自己管辖的科目范围内
-            DataTable dtRole = GetManagerRoleByCache(myrole_id);
+            DataTable dtRole = GetManagerRole(myrole_id);
             DataRow[] drs = dtRole.Select("Role_id=" + parent_id);
             if (drs.Length == 0) return "nopower";
             Model.sys_role model = GetModel(role_id);
@@ -354,7 +368,7 @@ namespace Lythen.BLL
             if (deRole_id == 1) return "cannot";
             if (myRole_id == deRole_id) return "cannot";
             //只能删除自己管理的角色
-            DataTable dtRole = GetManagerRoleByCache(myRole_id);
+            DataTable dtRole = GetManagerRole(myRole_id);
             DataRow[] drs = dtRole.Select("Role_id=" + deRole_id);
             if (drs.Length == 0) return "nopower";
             if (Delete(deRole_id))
@@ -374,7 +388,7 @@ namespace Lythen.BLL
             if (!File.Exists(path))
             {
                 sb.Append("[{\"id\":0,\"text\":\"请选择角色\",\"children\":[");
-                DataTable dtRole = GetManagerRoleByCache(role_id);
+                DataTable dtRole = GetManagerRole(role_id);
                 if (dtRole.Rows.Count == 0)
                 {
                     sb.Append("	]}]");

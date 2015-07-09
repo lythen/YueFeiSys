@@ -3,6 +3,7 @@ using System.Data;
 using System.Collections.Generic;
 using Lythen.Common;
 using Lythen.Model;
+using System.Text;
 namespace Lythen.BLL
 {
 	/// <summary>
@@ -165,6 +166,20 @@ namespace Lythen.BLL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
+        public string AddorDeleteStudentCourse(string addlist,string deletelist, decimal cost, string stu_id)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (!string.IsNullOrEmpty(addlist))
+                if (AddStudentCourse(addlist, cost, stu_id))
+                {
+                    sb.Append("报名成功。\r\n");
+                }
+                else sb.Append("报名失败。\r\n");
+                
+            if (!string.IsNullOrEmpty(deletelist))
+                sb.Append(DeleteStudentCourse(deletelist, stu_id));
+            return sb.ToString(); ;
+        }
         /// <summary>
         /// 报名课程
         /// </summary>
@@ -213,6 +228,25 @@ namespace Lythen.BLL
             if (allCost != 0) cost_list[len - 1] = cost_list[len - 1] + allCost;
             return dal.AddStudentCourse(cids, cost_list, stu_id);
 
+        }
+        public string DeleteStudentCourse(string listCourse, string stu_id)
+        {
+            if (string.IsNullOrEmpty(listCourse)) return "";
+            if (listCourse.EndsWith(","))
+                listCourse = listCourse.Substring(0, listCourse.Length - 1);
+            string[] list = listCourse.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            int len = list.Length;
+            int[] cids = new int[len];
+
+            for (int i = 0; i < len; i++)
+            {
+                cids[i] = WebUtility.FilterParam(list[i]);
+                if (cids[i] == 0) return "退费失败，课程获取失败。";
+            }
+
+            int row = dal.DeleteStudentCourse(cids, stu_id);
+            if (row == len) return "退费成功。";
+            else return "退费失败，请检查。";
         }
         public DataTable GetStudentCourse(string stu_id)
         {
