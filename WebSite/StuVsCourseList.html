@@ -11,15 +11,138 @@
     <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="Scripts/typecheck.js"></script>
     <script type="text/javascript" src="Scripts/login.js"></script>
+    <style>
+        
+        .input-text
+        {
+            padding: 0px 5px 0px 5px;height: 27px;
+        }
+        .combo
+        {
+            border: none;
+        }
+        .select_border2
+        {
+            padding: 0 0 0 0;
+            height: 30px;
+            display: inline-block;
+            background: #fff;
+        }
+       
+    </style>
 </head>
 <body>
 <div class="f-mr20 f-mt10">
         <div class="s-box f-m10 f-p10 m-f cen">
-            
+            &nbsp;&nbsp;科目筛选：<span>
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                       <input id="cbt" style="width:200px;" />
+                        </div> 
+                      </div> 
+                    </span>
+&nbsp;&nbsp;课程筛选：
+<span>
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                       <input id="cbtc" style="width:200px;" />
+                        </div> 
+                      </div> 
+                    </span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;学生ID：<input type="text" id="txtstuid" name="stuid" class="input-text lh30" style="width:200px;" />
+                     &nbsp;&nbsp;&nbsp;&nbsp;学生姓名：<input type="text" id="txtstuname" name="name" class="input-text lh30" style="width:200px;" />
+&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="btnsearch" value="查询" onclick="GoSearch();" class="u-btn" />
         </div>
         <div class="s-box f-m10 f-p10 m-f cen">
-            
+            <table id="dg" title="报名列表显示" />
         </div>
 </div>
 </body>
+<script>
+    $(function () {
+        loadsubject();
+        loadcourse();
+    });
+    function GoSearch() {
+        var sub_id = $('#cbt').combotree("getValue");
+        var course_id = $('#cbtc').combotree("getValue");
+        var stu_id = $("#txtstuid").val();
+        var stu_name = $("#txtstuname").val();
+        if (isValidString(stu_id)) {
+            alert("学生ID输入不合法。");
+            $("#txtstuid").focus();
+            return;
+        }
+        if (isValidString(stu_name)) {
+            alert("学生姓名输入不合法。");
+            $("#txtstuname").focus();
+            return;
+        }
+        var isin = true;
+        $('#dg').datagrid({
+            title: '报名列表显示',
+            iconCls: 'icon-edit',
+            singleSelect: false,
+            idField: 'Sc_course_id',
+            url: 'AjaxHandler/StudentVsCourseHandler.ashx',
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30, 50, 100, 200],
+            queryParams: {
+                type: 'getlist',
+                course_id: course_id,
+                subject_id: sub_id,
+                stu_name: stu_name,
+                stu_id: stu_id
+            },
+            columns: [[
+                { field: 'Sc_course_id', title: '课程id',width:40, align: 'center'},
+                { field: 'Course_title', title: '课程名称', align: 'center'},
+                { field: 'Subject_title', title: '所属科目', align: 'center'},
+                { field: 'Sc_stu_id', title: '学生id', align: 'center' },
+                { field: 'stu_name', title: '学生姓名', align: 'center' },
+                { field: 'Sc_pay', title: '交费(元)',  align: 'center' }
+            ]],
+            onLoadSuccess: function (row) {//当表格成功加载时执行   
+                if (isin) {
+                    var rowData = row.rows;
+                    if (rowData.length == 0) $('#dg').datagrid("hideColumn", "Sc_pay");
+                    else if (jQuery.isEmptyObject(rowData[0].Sc_pay)) $('#dg').datagrid("hideColumn", "Sc_pay");
+                    isin = false;
+                }
+
+            }
+        });
+    }
+    function loadsubject() {
+        $('#cbt').combotree({
+            url: 'AjaxHandler/SubjectHandler.ashx?type=gettable',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                loadcourse();
+            }
+        });
+        $('#cbt').combotree("setValue", 0);
+    }
+    function loadcourse() {
+        var subject_id = "";
+        try {
+            subject_id = $('#cbt').combotree("getValue");
+        } catch (e) {
+            subject_id = "0";
+        }
+
+        $('#cbtc').combotree({
+            url: 'AjaxHandler/CourseHandler.ashx?type=getlist&sub_id=subject_id',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text'
+        });
+        $('#cbtc').combotree("setValue", 0);
+    }
+</script>
 </html>

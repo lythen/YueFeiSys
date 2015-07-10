@@ -418,6 +418,19 @@ and Course_status=(case when @status='0' then  Course_status else @status end) o
             string sql = string.Format("select SUM(Course_cost) from course where Course_id in({0});select Course_id,Course_cost from course where Course_id in({0})", list_id);
             return DbHelperSQL.Query(sql);
         }
+        /// <summary>
+        /// 获取课程列表，传入0表示获取全部课程
+        /// </summary>
+        /// <param name="sub_id"></param>
+        /// <returns></returns>
+        public DataSet GetLiteList(int subject_id)
+        {
+            string sql = "select Course_id,Course_title from course where Course_sub_id=(case when @subject_id=0 then Course_sub_id else @subject_id end)";
+            SqlParameter[] parameters = {
+					new SqlParameter("@subject_id", SqlDbType.Int,4)};
+            parameters[0].Value = subject_id;
+            return DbHelperSQL.Query(sql, parameters);
+        }
         #endregion  ExtensionMethod
     }
 }

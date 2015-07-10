@@ -24,6 +24,7 @@ public class CourseHandler : IHttpHandler, IRequiresSessionState
         {
             case "gettable": GetTable(context); break;
             case "add": Add(context); break;
+            case "getlist": GetJsonList(context); break;
         }
     }
  
@@ -92,5 +93,10 @@ public class CourseHandler : IHttpHandler, IRequiresSessionState
     }
     void Delete()
     {
+    }
+    void GetJsonList(HttpContext context)
+    {
+        int subject_id = WebUtility.FilterParam(context.Request.QueryString["sub_id"]);
+        context.Response.Write(cBLL.GetJsonList(subject_id));
     }
 }

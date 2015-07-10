@@ -159,10 +159,19 @@ namespace Lythen.BLL
 		/// <summary>
 		/// 分页获取数据列表
 		/// </summary>
-		//public DataSet GetList(int PageSize,int PageIndex,string strWhere)
-		//{
-			//return dal.GetList(PageSize,PageIndex,strWhere);
-		//}
+        public DataTable GetList(int PageSize, int PageIndex, int subject_id, int course_id, string stu_id, string stu_name,int role_id)
+        {
+            DataSet ds = dal.GetList(PageSize, PageIndex, subject_id, course_id, stu_id, stu_name);
+            DataTable dtCount = new DataTable("table");
+            dtCount.Columns.Add(new DataColumn("total", typeof(int)));
+            dtCount.Columns.Add(new DataColumn("rows", typeof(DataTable)));
+            if (role_id != 1) ds.Tables[0].Columns.Remove("Sc_pay");
+            DataRow dr = dtCount.NewRow();
+            dr[0] = (int)ds.Tables[1].Rows[0][0];
+            dr[1] = ds.Tables[0];
+            dtCount.Rows.Add(dr);
+            return dtCount;
+        }
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod

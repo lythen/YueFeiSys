@@ -13,10 +13,10 @@ namespace Lythen.BLL
 	public partial class course
 	{
 		private readonly Lythen.DAL.course dal=new Lythen.DAL.course();
-        private string CACHE_PATH;
+        private string CachePath;
 		public course()
 		{
-            CACHE_PATH = System.Web.HttpContext.Current.Server.MapPath("~/DataCache/course/");
+            CachePath = System.Web.HttpContext.Current.Server.MapPath("~/DataCache/course/");
         }
 		#region  BasicMethod
 
@@ -244,6 +244,47 @@ namespace Lythen.BLL
         public DataSet getSUMCost(string list_id)
         {
             return dal.getSUMCost(list_id);
+        }
+        public string GetJsonList(int sub_id)
+        {
+            DataTable dtCourse = dal.GetLiteList(sub_id).Tables[0];
+
+            if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
+            string file_path = string.Format("{0}course_{1}.txt", CachePath, sub_id);
+            StringBuilder sb = new StringBuilder();
+            if (!File.Exists(file_path))
+            {
+                sb.Append("[{\"id\":0,\"text\":\"请选择课程\"}");
+                DataTable dtSub = new Lythen.BLL.subject().GetList("").Tables[0];
+                if (dtCourse.Rows.Count == 0)
+                {
+                    sb.Append("]");
+                    return sb.ToString();
+                }
+                else
+                {
+                    foreach (DataRow dr in dtCourse.Rows)
+                    {
+                        sb.Append(",{\"id\":\"").Append(dr["Course_id"]).Append("\",\"text\":\"").Append(dr["Course_title"]).Append("\"}");
+                    }
+                }
+                sb.Append("]");
+                StreamWriter sw = new StreamWriter(file_path);
+                sw.Write(sb.ToString());
+                sw.Flush();
+                sw.Close();
+                return sb.ToString();
+            }
+            else
+            {
+
+                StreamReader sr = new StreamReader(file_path);
+                string str = sr.ReadToEnd();
+                sr.Close();
+                return str;
+            }
+
+        
         }
 		#endregion  ExtensionMethod
 	}

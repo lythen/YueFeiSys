@@ -283,30 +283,28 @@ namespace Lythen.DAL
 			return DbHelperSQL.Query(strSql.ToString());
 		}
 
-		/*
+		
 		/// <summary>
 		/// 分页获取数据列表
 		/// </summary>
-		public DataSet GetList(int PageSize,int PageIndex,string strWhere)
+		public DataSet GetList(int PageSize,int PageIndex,int subject_id,int course_id,string stu_id,string stu_name)
 		{
 			SqlParameter[] parameters = {
-					new SqlParameter("@tblName", SqlDbType.VarChar, 255),
-					new SqlParameter("@fldName", SqlDbType.VarChar, 255),
-					new SqlParameter("@PageSize", SqlDbType.Int),
-					new SqlParameter("@PageIndex", SqlDbType.Int),
-					new SqlParameter("@IsReCount", SqlDbType.Bit),
-					new SqlParameter("@OrderType", SqlDbType.Bit),
-					new SqlParameter("@strWhere", SqlDbType.VarChar,1000),
+					new SqlParameter("@stu_name", SqlDbType.VarChar, 30),
+					new SqlParameter("@stu_id", SqlDbType.VarChar, 20),
+					new SqlParameter("@pagesize", SqlDbType.Int),
+					new SqlParameter("@pageindex", SqlDbType.Int),
+					new SqlParameter("@Subject_id", SqlDbType.Int),
+					new SqlParameter("@Course_id", SqlDbType.Int)
 					};
-			parameters[0].Value = "stu_vs_course";
-			parameters[1].Value = "Sc_course_id";
+            parameters[0].Value = stu_name;
+            parameters[1].Value = stu_id;
 			parameters[2].Value = PageSize;
 			parameters[3].Value = PageIndex;
-			parameters[4].Value = 0;
-			parameters[5].Value = 0;
-			parameters[6].Value = strWhere;	
-			return DbHelperSQL.RunProcedure("UP_GetRecordByPage",parameters,"ds");
-		}*/
+            parameters[4].Value = subject_id;
+            parameters[5].Value = course_id;
+            return DbHelperSQL.RunProcedure("proGetStudentCourseList", parameters, "ds");
+		}
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod

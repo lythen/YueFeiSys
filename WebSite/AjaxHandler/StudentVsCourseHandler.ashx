@@ -22,6 +22,7 @@ public class StudentVsCourseHandler : IHttpHandler, IRequiresSessionState
         {
             case "gettable": GetTable(context); break;
             case "adddelete": AddorDeleteStudentCourse(context); break;
+            case "getlist": GetList(context); break;
         }
     }
  
@@ -77,10 +78,9 @@ public class StudentVsCourseHandler : IHttpHandler, IRequiresSessionState
         int PageSize = WebUtility.FilterParam(context.Request.Form["rows"]);
         int PageIndex = WebUtility.FilterParam(context.Request.Form["page"]);
         int subject_id = WebUtility.FilterParam(context.Request.Form["subject_id"]);
-        int teacher_id = WebUtility.FilterParam(context.Request.Form["teacher_id"]);
         int course_id = WebUtility.FilterParam(context.Request.Form["course_id"]);
         string stu_id = WebUtility.InputText(context.Request.Form["stu_id"], 20);
         string stu_name = WebUtility.InputText(context.Request.Form["stu_name"], 30);
-        
+        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(svcBLL.GetList(PageSize, PageIndex, subject_id, course_id, stu_id, stu_name, myrole_id),null));
     }
 }
