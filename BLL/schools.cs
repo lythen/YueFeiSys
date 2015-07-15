@@ -189,7 +189,7 @@ namespace Lythen.BLL
             StringBuilder sb = new StringBuilder();
             if (!File.Exists(file_path))
             {
-                sb.Append("[{\"id\":0,\"text\":\"请选择学校\"}");
+                sb.Append("[{\"School_id\":0,\"School_name\":\"请选择学校\"}");
                 DataTable dtSub = new Lythen.BLL.subject().GetList("").Tables[0];
                 if (dtSchool.Rows.Count == 0)
                 {
@@ -200,7 +200,7 @@ namespace Lythen.BLL
                 {
                     foreach (DataRow dr in dtSchool.Rows)
                     {
-                        sb.Append(",{\"id\":\"").Append(dr["School_id"]).Append("\",\"text\":\"").Append(dr["School_name"]).Append("\"}");
+                        sb.Append(",{\"School_id\":\"").Append(dr["School_id"]).Append("\",\"School_name\":\"").Append(dr["School_name"]).Append("\"}");
                     }
                 }
                 sb.Append("]");
