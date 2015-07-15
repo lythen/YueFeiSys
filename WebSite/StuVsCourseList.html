@@ -49,7 +49,15 @@
                         </div> 
                       </div> 
                     </span>
-                    &nbsp;&nbsp;&nbsp;&nbsp;学生ID：<input type="text" id="txtstuid" name="stuid" class="input-text lh30" style="width:200px;" />
+                    &nbsp;&nbsp;校区筛选：
+<span>
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                       <input id="cbsc" style="width:200px;" />
+                        </div> 
+                      </div> 
+                    </span><br /><br />
+                    &nbsp;&nbsp;学生ID：<input type="text" id="txtstuid" name="stuid" class="input-text lh30" style="width:200px;" />
                      &nbsp;&nbsp;&nbsp;&nbsp;学生姓名：<input type="text" id="txtstuname" name="name" class="input-text lh30" style="width:200px;" />
 &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="btnsearch" value="查询" onclick="GoSearch();" class="u-btn" />
         </div>
@@ -62,12 +70,14 @@
     $(function () {
         loadsubject();
         loadcourse();
+        loadschool();
     });
     function GoSearch() {
         var sub_id = $('#cbt').combotree("getValue");
         var course_id = $('#cbtc').combotree("getValue");
         var stu_id = $("#txtstuid").val();
         var stu_name = $("#txtstuname").val();
+        var school_id = $('#cbsc').combotree("getValue");
         if (isValidString(stu_id)) {
             alert("学生ID输入不合法。");
             $("#txtstuid").focus();
@@ -93,9 +103,11 @@
                 course_id: course_id,
                 subject_id: sub_id,
                 stu_name: stu_name,
-                stu_id: stu_id
+                stu_id: stu_id,
+                school_id: school_id
             },
             columns: [[
+                { field: 'School_name', title: '校区', width: 100, align: 'center' },
                 { field: 'Sc_course_id', title: '课程id',width:40, align: 'center'},
                 { field: 'Course_title', title: '课程名称', align: 'center'},
                 { field: 'Subject_title', title: '所属科目', align: 'center'},
@@ -143,6 +155,16 @@
             textField: 'text'
         });
         $('#cbtc').combotree("setValue", 0);
+    }
+    function loadschool() {
+        $('#cbsc').combotree({
+            url: 'AjaxHandler/SchoolHandler.ashx?type=getjson',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text'
+        });
+        $('#cbsc').combotree("setValue", id);
     }
 </script>
 </html>

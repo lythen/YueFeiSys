@@ -177,7 +177,7 @@ namespace Lythen.BLL
 		#endregion  BasicMethod
 		#region  ExtensionMethod
         /// <summary>
-        /// 返回下拉列表所需要的JSON
+        /// 返回下拉列表所需要的校区JSON
         /// </summary>
         /// <param name="IdIsTxt">ID的参数是否为科目的title，即ID，与txt一样，都是名称</param>
         /// <returns></returns>

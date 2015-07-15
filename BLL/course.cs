@@ -184,14 +184,14 @@ namespace Lythen.BLL
         /// <param name="teacher_id">教师ID</param>
         /// <param name="status">课程状态</param>
         /// <returns></returns>
-        public DataTable GetListForTable(int subject_id, int teacher_id, string status, int role_id, int adminid, string stu_id)
+        public DataTable GetListForTable(int subject_id, int teacher_id, string status, int role_id, int adminid, int school_id)
         {
             if (teacher_id == 0)
             {
                 if (role_id != 1)
                     teacher_id = adminid;
             }
-            DataSet ds = dal.GetListForTable(subject_id, teacher_id, status,stu_id);
+            DataSet ds = dal.GetListForTable(subject_id, teacher_id, status, school_id);
             DataTable dtSub = ds.Tables[0];
             DataTable dtCount = new DataTable("table");
             dtCount.Columns.Add(new DataColumn("total", typeof(int)));

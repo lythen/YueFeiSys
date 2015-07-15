@@ -34,7 +34,7 @@ public class StudentVsCourseHandler : IHttpHandler, IRequiresSessionState
     void GetTable(HttpContext context)
     {
         string stu_id = WebUtility.InputText(context.Request.Form["stu_id"], 20);
-        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(svcBLL.GetStudentCourse(stu_id),null));
+        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(svcBLL.GetStudentCourse(stu_id,myrole_id),null));
     }
     void AddorDeleteStudentCourse(HttpContext context)
     {
@@ -81,6 +81,7 @@ public class StudentVsCourseHandler : IHttpHandler, IRequiresSessionState
         int course_id = WebUtility.FilterParam(context.Request.Form["course_id"]);
         string stu_id = WebUtility.InputText(context.Request.Form["stu_id"], 20);
         string stu_name = WebUtility.InputText(context.Request.Form["stu_name"], 30);
-        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(svcBLL.GetList(PageSize, PageIndex, subject_id, course_id, stu_id, stu_name, myrole_id),null));
+        int school_id = WebUtility.FilterParam(context.Request.Form["school_id"]);
+        context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(svcBLL.GetList(PageSize, PageIndex, school_id, subject_id, course_id, stu_id, stu_name, myrole_id), null));
     }
 }

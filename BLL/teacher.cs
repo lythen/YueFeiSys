@@ -223,7 +223,7 @@ namespace Lythen.BLL
             StringBuilder sb = new StringBuilder();
             if (!File.Exists(file_path))
             {
-                sb.Append("[{\"id\":0,\"text\":\"请选择老师\"}");
+                sb.Append("[{\"Teacher_id\":0,\"Teacher_realname\":\"请选择老师\"}");
                 DataTable dtSub = new Lythen.BLL.subject().GetList("").Tables[0];
                 if (dtTeacher.Rows.Count == 0)
                 {
@@ -234,7 +234,7 @@ namespace Lythen.BLL
                 {
                     foreach (DataRow dr in dtTeacher.Rows)
                     {
-                        sb.Append(",{\"id\":\"").Append(dr["Teacher_id"]).Append("\",\"text\":\"").Append(dr["Teacher_realname"]).Append("\"}");
+                        sb.Append(",{\"Teacher_id\":\"").Append(dr["Teacher_id"]).Append("\",\"Teacher_realname\":\"").Append(dr["Teacher_realname"]).Append("\"}");
                     }
                 }
                 sb.Append("]");

@@ -3,6 +3,9 @@ using System.Data;
 using System.Collections.Generic;
 using Lythen.Common;
 using Lythen.Model;
+using System.Text;
+using System.IO;
+using System.Web;
 namespace Lythen.BLL
 {
 	/// <summary>
@@ -11,6 +14,7 @@ namespace Lythen.BLL
 	public partial class sys_stu_school
 	{
 		private readonly Lythen.DAL.sys_stu_school dal=new Lythen.DAL.sys_stu_school();
+        private string CachePath = HttpContext.Current.Server.MapPath("~/DataCache/stuSchool/");
 		public sys_stu_school()
 		{}
 		#region  BasicMethod
@@ -172,7 +176,49 @@ namespace Lythen.BLL
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod
+        /// <summary>
+        /// 返回下拉列表所需要学生学校的JSON
+        /// </summary>
+        /// <param name="IdIsTxt">ID的参数是否为科目的title，即ID，与txt一样，都是名称</param>
+        /// <returns></returns>
+        public string GetListJson()
+        {
+            DataTable dtSchool = dal.GetList("").Tables[0];
+            if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
+            string file_path = CachePath + "stuSchool.txt";
+            StringBuilder sb = new StringBuilder();
+            if (!File.Exists(file_path))
+            {
+                sb.Append("[{\"id\":0,\"text\":\"请选择学校\"}");
+                DataTable dtSub = new Lythen.BLL.subject().GetList("").Tables[0];
+                if (dtSchool.Rows.Count == 0)
+                {
+                    sb.Append("]");
+                    return sb.ToString();
+                }
+                else
+                {
+                    foreach (DataRow dr in dtSchool.Rows)
+                    {
+                        sb.Append(",{\"id\":\"").Append(dr["ss_id"]).Append("\",\"text\":\"").Append(dr["ss_title"]).Append("\"}");
+                    }
+                }
+                sb.Append("]");
+                StreamWriter sw = new StreamWriter(file_path);
+                sw.Write(sb.ToString());
+                sw.Flush();
+                sw.Close();
+                return sb.ToString();
+            }
+            else
+            {
 
+                StreamReader sr = new StreamReader(file_path);
+                string str = sr.ReadToEnd();
+                sr.Close();
+                return str;
+            }
+        }
 		#endregion  ExtensionMethod
 	}
 }

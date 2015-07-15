@@ -151,8 +151,10 @@
                         年级：
                     </td>
                     <td class="tdcontent">
+                     <div class="select_border">
                         <div class="select_containers ">
                            <input id="cbtsg" style="width: 200px;" />
+                        </div>
                         </div>
                     </td>
                 </tr>
@@ -228,13 +230,21 @@
                                             <input id="cbt" style="width: 200px;" />
                                         </div>
                                     </div>
-                                </span>&nbsp;&nbsp;选择老师： <span>
+                                </span>
+                                &nbsp;&nbsp;选择校区： <span>
+                                    <div class="select_border">
+                                        <div class="select_containers ">
+                                            <input id="cbsc" style="width: 200px;" />
+                                        </div>
+                                    </div>
+                                </span>
+                                &nbsp;&nbsp;选择老师： <span>
                                     <div class="select_border">
                                         <div class="select_containers ">
                                             <input id="cbtTe" style="width: 200px;" />
                                         </div>
                                     </div>
-                                </span>
+                                </span><br /><br />
                                 &nbsp;&nbsp; 课程状态：<span>
                                     <div class="select_border2">
                                         <div class="select_containers ">
@@ -274,6 +284,7 @@
     var teacher_id;
     var subject_id;
     var student_id;
+    var school_id;
     var status;
     $(function () {
         student_id = getQueryString("link");
@@ -281,14 +292,14 @@
             setMSGStyle();
             setStuMsg();
         } else {
-            setSchool(0);
+            setStuSchool(0);
             setGrade(0);
         }
 
     });
-    function setSchool(id) {
+    function setStuSchool(id) {
         $('#cbtsc').combotree({
-            url: 'AjaxHandler/SchoolHandler.ashx?type=getjson',
+            url: 'AjaxHandler/StudentSchoolHandler.ashx?type=getjson',
             required: true,
             method: 'get',
             valueField: 'id',
@@ -373,6 +384,7 @@
         $("#addsignup").slideToggle();
         loadTree();
         loadteacher();
+        loadschool();
         getVal();
     }
     function setMSGStyle() {
@@ -437,7 +449,7 @@
                     $("#txtstuname").val(json.stu_name);
                     $("#labStuid").text(json.stu_id);
                     $("#txtage").val(json.stu_age);
-                    setSchool(json.stu_school_id);
+                    setStuSchool(json.stu_school_id);
                     setGrade(json.stu_grade);
                     $("#txtparent_name").val(json.parent_name);
                     $("#txtparent_phone").val(json.parent_mobile);
@@ -446,7 +458,7 @@
                     $("#txtemail").val(json.stu_grade);
                     $('#slsex').val(json.stu_sex);
                 } catch (e) {
-                    alert("加载学生信息出错。");
+                    //alert("加载学生信息出错。");
                     history.go(-1);
                 }
             } else {
@@ -481,11 +493,25 @@
         });
         $('#cbtTe').combotree("setValue", 0);
     }
+    function loadschool() {
+        $('#cbsc').combotree({
+            url: 'AjaxHandler/SchoolHandler.ashx?type=getjson',
+            required: true,
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            onChange: function (newValue, oldValue) {
+                getVal();
+            }
+        });
+        $('#cbsc').combotree("setValue", 0);
+    }
     function getVal() {
         teacher_id = $('#cbtTe').combotree("getValue");
         subject_id = $('#cbt').combotree("getValue");
         status = $('#sestatus').val();
-        loadhastable();
+        school_id = $('#cbsc').combotree("getValue");
+        loadtable();
     }
     function loadtable() {
         $('#dg').datagrid({
@@ -501,16 +527,17 @@
                 teacher_id: teacher_id,
                 subject_id: subject_id,
                 status: status,
-                stu_id: student_id
+                school_id:school_id
             },
             width: 960,
             columns: [[
                 { field: 'Sc_stu_id', title: '全选', width: 100, align: 'center', checkbox: true },
+                { field: 'School_name', title: '校区', align: 'center' },
                 { field: 'Course_id', title: '课程ID', width: 60 },
-                { field: 'Course_title', title: '科目名称', width: 200, align: 'center', editor: 'text' },
-                { field: 'Subject_title', title: '所属科目', width: 100, align: 'center' },
-                { field: 'Teacher_realname', title: '任课老师', width: 100, align: 'center' },
-                { field: 'Course_cost', title: '收费(元)', width: 70, align: 'center' },
+                { field: 'Course_title', title: '科目名称',align: 'center'},
+                { field: 'Subject_title', title: '所属科目', align: 'center' },
+                { field: 'Teacher_realname', title: '任课老师', align: 'center' },
+                { field: 'Course_cost', title: '收费(元)',  align: 'center' },
                 { field: 'Course_info', title: '时间说明', width: 200, align: 'center' }
             ]],
             onLoadSuccess: function (row) {//当表格成功加载时执行               
@@ -536,6 +563,7 @@
         });
     }
     function loadhastable() {
+        var isin = true;
         $('#dg').datagrid({
             title: '已选课程列表显示',
             iconCls: 'icon-edit',
@@ -550,13 +578,23 @@
             },
             width: 960,
             columns: [[
+                { field: 'School_name', title: '校区', align: 'center' },
                 { field: 'Course_id', title: '课程ID', width: 50 },
-                { field: 'Course_title', title: '科目名称', width: 150, align: 'center', editor: 'text' },
+                { field: 'Course_title', title: '科目名称', width: 150, align: 'center'},
                 { field: 'Subject_title', title: '所属科目', width: 100, align: 'center' },
                 { field: 'Teacher_realname', title: '任课老师', width: 100, align: 'center' },
                 { field: 'Sc_pay', title: '交费(元)', width: 70, align: 'center' },
                 { field: 'Course_info', title: '时间说明', width: 300, align: 'center' }
-            ]]
+            ]],
+            onLoadSuccess: function (row) {//当表格成功加载时执行   
+                if (isin) {
+                    var rowData = row.rows;
+                    if (rowData.length == 0) $('#dg').datagrid("hideColumn", "Sc_pay");
+                    else if (jQuery.isEmptyObject(rowData[0].Sc_pay)) $('#dg').datagrid("hideColumn", "Sc_pay");
+                    isin = false;
+                }
+
+            }
         });
     }
     function getRowIndex(target) {

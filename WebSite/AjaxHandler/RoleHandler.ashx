@@ -39,6 +39,7 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
             case "getlist": GetList(context); break;
             case "gettable": GetTable(context); break;
             case "getdetail": GetDetail(context); break;
+            case "check": CheckRole(context); break;
         }
     }
  
@@ -154,5 +155,18 @@ public class RoleHandler : IHttpHandler,IRequiresSessionState {
             return;
         }
         context.Response.Write(Lythen.Common.JsonEmitter.WriteResult(dt, null));
+    }
+    void CheckRole(HttpContext context)
+    {
+        string check = context.Request.Form["check"];
+        bool isCheck = false;
+        switch (check)
+        {
+            case "pay": isCheck = adm.isPayAdmin(); break;
+            case "sa": isCheck = adm.isSuperAdmin(); break;
+            case "parent": isCheck = adm.isParent(); break;
+        }
+        if (isCheck) context.Response.Write("success");
+        else context.Response.Write("error");
     }
 }

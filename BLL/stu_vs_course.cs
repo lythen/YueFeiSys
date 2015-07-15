@@ -156,12 +156,16 @@ namespace Lythen.BLL
 		{
 			return dal.GetListByPage( strWhere,  orderby,  startIndex,  endIndex);
 		}
-		/// <summary>
-		/// 分页获取数据列表
-		/// </summary>
-        public DataTable GetList(int PageSize, int PageIndex, int subject_id, int course_id, string stu_id, string stu_name,int role_id)
+
+
+		#endregion  BasicMethod
+		#region  ExtensionMethod
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public DataTable GetList(int PageSize, int PageIndex, int school_id, int subject_id, int course_id, string stu_id, string stu_name, int role_id)
         {
-            DataSet ds = dal.GetList(PageSize, PageIndex, subject_id, course_id, stu_id, stu_name);
+            DataSet ds = dal.GetList(PageSize, PageIndex, school_id, subject_id, course_id, stu_id, stu_name);
             DataTable dtCount = new DataTable("table");
             dtCount.Columns.Add(new DataColumn("total", typeof(int)));
             dtCount.Columns.Add(new DataColumn("rows", typeof(DataTable)));
@@ -172,9 +176,6 @@ namespace Lythen.BLL
             dtCount.Rows.Add(dr);
             return dtCount;
         }
-
-		#endregion  BasicMethod
-		#region  ExtensionMethod
         public string AddorDeleteStudentCourse(string addlist,string deletelist, decimal cost, string stu_id)
         {
             StringBuilder sb = new StringBuilder();
@@ -257,15 +258,14 @@ namespace Lythen.BLL
             if (row == len) return "退费成功。";
             else return "退费失败，请检查。";
         }
-        public DataTable GetStudentCourse(string stu_id)
+        public DataTable GetStudentCourse(string stu_id,int role_id)
         {
             DataSet ds = dal.GetStudentCourse(stu_id);
             DataTable dtStudent = ds.Tables[0];
-
             DataTable dtCount = new DataTable("table");
             dtCount.Columns.Add(new DataColumn("total", typeof(int)));
             dtCount.Columns.Add(new DataColumn("rows", typeof(DataTable)));
-
+            if (role_id != 1) dtStudent.Columns.Remove("Sc_pay");
             DataRow dr = dtCount.NewRow();
             dr[0] = dtStudent.Rows.Count;
             dr[1] = dtStudent;

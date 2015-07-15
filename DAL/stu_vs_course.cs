@@ -287,7 +287,7 @@ namespace Lythen.DAL
 		/// <summary>
 		/// 分页获取数据列表
 		/// </summary>
-		public DataSet GetList(int PageSize,int PageIndex,int subject_id,int course_id,string stu_id,string stu_name)
+		public DataSet GetList(int PageSize,int PageIndex,int school_id,int subject_id,int course_id,string stu_id,string stu_name)
 		{
 			SqlParameter[] parameters = {
 					new SqlParameter("@stu_name", SqlDbType.VarChar, 30),
@@ -295,7 +295,8 @@ namespace Lythen.DAL
 					new SqlParameter("@pagesize", SqlDbType.Int),
 					new SqlParameter("@pageindex", SqlDbType.Int),
 					new SqlParameter("@Subject_id", SqlDbType.Int),
-					new SqlParameter("@Course_id", SqlDbType.Int)
+					new SqlParameter("@Course_id", SqlDbType.Int),
+					new SqlParameter("@School_id", SqlDbType.Int)
 					};
             parameters[0].Value = stu_name;
             parameters[1].Value = stu_id;
@@ -303,6 +304,7 @@ namespace Lythen.DAL
 			parameters[3].Value = PageIndex;
             parameters[4].Value = subject_id;
             parameters[5].Value = course_id;
+            parameters[6].Value = school_id;
             return DbHelperSQL.RunProcedure("proGetStudentCourseList", parameters, "ds");
 		}
 
@@ -331,17 +333,11 @@ namespace Lythen.DAL
         }
         public DataSet GetStudentCourse(string stu_id)
         {
-            string sql = @"select Sc_stu_id,Course_id,Course_title,Sc_pay,Teacher_realname,Course_info,Subject_title
-from stu_vs_course
-left join course on Sc_course_id=Course_id
-left join teacher on Course_teacher_id=Teacher_id
-left join [subject] on Course_sub_id=Subject_id
-where Sc_stu_id=@Sc_stu_id";
             SqlParameter[] parameters = {
-					new SqlParameter("@Sc_stu_id", SqlDbType.VarChar, 20)
+					new SqlParameter("@stu_id", SqlDbType.VarChar, 20)
 					};
             parameters[0].Value = stu_id;
-            return DbHelperSQL.Query(sql,parameters);
+            return DbHelperSQL.RunProcedure("proGetSingleStudentCourseList",parameters,"ds");
         }
         public int DeleteStudentCourse(int[] listCourse, string stu_id)
         {

@@ -110,9 +110,20 @@
     var status;
     var isSet = 0;
     $(function () {
-        var arr = ["xml", "html", "css", "js"];
-        loadTree();
-        loadteacher();
+        $.post("AjaxHandler/RoleHandler.ashx",
+        { "type": "check",
+            "check": "pay"
+        },
+        function (data, status) {
+            if (status != "success" || !checkLogin(data)||data != "success") {
+                alert("没有权限。");
+                history.go(-1);
+                return;
+            }
+            loadTree();
+            loadteacher();
+        });
+
     });
     function loadTree() {
         $('#cbt').combotree({

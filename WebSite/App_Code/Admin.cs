@@ -69,4 +69,37 @@ public class Admin
             username = WebUtility.InputText(HttpContext.Current.Session["role_name"].ToString(), 50);
         return username;
     }
+    /// <summary>
+    /// 是否是超级管理员
+    /// </summary>
+    /// <returns></returns>
+    public bool isSuperAdmin()
+    {
+        int id = 0;
+        if (HttpContext.Current.Session["role_id"] != null)
+            id = WebUtility.FilterParam(HttpContext.Current.Session["role_id"].ToString());
+        return id == 1;
+    }
+    /// <summary>
+    /// 是否有报名权限
+    /// </summary>
+    /// <returns></returns>
+    public bool isPayAdmin()
+    {
+        int id = 0;
+        if (HttpContext.Current.Session["role_id"] != null)
+            id = WebUtility.FilterParam(HttpContext.Current.Session["role_id"].ToString());
+        return id == 1 || id == 2;
+    }
+    /// <summary>
+    /// 是否有报名权限
+    /// </summary>
+    /// <returns></returns>
+    public bool isParent()
+    {
+        int id = 0;
+        if (HttpContext.Current.Session["role_id"] != null)
+            id = WebUtility.FilterParam(HttpContext.Current.Session["role_id"].ToString());
+        return id == 3;
+    }
 }
