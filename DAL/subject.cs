@@ -296,7 +296,7 @@ namespace Lythen.DAL
         /// <returns></returns>
         public DataSet GetListForTable()
         {
-            string sql = "select T.Subject_id,T.Subject_title,(select b.Subject_title from subject b where b.Subject_id=T.Subject_parent) as parent  from subject T order by T.Subject_id;select COUNT(1) from subject";
+            string sql = "select T.Subject_id,T.Subject_title,T.Subject_parent,(select b.Subject_title from subject b where b.Subject_id=T.Subject_parent) as parent  from subject T order by T.Subject_parent,T.Subject_id;select COUNT(1) from subject";
             return DbHelperSQL.Query(sql);
         }
         /// <summary>

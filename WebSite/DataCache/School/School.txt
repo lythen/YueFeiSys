@@ -1,1 +1,1 @@
-[{"School_id":0,"School_name":"请选择学校"},{"School_id":"1","School_name":"四季天地校区"},{"School_id":"2","School_name":"大塘校区"}]
+[{"School_id":0,"School_name":"请选择学校"},{"School_id":1,"School_name":"四季天地校区"},{"School_id":2,"School_name":"大塘校区"}]

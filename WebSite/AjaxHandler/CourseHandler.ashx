@@ -25,6 +25,7 @@ public class CourseHandler : IHttpHandler, IRequiresSessionState
             case "gettable": GetTable(context); break;
             case "add": Add(context); break;
             case "getlist": GetJsonList(context); break;
+            case "edit": Edit(context); break;
         }
     }
  
@@ -88,15 +89,32 @@ public class CourseHandler : IHttpHandler, IRequiresSessionState
         if (cBLL.Add(1, cost, datainfo, cinfo, status, subject_id, teacher_id, title)) context.Response.Write("success");
         else context.Response.Write("添加失败。");
     }
-    void Edit()
+    void Edit(HttpContext context)
     {
+        decimal cost;
+        try
+        {
+            cost = decimal.Parse(context.Request.Form["cost"]);
+        }
+        catch (FormatException)
+        {
+            context.Response.Write("金额输入不正确，请重新输入。");
+            return;
+        }
+        int c_id = WebUtility.FilterParam(context.Request.Form["c_id"]);
+        int school_id = WebUtility.FilterParam(context.Request.Form["school"]);
+        int t_id = WebUtility.FilterParam(context.Request.Form["t_id"]);
+        int sub_id = WebUtility.FilterParam(context.Request.Form["sub_id"]);
+        string info = WebUtility.InputText(context.Request.Form["info"], 5000);
+        string title = WebUtility.InputText(context.Request.Form["c_title"], 50);
+        context.Response.Write(cBLL.Edit(c_id, t_id, sub_id, school_id, title, info, cost));
     }
     void Delete()
     {
     }
     void GetJsonList(HttpContext context)
     {
-        int subject_id = WebUtility.FilterParam(context.Request.QueryString["sub_id"]);
+        int subject_id = WebUtility.FilterParam(context.Request.QueryString["subject_id"]);
         context.Response.Write(cBLL.GetJsonList(subject_id));
     }
 }

@@ -4,22 +4,53 @@
     <base target="right" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="css/common.css" />
-    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="css/easyui.css" />
     <script type="text/javascript" src="Scripts/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="Scripts/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="Scripts/typecheck.js"></script>
+    <script type="text/javascript" src="Scripts/login.js"></script>
     <title>后台首页</title>
     <style>
-    #contain{width:1100px;margin-left:15px;margin-right:15px;}
-    #addtb td{height:40px;}
-    .input-text{padding:0px 5px 0px 5px}
-    .combo{border:none;}
-    .select_border2{padding:0 0 0 0;height: 30px;  display: inline-block;  border: 1px solid #bac7d2;background: #fff;}
-    .input-text2{  padding: 0px 5px 0px 5px;}
-    .datagrid-cell{width:100%;}
-    .datagrid-cell table{width:100%;}
+        #contain
+        {
+            width: 1100px;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        #addtb td
+        {
+            height: 40px;
+        }
+        .input-text
+        {
+            padding: 0px 5px 0px 5px;
+        }
+        .combo
+        {
+            border: none;
+        }
+        .select_border2
+        {
+            padding: 0 0 0 0;
+            height: 30px;
+            display: inline-block;
+            border: 1px solid #bac7d2;
+            background: #fff;
+        }
+        .input-text2
+        {
+            padding: 0px 5px 0px 5px;
+        }
+        .datagrid-cell
+        {
+            width: 100%;
+        }
+        .datagrid-cell table
+        {
+            width: 100%;
+        }
     </style>
     <script>
         function checkAll(obj) {
@@ -66,7 +97,7 @@
                         }
                     });
                 } else {
-                alert('课程名称包含危险字符。');
+                    alert('课程名称包含危险字符。');
                 }
             }
         }
@@ -74,155 +105,168 @@
 </head>
 <body>
     <div id="contain">
-    <div id="search_bar" class="mt10">
-       <div class="box">
-          <div class="box_border">
-            <div class="box_top"><b class="pl15">添加课程</b></div>
-            <div class="box_center pt10 pb10">
-            <table id="addtb" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-            <td>&nbsp;&nbsp;科目筛选：</td>
-            <td><span>
-                      <div class="select_border"> 
-                        <div class="select_containers "> 
-                       <input id="cbt" style="width:200px;" />
-                        </div> 
-                      </div> 
-                    </span></td>
-                    <td>&nbsp;&nbsp;选择校区：</td>
-            <td>
-            <span>
-                                    <div class="select_border">
-                                        <div class="select_containers ">
-                                            <input id="cbsc" style="width: 200px;" />
+        <div id="search_bar" class="mt10">
+            <div class="box">
+                <div class="box_border">
+                    <div class="box_top">
+                        <b class="pl15">添加课程</b></div>
+                    <div class="box_center pt10 pb10">
+                        <table id="addtb" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td>
+                                    &nbsp;&nbsp;科目筛选：
+                                </td>
+                                <td>
+                                    <span>
+                                        <div class="select_border">
+                                            <div class="select_containers ">
+                                                <input id="cbt" style="width: 200px;" />
+                                            </div>
                                         </div>
-                                    </div>
-                                </span>
-            </td>
-                               <td>&nbsp;&nbsp;选择老师：</td>
-            <td><span>
-                      <div class="select_border"> 
-                        <div class="select_containers "> 
-
-                        <input id="cbtTe" style="width:200px;" />
-                        </div> 
-                      </div> 
-                    </span></td>
-            </tr>
-            <tr>
- 
-                        <td>&nbsp;&nbsp;课程名称：</td>
-            <td><input type="text" id="txtcourse" name="name" class="input-text lh30" style="width:200px;" /></td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;报名价格： </td>
-            <td><input type="text" id="txtcost" name="name" class="input-text lh30" style="width:200px;" /></td>
-            </tr>
-            <tr>
-            <td>
-            &nbsp;&nbsp;课程介绍：
-            </td>
-            <td colspan="3">
-            <textarea id="txtinfo" rows="10" name="name" class="input-text2" style="width:480px;" ></textarea>
-            </td>
-            <td colspan="2">&nbsp;&nbsp;
-            <input type="button" name="button" onclick="AddCourse();" class="btn btn82 btn_add" value="新增"/>
-            </td>
-            </tr>
-            </table>
+                                    </span>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;选择校区：
+                                </td>
+                                <td>
+                                    <span>
+                                        <div class="select_border">
+                                            <div class="select_containers ">
+                                                <input id="cbsc" style="width: 200px;" />
+                                            </div>
+                                        </div>
+                                    </span>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;选择老师：
+                                </td>
+                                <td>
+                                    <span>
+                                        <div class="select_border">
+                                            <div class="select_containers ">
+                                                <input id="cbtTe" style="width: 200px;" />
+                                            </div>
+                                        </div>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;&nbsp;课程名称：
+                                </td>
+                                <td>
+                                    <input type="text" id="txtcourse" name="name" class="input-text lh30" style="width: 200px;" />
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;报名价格：
+                                </td>
+                                <td>
+                                    <input type="text" id="txtcost" name="name" class="input-text lh30" style="width: 200px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;&nbsp;课程介绍：
+                                </td>
+                                <td colspan="3">
+                                    <textarea id="txtinfo" rows="10" name="name" class="input-text2" style="width: 480px;"></textarea>
+                                </td>
+                                <td colspan="2">
+                                    &nbsp;&nbsp;
+                                    <input type="button" name="button" onclick="AddCourse();" class="btn btn82 btn_add"
+                                        value="新增" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-          </div>
+        </div>
+        <div id="table" class="mt10">
+            <div class="box span10 oh">
+                <div class="box_bottom pb5 pt5 pr10" style="border: 1px solid #dadada;">
+                    <div class="search_bar_btn">
+                        &nbsp;&nbsp; 课程状态：<span>
+                            <div class="select_border2">
+                                <div class="select_containers ">
+                                    <select name="" id="sestatus" class="select">
+                                        <option value="0">全部</option>
+                                        <option value="1">已结束</option>
+                                        <option value="2">进行中</option>
+                                        <option value="3">未开始</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </span>&nbsp;&nbsp;
+                        <input type="button" name="button" class="btn btn82 btn_del" value="删除" />
+                    </div>
+                </div>
+                <br />
+                <table id="dg" title="课程列表显示" />
+            </div>
         </div>
     </div>
-    <div id="table" class="mt10">
-        <div class="box span10 oh">
-        <div class="box_bottom pb5 pt5 pr10" style="border:1px solid #dadada;">
-              <div class="search_bar_btn">
-        &nbsp;&nbsp;
-                    课程状态：<span>
-                      <div class="select_border2"> 
-                        <div class="select_containers "> 
-                        <select name="" id="sestatus" class="select"> 
-                        <option value="0">全部</option> 
-                        <option value="1">已结束</option> 
-                        <option value="2">进行中</option> 
-                        <option value="3">未开始</option> 
-                        </select> 
-                        </div> 
-                      </div> 
-                    </span>
-                     &nbsp;&nbsp; <input type="button" name="button" class="btn btn82 btn_del" value="删除"/>
-        </div></div>
-        <br />
-             <table id="dg" title="课程列表显示" />
-        
-        </div>
-     </div>
-     </div>
 </body>
 <script>
     var teacher_id;
     var subject_id;
+    var school_id;
     var status;
-    loadschool();
-    loadTree();
-    loadteacher();
+    var subject_json;
+    var teacher_json;
+    var school_json;
     $(function () {
-        InitDataTxt();
-        getVal(loadtable);
+        subject_json = synchroAjaxByUrl('AjaxHandler/SubjectHandler.ashx?type=getjson');
+        teacher_json = synchroAjaxByUrl('AjaxHandler/TeacherHandler.ashx?type=getjson');
+        school_json = synchroAjaxByUrl('AjaxHandler/SchoolHandler.ashx?type=getjson');
+        loadschool();
+        loadsubject();
+        loadteacher();
+        getVal();
     });
-    function loadTree() {
+    function loadsubject() {
         $('#cbt').combotree({
-            url: 'AjaxHandler/SubjectHandler.ashx?type=gettable',
+            data: subject_json,
             required: true,
-            method: 'get',
-            valueField: 'id',
-            textField: 'text',
-            onChange: function (newValue, oldValue) {
-                getVal(loadtable);
-            }
-        });
-        $('#cbt').combotree("setValue", 0);
-    }
-    function loadteacher() {
-        $('#cbtTe').combotree({
-            url: 'AjaxHandler/TeacherHandler.ashx?type=getjson',
-            required: true,
-            method: 'get',
-            valueField: 'id',
-            textField: 'text',
-            onChange: function (newValue, oldValue) {
-                getVal(loadtable);
-            }
-        });
-        $('#cbtTe').combotree("setValue", 0);
-    }
-    function InitDataTxt() {
-        $('#txtdate').timespinner({
-            min: '00:00',
-            required: true,
-            showSeconds: true
-        });
-        $('#txtdate').timespinner("setValue", "00:00:00");
-    }
-    function loadschool() {
-        $('#cbsc').combotree({
-            url: 'AjaxHandler/SchoolHandler.ashx?type=getjson',
-            required: true,
-            method: 'get',
             valueField: 'id',
             textField: 'text',
             onChange: function (newValue, oldValue) {
                 getVal();
             }
         });
-        $('#cbsc').combotree("setValue", 0);
+        $('#cbt').combotree("setValue", 0);
+    }
+    function loadteacher() {
+        $('#cbtTe').combobox({
+            data: teacher_json,
+            required: true,
+            valueField: 'Teacher_id',
+            textField: 'Teacher_realname',
+            onSelect: function (newValue, oldValue) {
+                getVal();
+            }
+        });
+        $('#cbtTe').combobox("setValue", 0);
+    }
+    function loadschool() {
+        $('#cbsc').combobox({
+            data: school_json,
+            required: true,
+            valueField: 'School_id',
+            textField: 'School_name',
+            onSelect: function (newValue, oldValue) {
+                getVal();
+            }
+        });
+        $('#cbsc').combobox("setValue", 0);
     }
     function getVal() {
-        teacher_id = $('#cbtTe').combotree("getValue");
+        teacher_id = $('#cbtTe').combobox("getValue");
         subject_id = $('#cbt').combotree("getValue");
+        school_id = $('#cbsc').combobox("getValue");
         status = $('#sestatus').val();
         loadtable();
     }
-    window.s_json = synchroAjaxByUrl('AjaxHandler/SubjectHandler.ashx?type=gettable');
     function loadtable() {
         $('#dg').datagrid({
             title: '课程列表显示',
@@ -237,6 +281,7 @@
                 type: 'gettable',
                 teacher_id: teacher_id,
                 subject_id: subject_id,
+                school_id:school_id,
                 status: status
             },
             columns: [[
@@ -248,24 +293,25 @@
                     editor: {
                         type: 'combobox',
                         options: {
-                            method: 'get',
                             valueField: 'School_id',
                             textField: 'School_name',
-                            url: 'AjaxHandler/SchoolHandler.ashx?type=getjson',
+                            data: school_json,
                             required: true
                         }
                     }
                 },
                 { field: 'Course_id', title: '课程ID', width: 60 },
                 { field: 'Course_title', title: '科目名称', width: 150, align: 'center', editor: 'text' },
-                { field: 'Subject_title', title: '所属科目', align: 'center', width: 200,
+                { field: 'Subject_id', title: '所属科目', align: 'center', width: 200,
+                    formatter: function (value, row) {
+                        return row.Subject_title;
+                    },
                     editor: {
                         type: 'combotree',
                         options: {
-                            method: 'get',
                             valueField: 'id',
                             textField: 'text',
-                            url: 'AjaxHandler/SubjectHandler.ashx?type=gettable',
+                            data: subject_json,
                             required: true
                         }
                     }
@@ -277,10 +323,9 @@
                     editor: {
                         type: 'combobox',
                         options: {
-                            method: 'get',
                             valueField: 'Teacher_id',
                             textField: 'Teacher_realname',
-                            url: 'AjaxHandler/TeacherHandler.ashx?type=getjson',
+                            data: teacher_json,
                             required: true
                         }
                     }
@@ -290,146 +335,129 @@
                 { field: 'action', title: '操作', width: 120, align: 'center',
                     formatter: function (value, row, index) {
                         if (row.editing) {
-                            var s = '<a href="#" onclick="accept()">保存</a> ';
-                            var c = '<a href="#" onclick="cancelrow(this)">取消</a>';
+                            var s = '<a href="#" onclick="saverow(' + index + ')">保存</a> ';
+                            var c = '<a href="#" onclick="cancelrow(' + index + ')">取消</a>';
                             return s + c;
                         } else {
-                            var e = '<a href="#" onclick="editrow(this,' + index + ')">编辑</a> ';
-                            var d = '<a href="#" onclick="deleterow(this,' + row.Course_id + ')">删除</a>';
+                            var e = '<a href="#" onclick="editrow(' + index + ')">编辑</a> ';
+                            var d = '<a href="#" onclick="deleterow(' + index + ',' + row.Course_id + ')">删除</a>';
                             return e + d;
                         }
                     }
                 }
             ]],
-                onBeforeEdit: function (index, row) {
-                    row.editing = true;
-                    updateActions(index);
-                },
-                onAfterEdit: function (index, row) {
-                    editSave(row);
+            onBeforeEdit: function (index, row) {
+                row.editing = true;
+                updateActions(index);
+            },
+            onAfterEdit: function (index, row) {
                     row.editing = false;
                     updateActions(index);
                 },
-                onCancelEdit: function (index, row) {
+             onCancelEdit: function (index, row) {
                     row.editing = false;
                     updateActions(index);
-                }
-        });
-    }
-    function synchroAjaxByUrl(url) {
+             }
 
-        var temp;
-        $.ajax({
-            url: url,
-            type: "get",
-            async: false,
-            dataType: "json",
-            success: function (data) {
-                temp = data;
+        });
+        }
+        var editIndex = undefined;
+        function updateActions(index) {
+            $('#dg').datagrid('updateRow', {
+                index: index,
+                row: {}
+            });
+        }
+        function editrow(index) {
+            
+            if (editIndex != index) {
+                if (endEditing()) {
+                    $('#dg').datagrid('beginEdit', index);
+                    editIndex = index;
+                } else {
+                    $('#dg').datagrid('selectRow', editIndex);
+                }
             }
-        });
-        return temp;
-    }
-    function updateActions(index) {
-        $('#dg').datagrid('updateRow', {
-            index: index,
-            row: {}
-        });
-    }
-    function getRowIndex(target) {
-        var tr = $(target).closest('tr.datagrid-row');
-        return parseInt(tr.attr('datagrid-row-index'));
-    }
-    //编辑行
-    var editIndex = undefined;
-    function editrow(target, index) {
-        $('#dg').datagrid('beginEdit', index);
-        if (editIndex != index) {
+        }
+        function deleterow(index) {
+            $.messager.confirm('Confirm', 'Are you sure?', function (r) {
+                if (r) {
+                    $('#dg').datagrid('deleteRow', index);
+                }
+            });
+        }
+        function saverow(index) {
             if (endEditing()) {
-                $('#dg').datagrid('selectRow', index)
-							.datagrid('beginEdit', index);
-                editIndex = index;
+                editIndex = undefined;
+                $('#dg').datagrid('endEdit', index);
+               // $('#dg').datagrid('acceptChanges');
+            }
+        }
+        function cancelrow(index) {
+            $('#dg').datagrid('cancelEdit', index);
+        }
+        function endEditing() {
+            if (editIndex == undefined) { return true }
+            if ($('#dg').datagrid('validateRow', editIndex)) {
+                var school_id;
+                var c_id;
+                var c_title;
+                var t_id;
+                var cost;
+                var info;
+                var sub_id;
+
+                //考师修改
+                var te = $('#dg').datagrid('getEditor', { index: editIndex, field: 'Teacher_id' });
+                var teacher_name = $(te.target).combobox('getText');
+                t_id = $(te.target).combobox('getValue');
+                $('#dg').datagrid('getRows')[editIndex]['Teacher_realname'] = teacher_name;
+
+                //科目修改
+                var su = $('#dg').datagrid('getEditor', { index: editIndex, field: 'Subject_id' });
+                var subject_ttl = $(su.target).combobox('getText');
+                sub_id = $(su.target).combobox('getValue');
+                $('#dg').datagrid('getRows')[editIndex]['Subject_title'] = subject_ttl;
+                
+                //校区修改
+                var sc = $('#dg').datagrid('getEditor', { index: editIndex, field: 'School_id' });
+                var school_title = $(sc.target).combobox('getText');
+                school_id = $(sc.target).combobox('getValue');
+                $('#dg').datagrid('getRows')[editIndex]['School_name'] = school_title;
+                $('#dg').datagrid('endEdit', editIndex);
+
+                var row = $('#dg').datagrid('getRows')[editIndex];
+                c_id = row['Course_id'];
+                c_title = row['Course_title'];
+                info = row['Course_info'];
+                cost = row['Course_cost'];
+                $.post("AjaxHandler/CourseHandler.ashx",
+                { "type": "edit",
+                    "sub_id": sub_id,
+                    "school": school_id,
+                    "c_id": c_id,
+                    "c_title": c_title,
+                    "t_id": t_id,
+                    "cost": cost,
+                    "info": info
+                },
+                function (data, status) {
+                    if (status != "success") {
+                        alert("网络错误");
+                        return false;
+                    }
+                    if (!checkLogin(data)) return false;
+                    if (data == "success")
+                        return true;
+                    else {
+                        alert(data);
+                        return false;
+                    }
+                });
             } else {
-                $('#dg').datagrid('selectRow', editIndex);
+                alert("列选择出错，请刷新页面后重新操作。");
+                return false;
             }
         }
-    }
-    function endEditing() {
-        if (editIndex == undefined) { return true }
-        if ($('#dg').datagrid('validateRow', editIndex)) {
-            //考师修改
-            var te = $('#dg').datagrid('getEditor', { index: editIndex, field: 'Teacher_id' });
-            var teacher_name = $(te.target).combobox('getText');
-            $('#dg').datagrid('getRows')[editIndex]['Teacher_realname'] = teacher_name;
-            //科目修改
-
-            //校区修改
-            var sc = $('#dg').datagrid('getEditor', { index: editIndex, field: 'School_id' });
-            var teacher_name = $(sc.target).combobox('getText');
-            $('#dg').datagrid('getRows')[editIndex]['School_name'] = teacher_name;
-            $('#dg').datagrid('endEdit', editIndex);
-            editIndex = undefined;
-            return true;
-        } else {
-            return false;
-        }
-    }
-    function accept() {
-        if (endEditing()) {
-            $('#dg').datagrid('acceptChanges');
-        }
-    }
-    function deleterow(target, id) {
-        $.messager.confirm('警告', '确实删除?', function (r) {
-            if (r) {
-                $.post("AjaxHandler/CourseHandler.ashx",
-                { "type": "delete",
-                    "id": id
-                },
-                function (data, status) {
-                    if (status == "success") {
-                        if (data == "success") {
-                            alert("删除成功");
-                            $('#dg').datagrid('deleteRow', getRowIndex(target));
-                        } else
-                            alert("删除失败");
-                    } else alert("删除失败。");
-                });
-            }
-        });
-    }
-    function cancelrow(target) {
-        $('#dg').datagrid('cancelEdit', getRowIndex(target));
-    }
-
-    function Delete() {
-        $.messager.confirm('警告', '确实删除?', function (r) {
-            if (r) {
-                var debox = $('#dg').datagrid('getChecked');
-                var len = debox.length;
-                if (len == 0) {
-                    alert("没有选择任何行。");
-                    return;
-                }
-                var ids = "";
-                for (var i = 0; i < len; i++) {
-                    ids += debox[i].Subject_id + ',';
-                }
-                $.post("AjaxHandler/CourseHandler.ashx",
-                { "type": "deletelist",
-                    "ids": ids
-                },
-                function (data, status) {
-                    if (status == "success") {
-                        alert("共删除课程" + data + "");
-                        loadtable();
-                    } else alert("删除失败。");
-                });
-            }
-        });
-    }
-    function editSave(row) {
-        $('#dg').datagrid('acceptChanges');
-    }
 </script>
 </html>

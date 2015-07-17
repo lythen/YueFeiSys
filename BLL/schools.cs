@@ -200,7 +200,7 @@ namespace Lythen.BLL
                 {
                     foreach (DataRow dr in dtSchool.Rows)
                     {
-                        sb.Append(",{\"School_id\":\"").Append(dr["School_id"]).Append("\",\"School_name\":\"").Append(dr["School_name"]).Append("\"}");
+                        sb.Append(",{\"School_id\":").Append(dr["School_id"]).Append(",\"School_name\":\"").Append(dr["School_name"]).Append("\"}");
                     }
                 }
                 sb.Append("]");

@@ -64,9 +64,9 @@ namespace Lythen.BLL
         }
         public string Update(int Subject_id, int Parent_id, string Subject_title)
         {
-            if (dal.Exists(Parent_id, Subject_title)) return "exists";
+            if (dal.Exists(Parent_id, Subject_title)) return "该父科目下已存在所修改子科目名称。";
             Model.subject model = GetModelByCache(Subject_id);
-            if (model == null) return "nosubject";
+            if (model == null) return "所选科目不存在或已删除。";
             model.Subject_parent = Parent_id;
             model.Subject_title = Subject_title;
             if (Update(model)) return "success";
@@ -256,12 +256,10 @@ namespace Lythen.BLL
         /// </summary>
         /// <param name="IdIsTxt">ID的参数是否为科目的title，即ID，与txt一样，都是名称</param>
         /// <returns></returns>
-        public string GetListJson(bool IdIsTxt)
+        public string GetListJson()
         {
             if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
-            string file_path;
-            if (IdIsTxt) file_path = CachePath + "subject_txt.txt";
-            else file_path = CachePath + "subject_id.txt";
+            string  file_path = CachePath + "subject.txt";
             StringBuilder sb = new StringBuilder();
             if (!File.Exists(file_path))
             {
@@ -279,7 +277,7 @@ namespace Lythen.BLL
                     foreach (DataRow dr in drs)
                     {
                         len--;
-                        WriteNode(dr, dtSub, sb, len, IdIsTxt);
+                        WriteNode(dr, dtSub, sb, len);
                     }
                 }
                 sb.Append("]}]");
@@ -298,23 +296,23 @@ namespace Lythen.BLL
                 return str;
             }
         }
-        void WriteNode(DataRow dr, DataTable dtsub, StringBuilder sb, int len,bool IdIsTxt)
+        void WriteNode(DataRow dr, DataTable dtsub, StringBuilder sb, int len)
         {
-            if(IdIsTxt) sb.Append("{\"id\":\"").Append(dr["Subject_title"]).Append("\",\"text\":\"").Append(dr["Subject_title"]).Append("\",\"children\":[");
-            else sb.Append("{\"id\":\"").Append(dr["Subject_id"]).Append("\",\"text\":\"").Append(dr["Subject_title"]).Append("\",\"children\":[");
+            sb.Append("{\"id\":").Append(dr["Subject_id"]).Append(",\"text\":\"").Append(dr["Subject_title"]).Append("\"");
 
             DataRow[] drs = dtsub.Select("Subject_parent=" + dr["Subject_id"].ToString());
             if (drs.Length == 0)
             {
-                sb.Append("]}");
+                sb.Append("}");
                 if (len > 0) sb.Append(",");
                 return;
             }
+            sb.Append(",\"children\":[");
             int lenc = drs.Length;
             foreach (DataRow drc in drs)
             {
                 lenc--;
-                WriteNode(drc, dtsub, sb, lenc, IdIsTxt);
+                WriteNode(drc, dtsub, sb, lenc);
             }
             sb.Append("]}");
             if (len > 0) sb.Append(",");

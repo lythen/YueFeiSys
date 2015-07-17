@@ -254,7 +254,7 @@ namespace Lythen.BLL
             StringBuilder sb = new StringBuilder();
             if (!File.Exists(file_path))
             {
-                sb.Append("[{\"id\":0,\"text\":\"请选择课程\"}");
+                sb.Append("[{\"Course_id\":0,\"Course_title\":\"请选择课程\"}");
                 DataTable dtSub = new Lythen.BLL.subject().GetList("").Tables[0];
                 if (dtCourse.Rows.Count == 0)
                 {
@@ -265,7 +265,7 @@ namespace Lythen.BLL
                 {
                     foreach (DataRow dr in dtCourse.Rows)
                     {
-                        sb.Append(",{\"id\":\"").Append(dr["Course_id"]).Append("\",\"text\":\"").Append(dr["Course_title"]).Append("\"}");
+                        sb.Append(",{\"id\":").Append(dr["Course_id"]).Append(",\"Course_title\":\"").Append(dr["Course_title"]).Append("\"}");
                     }
                 }
                 sb.Append("]");
@@ -286,7 +286,20 @@ namespace Lythen.BLL
 
         
         }
-		#endregion  ExtensionMethod
+        public string Edit(int c_id, int t_id, int sub_id, int school_id, string title, string info, decimal cost)
+        {
+            Model.course mode = GetModel(c_id);
+            if (mode == null) return "课程不存在或被删除。";
+            mode.Course_choool_id = school_id;
+            mode.Course_cost = cost;
+            mode.Course_info = info;
+            mode.Course_sub_id = sub_id;
+            mode.Course_teacher_id = t_id;
+            mode.Course_title = title;
+            if (Update(mode)) return "success";
+            else return "修改失败";
+        }
+        #endregion  ExtensionMethod
 	}
 }
 

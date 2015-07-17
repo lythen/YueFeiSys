@@ -234,7 +234,7 @@ namespace Lythen.BLL
                 {
                     foreach (DataRow dr in dtTeacher.Rows)
                     {
-                        sb.Append(",{\"Teacher_id\":\"").Append(dr["Teacher_id"]).Append("\",\"Teacher_realname\":\"").Append(dr["Teacher_realname"]).Append("\"}");
+                        sb.Append(",{\"Teacher_id\":").Append(dr["Teacher_id"]).Append(",\"Teacher_realname\":\"").Append(dr["Teacher_realname"]).Append("\"}");
                     }
                 }
                 sb.Append("]");
